@@ -1,25 +1,25 @@
 
 const routes = [
 	{
-		path: '/', component: () => import('layouts/MyLayout.vue'),
+		path: '/', component: () => import('layouts/FrontLayout.vue'),
 		children: [
-			{ path: '', component: () => import('pages/Index.vue') }
+			{ path: '', component: () => import('pages/Front/PFHome.vue') }
 		]
 	},
 	
 	{
-		path: '/member', component: () => import('layouts/MyLayout.vue'),
+		path: '/member', component: () => import('layouts/MemberLayout.vue'),
 		children: [
-			{ path: 'dashboard', component: () => import('pages/Index.vue') }
+			{ path: '', component: () => import('pages/Member/PMDashboard.vue') }
 		]
 	},
 	{
-		path: '/admin', component: () => import('layouts/MyLayout.vue'),
+		path: '/admin', component: () => import('layouts/AdminLayout.vue'),
 		children: [
-			{ path: 'dashboard', component: () => import('pages/Index.vue') }
+			{ path: '', component: () => import('pages/Admin/PADashboard.vue') }
 		]
 	}	
-]
+];
 
 if (process.env.MODE !== 'ssr')
 {
