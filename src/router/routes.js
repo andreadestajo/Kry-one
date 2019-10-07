@@ -3,7 +3,8 @@ const routes = [
 	{
 		path: '/', component: () => import('layouts/FrontLayout.vue'),
 		children: [
-			{ path: '', component: () => import('pages/Front/PFHome.vue') }
+			{ path: '', component: () => import('pages/Front/PFHome.vue') },
+			{ path: 'registration', component: () => import('pages/Front/PFRegistration.vue') }
 		]
 	},
 	
