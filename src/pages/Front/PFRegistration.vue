@@ -61,7 +61,7 @@
                          stack-label
                          v-model="registration_form_data.referral_code"/>
 
-              <q-checkbox class="q-py-lg"
+                <q-checkbox class="q-py-lg"
                             right-label
                             v-model="registration_form_data.is_agree">
                     I agree to the Kryptoknight's <br />
@@ -69,31 +69,33 @@
                 </q-checkbox>
 
                 <div>
-                    <q-btn unelevated
-                           label="Create Account"
-                           type="submit"
-                           color="primary"
-                           class="full-width"/>
+                  <q-btn unelevated
+                         label="Create Account"
+                         type="submit"
+                         color="primary"
+                         class="full-width"/>
 
-                    <q-btn unelevated
-                           label="Back"
-                           type="reset"
-                           color="grey"
-                           class="q-mt-sm full-width" />
-                </div>
+                  <q-btn unelevated
+                         label="Back"
+                         type="reset"
+                         color="grey"
+                         class="q-mt-sm full-width" />
+              </div>
             </q-form>
         </q-page>
     </q-page-container>
 </template>
 
 <script>
+    import {required}     from 'vuelidate/lib/validators'
     import refs_countries from '../../references/refs_countries'
 
     export default {
         name: "PFRegistration",
         data: () =>
         ({
-            registration_form_data: {
+            registration_form_data:
+            {
                 fullname      : '',
                 email         : '',
                 password      : '',
@@ -103,8 +105,16 @@
             },
             isPassword: true
         }),
-        methods:
+        validations:
         {
+            registration_form_data:
+            {
+                fullname      : {required},
+                email         : {required},
+                password      : {required},
+                country       : {required},
+                referral_code : {required}
+            }
         },
         country_options: refs_countries
     }
