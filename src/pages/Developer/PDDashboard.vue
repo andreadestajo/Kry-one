@@ -8,6 +8,8 @@
 <script>
 import MCallables from '../../mixins/MCallables';
 
+import {Call, login, registration}     from "../../utilities/Callables";
+
 export default
 {
 	name: "PDDeveloper",
@@ -16,12 +18,12 @@ export default
 	{
 		async callLogin()
 		{
-			let res = await this.$_call('login');
+			let res = await Call(login);
 			console.log(res.data);
 		},
 		async callRegister()
 		{
-			let res = await this.$_call('registration');
+			let res = await Call(registration);
 			console.log(res.data);
 		}
 	}
