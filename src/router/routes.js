@@ -5,7 +5,7 @@ const routes = [
 		children: [
 			{ path: '', component: () => import('pages/Front/PFHome.vue') },
 			{ path: 'login', component: () => import('pages/Front/PFLogin.vue') },
-			{ path: 'register', component: () => import('pages/Front/PFRegister.vue') },
+			{ path: 'registration', component: () => import('pages/Front/PFRegistration.vue') }
 		]
 	},
 	

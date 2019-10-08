@@ -1,4 +1,11 @@
 // Configuration for your app
+const DotEnv = require('dotenv');
+const webpack = require('webpack');
+
+// Get env variables
+const envparsers = require('./src/config/envparser');
+const path = require('path');
+
 // https://quasar.dev/quasar-cli/quasar-conf-js
 
 module.exports = function (ctx) {
@@ -7,6 +14,8 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
+      'vuelidate',
+      'firebase',
     ],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
@@ -54,6 +63,7 @@ module.exports = function (ctx) {
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       scopeHoisting: true,
+      env: envparsers(),
       // vueRouterMode: 'history',
       // showProgress: false,
       // gzip: true,
@@ -63,6 +73,12 @@ module.exports = function (ctx) {
 
       // https://quasar.dev/quasar-cli/cli-documentation/handling-webpack
       extendWebpack (cfg) {
+        cfg.resolve.alias.env = path.resolve(__dirname, 'src/config/helpers/env.js');
+        cfg.plugins.push(
+          new webpack.ProvidePlugin({
+            'env': 'env'
+          })
+        )
       }
     },
 
