@@ -1,9 +1,13 @@
-module.exports = {
-  login : (request, response) => {
-    response.send("login!");
-  },
-  registration: (request, response) => {
-    response.send("registration!");
-  }
+module.exports =
+{
+	login (request, response)
+	{
+		console.log("hi");
+		return "hey";
+	},
+	registration (request, response)
+	{
+		console.log("hello world");
+	}
 };
 

@@ -20,7 +20,13 @@ const routes = [
 		children: [
 			{ path: '', component: () => import('pages/Admin/PADashboard.vue') }
 		]
-	}	
+	},	
+	{
+		path: '/developer', component: () => import('layouts/DeveloperLayout.vue'),
+		children: [
+			{ path: '', component: () => import('pages/Developer/PDDashboard.vue') }
+		]
+	},	
 ];
 
 if (process.env.MODE !== 'ssr')

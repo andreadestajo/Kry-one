@@ -21,9 +21,20 @@ export default ({ Vue }) => {
   Vue.use(firestorePlugin);
 }
 
+let FUNCTIONS;
+
+if(env('MODE') == 'development')
+{
+	Firebase.functions().useFunctionsEmulator(`http://${ window.location.hostname }:5000`);
+	FUNCTIONS = Firebase.functions();
+}
+else
+{
+	FUNCTIONS  = Firebase.app().functions('asia-northeast1');
+}
+
 const DB         = Firebase.firestore();
 const AUTH       = Firebase.auth();
-const FUNCTIONS  = Firebase.app().functions('asia-northeast1');
 const STORAGE    = Firebase.storage;
 const STORAGEREF = Firebase.storage().ref();
 
@@ -34,4 +45,3 @@ export {
   STORAGE,
   STORAGEREF,
 }
-
