@@ -5,6 +5,6 @@
 <script>
     export default
     {
-        name: "PFHome"
+        name: "PFRegister"
     }
 </script>
