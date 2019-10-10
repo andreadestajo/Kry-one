@@ -69,26 +69,31 @@
                 </q-checkbox>
 
                 <div>
-                  <q-btn unelevated
+                    <q-btn unelevated
                          label="Create Account"
                          type="submit"
                          color="primary"
-                         class="full-width"/>
+                         class="full-width"
+                         @click="register()"
+                    ></q-btn>
 
-                  <q-btn unelevated
+                    <q-btn unelevated
                          label="Back"
                          type="reset"
                          color="grey"
                          class="q-mt-sm full-width" />
-              </div>
+                    </div>
             </q-form>
         </q-page>
     </q-page-container>
 </template>
 
 <script>
-    import {required}     from 'vuelidate/lib/validators'
-    import refs_countries from '../../references/refs_countries'
+    import refs_countries from "../../references/refs_countries";
+
+    import {fbCall} 	  from "../../utilities/Callables";
+    import {required}     from "vuelidate/lib/validators";
+    import {FN_REGISTER}  from "../../references/refs_functions";
 
     export default {
         name: "PFRegistration",
@@ -105,6 +110,14 @@
             },
             isPassword: true
         }),
+        methods: {
+            async register() {
+                const res = await fbCall(FN_REGISTER, {userData: this.registration_form_data})
+                    .then(data => {
+                        console.log(data)
+                    })
+            }
+        },
         validations:
         {
             registration_form_data:

@@ -2,12 +2,16 @@ module.exports =
 {
 	login (request, response)
 	{
-		console.log("hi");
-		return "hey";
+		return "login";
 	},
-	registration (request, response)
+	registration (data, context)
 	{
-		console.log("hello world");
-	}
+	    console.log(data)
+	    console.log('pwede na besh')
+		return "registration"
+	},
+    verifyEmail(request, response) {
+	    return null
+    }
 };
 
