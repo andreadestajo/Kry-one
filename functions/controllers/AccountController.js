@@ -45,7 +45,6 @@ module.exports =
 
     async register (data, context)
     {
-        resetPassword(); return 0;
         const user_info     = data.registration_form_data;
 
         // Create new user and return result

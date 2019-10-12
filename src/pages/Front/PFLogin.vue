@@ -100,6 +100,9 @@
         {
             async signInWithEmailAndPassword()
             {
+                this.$v.login_form_data.$touch();
+                if(this.$v.login_form_data.$error) {return 0}
+
                 if(!DB_USER.getCurrentUser())
                 {
                     DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
@@ -121,12 +124,8 @@
         {
             login_form_data:
             {
-                email     : {required, email},
-                password  :
-                {
-                    required,
-                    minLength: minLength(6)
-                }
+                email    : {required, email},
+                password : {required, minLength: minLength(6)}
             }
         }
     }
