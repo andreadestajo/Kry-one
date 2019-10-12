@@ -1,7 +1,6 @@
-const {HTTPS_ERROR} = require("../plugin/firebase");
-
 const {ADMIN_AUTH} = require('../plugin/firebase');
 const user         = require('../models/MDB_USER');
+const {sendMail}   = require('../globals/EmailHelper');
 
 module.exports =
 {
@@ -63,25 +62,45 @@ module.exports =
             return {error: add_user_info.error}
         }
 
-        // Send email verification link
-        await ADMIN_AUTH.generateEmailVerificationLink(user_record.email)
+
+        return {email: user_record.email}
+    },
+
+    async sendEmailVerificationLink(email)
+    {
+        const generate_link = await ADMIN_AUTH.generateEmailVerificationLink(email)
         .then((link) => {
-            // Construct email verification template, embed the link and send
-            // using custom SMTP server.
-            console.log(link)
+            return {
+                data : {link},
+                error: false
+            }
         })
         .catch((error) => {
             return {error}
         });
 
-        return {email: user_record.email}
-    },
+        if(generate_link.error)
+        {
+            return {error: generate_link.error}
+        }
 
-    verifyEmail(request, response) {
+        // Send verification email
+        const send_email = sendMail({
+            to      : 'samps@getnada.com', // required
+            from    : 'no-reply@getnada.com', // required
+            subject : 'Test Mail', // required
+            text    : 'This is a text mail',
+            html    : '<b>this is a bold text <i>and this</i></b>'
+        });
 
-    },
+        if(send_email.error) {
+            return {error: send_email.error}
+        }
 
-    resetPassword (request, response) {
+        // Last step of registration
+        return {
+            data: {message: 'Successfully Created Email'}
+        }
 
     }
 };
