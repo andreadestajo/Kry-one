@@ -2,6 +2,37 @@ const {ADMIN_AUTH} = require('../plugin/firebase');
 const user         = require('../models/MDB_USER');
 const {sendMail}   = require('../globals/EmailHelper');
 
+const {emailVerificationTemplate} = require('../references/ref_email_templates');
+
+const sendEmailVerificationLink = async (email, fullname) =>
+{
+    const generate_link = await ADMIN_AUTH.generateEmailVerificationLink(email)
+        .then((link) => {
+            return {
+                data : {link},
+                error: false
+            }
+        })
+        .catch((error) => {
+            return {error}
+        });
+
+    if(generate_link.error)
+    {
+        return {error: generate_link.error}
+    }
+
+    const mail_options = {
+        to      : email,
+        from    : 'no-reply@kryptoone.com',
+        subject : 'Email Verification',
+        text    : emailVerificationTemplate(fullname, generate_link.data.link),
+        html    : emailVerificationTemplate(fullname, generate_link.data.link)
+    };
+
+    return sendMail(mail_options);
+};
+
 module.exports =
 {
     login (data, context)
@@ -62,46 +93,8 @@ module.exports =
             return {error: add_user_info.error}
         }
 
-
-        return {email: user_record.email}
-    },
-
-    async sendEmailVerificationLink(email)
-    {
-        const generate_link = await ADMIN_AUTH.generateEmailVerificationLink(email)
-        .then((link) => {
-            return {
-                data : {link},
-                error: false
-            }
-        })
-        .catch((error) => {
-            return {error}
-        });
-
-        if(generate_link.error)
-        {
-            return {error: generate_link.error}
-        }
-
-        // Send verification email
-        const send_email = sendMail({
-            to      : 'samps@getnada.com', // required
-            from    : 'no-reply@getnada.com', // required
-            subject : 'Test Mail', // required
-            text    : 'This is a text mail',
-            html    : '<b>this is a bold text <i>and this</i></b>'
-        });
-
-        if(send_email.error) {
-            return {error: send_email.error}
-        }
-
         // Last step of registration
-        return {
-            data: {message: 'Successfully Created Email'}
-        }
-
+        return sendEmailVerificationLink(user_info.email, user_info.fullname);
     }
 };
 
