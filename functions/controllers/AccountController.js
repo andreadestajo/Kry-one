@@ -64,15 +64,16 @@ module.exports =
         }
 
         // Send email verification link
-        await ADMIN_AUTH.sendEmailVerification(user_record.email)
+        await ADMIN_AUTH.generateEmailVerificationLink(user_record.email)
         .then((link) => {
             // Construct email verification template, embed the link and send
             // using custom SMTP server.
-            console.log('oksna')
+            console.log(link)
         })
         .catch((error) => {
-            console.log({error})
+            return {error}
         });
+
         return {email: user_record.email}
     },
 

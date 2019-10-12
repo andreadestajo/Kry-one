@@ -1,3 +1,7 @@
+// Initialize dotenv to read .env file.
+const dotenv = require('dotenv');
+dotenv.config();
+
 const FUNCTIONS = require('firebase-functions');
 
 const FUNCTIONS_REGION    = FUNCTIONS.region('us-central1');
