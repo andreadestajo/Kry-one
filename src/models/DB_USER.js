@@ -1,4 +1,4 @@
-import { DB } from "../boot/firebase";
+import { DB, AUTH }   from "../boot/firebase";
 
 export default
 {
@@ -59,5 +59,14 @@ export default
     {
         return await this.doc(id).delete();
     },
-
+    signIn(email, password) {
+        return AUTH.signInWithEmailAndPassword(email, password)
+    },
+    getCurrentUser()
+    {
+        return AUTH.currentUser
+    },
+    logout() {
+        // Logout thingy here
+    }
 }

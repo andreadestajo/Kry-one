@@ -3,7 +3,7 @@
         <q-page class="q-pa-lg">
             <div class="text-center">
                 <div class="text-h6">
-                    KRYPTOKNIGHT
+                    KRYPTOONE
                     <div class="text-subtitle2">
                       Create Account
                     </div>
@@ -110,12 +110,15 @@
             },
             isPassword: true
         }),
-        methods: {
-            async register() {
-                const res = await fbCall(FN_REGISTER, {userData: this.registration_form_data})
-                    .then(data => {
-                        console.log(data)
-                    })
+        methods:
+        {
+            async register()
+            {
+                await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
+                .then(data =>
+                {
+                    console.log(data)
+                })
             }
         },
         validations:

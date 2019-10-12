@@ -8,7 +8,8 @@ const authentication_controller = require('./controllers/Authentication');
 const account_controller        = require('./controllers/AccountController');
 
 //exports.login        = FUNCTIONS_HTTPS.onCall(authentication_controller.login);
-exports.registration = FUNCTIONS_HTTPS.onCall(authentication_controller.registration);
+//exports.registration = FUNCTIONS_HTTPS.onCall(authentication_controller.registration);
 
-// Accountexports.login          = '';
-exports.register       = FUNCTIONS_HTTPS.onCall(account_controller.register);
+// Account
+exports.register = FUNCTIONS_HTTPS.onCall(account_controller.register);
+exports.login    = FUNCTIONS_HTTPS.onCall(account_controller.login);
