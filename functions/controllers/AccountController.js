@@ -1,8 +1,10 @@
 const {ADMIN_AUTH} = require('../plugin/firebase');
-const user         = require('../models/MDB_USER');
 const {sendMail}   = require('../globals/EmailHelper');
 
-const {emailVerificationTemplate} = require('../references/ref_email_templates');
+const {
+    emailVerificationTemplate,
+    passwordResetTemplate
+} = require('../references/ref_email_templates');
 
 const sendEmailVerificationLink = async (email, fullname) =>
 {
@@ -43,6 +45,7 @@ module.exports =
 
     async register (data, context)
     {
+        resetPassword(); return 0;
         const user_info     = data.registration_form_data;
 
         // Create new user and return result
@@ -95,6 +98,38 @@ module.exports =
 
         // Last step of registration
         return sendEmailVerificationLink(user_info.email, user_info.fullname);
+    },
+
+    async resetPassword(data, context)
+    {
+        // Generate the link for resetting password
+        const generate_password_reset_link = await ADMIN_AUTH.generatePasswordResetLink(data.email)
+        .then((link) => {
+            return {
+                data : {link},
+                error: null
+            }
+        })
+        .catch((error) => {
+            return {error}
+        });
+
+        // Immediately halt if there's no generated link
+        if(generate_password_reset_link.error)
+        {
+            return {error: generate_password_reset_link.error}
+        }
+
+        // Send the generated lin
+        const mail_options = {
+            to      : data.email,
+            from    : 'no-reply@kryptoone.com',
+            subject : 'Password Reset',
+            text    : passwordResetTemplate(data.email, generate_password_reset_link.data.link),
+            html    : passwordResetTemplate(data.email, generate_password_reset_link.data.link)
+        };
+
+        return sendMail(mail_options);
     }
 };
 

@@ -77,15 +77,15 @@
                 if(!DB_USER.getCurrentUser())
                 {
                     DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
-                        .then(() =>
-                        {
-                            // Do something here for successfully logged in user
-                            console.log(DB_USER.getCurrentUser())
-                        })
-                        .catch(error => {
-                            // Show a snackbar here
-                            console.log(error)
-                        })
+                    .then(() =>
+                    {
+                        // Do something here for successfully logged in user
+                        console.log(DB_USER.getCurrentUser())
+                    })
+                    .catch(error => {
+                        // Show a snackbar here
+                        console.log(error)
+                    })
                 } else {
                     console.log(DB_USER.getCurrentUser())
                 }
@@ -99,8 +99,7 @@
                 password      : {required}
             }
 
-        },
-        country_options: refs_countries
+        }
     }
 </script>
 

@@ -6,7 +6,7 @@ const FUNCTIONS = require('firebase-functions');
 
 const FUNCTIONS_REGION    = FUNCTIONS.region('us-central1');
 const FUNCTIONS_HTTPS     = FUNCTIONS_REGION.https; // FUNCTIONS.https
-const FUNCTIONS_FIRESTORE = FUNCTIONS_REGION.firestore;
+const FUNCTIONS_FIRESTORE = FUNCTIONS_REGION.firestore; // For triggers
 
 const authentication_controller = require('./controllers/Authentication');
 const account_controller        = require('./controllers/AccountController');
@@ -15,5 +15,6 @@ const account_controller        = require('./controllers/AccountController');
 //exports.registration = FUNCTIONS_HTTPS.onCall(authentication_controller.registration);
 
 // Account
-exports.register = FUNCTIONS_HTTPS.onCall(account_controller.register);
-exports.login    = FUNCTIONS_HTTPS.onCall(account_controller.login);
+exports.register      = FUNCTIONS_HTTPS.onCall(account_controller.register);
+exports.login         = FUNCTIONS_HTTPS.onCall(account_controller.login);
+exports.resetPassword = FUNCTIONS_HTTPS.onCall(account_controller.resetPassword);

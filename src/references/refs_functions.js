@@ -1,5 +1,5 @@
 
 export const
-FN_LOGIN                = `login`,
-FN_REGISTER             = `register`;
-
+FN_LOGIN               = `login`,
+FN_REGISTER            = `register`,
+FN_RESET_PASSWORD      = `resetPassword`;

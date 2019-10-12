@@ -19,4 +19,5 @@ yarn-error.log*
 *.njsproj
 *.sln
 functions/package-lock.json
+functions/.env
 firebase-debug.log
