@@ -17,16 +17,22 @@
                 <q-input dense
                          outlined
                          type="email"
-                         v-model="login_form_data.email"/>
+                         v-model="login_form_data.email"
+                         :error="$v.login_form_data.email.$error"
+                         :error-message="emailError"
+                         @blur="$v.login_form_data.email.$touch()"/>
 
                 <div class="q-pt-md">
                     Password
                 </div>
                 <q-input dense
                          outlined
+                         autocomplete="password"
                          v-model="login_form_data.password"
                          :type="isPassword ? 'password' : 'text'"
-                         autocomplete="password">
+                         :error="$v.login_form_data.password.$error"
+                         :error-message="passwordError"
+                         @blur="$v.login_form_data.password.$touch()">
                     <template v-slot:append>
                         <q-icon :name="isPassword ? 'visibility_off' : 'visibility'"
                                 class="cursor-pointer"
@@ -46,7 +52,8 @@
                            label="Back"
                            type="reset"
                            color="grey"
-                           class="q-mt-sm full-width" />
+                           class="q-mt-sm full-width"
+                           @click="$router.push('/')"/>
                 </div>
             </q-form>
         </q-page>
@@ -54,10 +61,13 @@
 </template>
 
 <script>
-    import refs_countries from "../../references/refs_countries";
+    import DB_USER           from "../../models/DB_USER"
 
-    import DB_USER from "../../models/DB_USER"
-    import {required}  from "vuelidate/lib/validators";
+    import {
+        required,
+        email,
+        minLength
+    } from "vuelidate/lib/validators";
 
     export default {
         name: "PFRegistration",
@@ -70,6 +80,22 @@
             },
             isPassword: true
         }),
+        computed: {
+            emailError()
+            {
+                return !this.$v.login_form_data.email.required
+                    ? 'Email is required'
+                        :!this.$v.login_form_data.email.email
+                    ? 'Invalid E-mail Address' : ''
+            },
+            passwordError()
+            {
+                return !this.$v.login_form_data.password.required
+                    ? 'Password is required'
+                       : !this.$v.login_form_data.email.minLength
+                    ? 'Must be atleast 6 characters long.' : ''
+            }
+        },
         methods:
         {
             async signInWithEmailAndPassword()
@@ -95,10 +121,13 @@
         {
             login_form_data:
             {
-                email         : {required},
-                password      : {required}
+                email     : {required, email},
+                password  :
+                {
+                    required,
+                    minLength: minLength(6)
+                }
             }
-
         }
     }
 </script>

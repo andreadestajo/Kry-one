@@ -5,7 +5,7 @@
                 <div class="text-h6">
                     KRYPTOONE
                     <div class="text-subtitle2">
-                      Create Account
+                        Think Ahead!
                     </div>
                 </div>
             </div>
@@ -74,14 +74,14 @@
                          type="submit"
                          color="primary"
                          class="full-width"
-                         @click="register()"
-                    ></q-btn>
+                         @click="register()"></q-btn>
 
                     <q-btn unelevated
                          label="Back"
                          type="reset"
                          color="grey"
-                         class="q-mt-sm full-width" />
+                         class="q-mt-sm full-width"
+                         @click="$router.push('/')"/>
                     </div>
             </q-form>
         </q-page>
