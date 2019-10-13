@@ -6,6 +6,10 @@ service cloud.firestore
 		match /employees/{employeeID}
 		{
 			allow read, write;
-		}
+		},
+		match /users/{userID}
+        {
+            allow read, write;
+        }
 	}
 }

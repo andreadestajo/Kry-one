@@ -1,5 +1,8 @@
 const {ADMIN_AUTH} = require('../plugin/firebase');
+const MDB_USER     = require('../models/MDB_USER');
+
 const {sendMail}   = require('../globals/EmailHelper');
+const {generateHashedId} = require('../globals/HashHelper');
 
 const {
     emailVerificationTemplate,
@@ -35,6 +38,12 @@ const sendEmailVerificationLink = async (email, fullname) =>
     return sendMail(mail_options);
 };
 
+const generateReferralCode = (email) => {
+    // Concert email to unicode char
+    const converted_email = email.split('').map((e,i) => email.charCodeAt(i));
+    return generateHashedId(...converted_email)
+};
+
 module.exports =
 {
     login (data, context)
@@ -45,7 +54,8 @@ module.exports =
 
     async register (data, context)
     {
-        const user_info     = data.registration_form_data;
+        const user_info       = data.registration_form_data;
+        user_info.referred_by = user_info.referral_code;
 
         // Create new user and return result
         const create_user = await ADMIN_AUTH.createUser
@@ -71,9 +81,13 @@ module.exports =
             return {error: create_user.error}
         }
 
+        // Generate short id as a referral code
+        user_info.referral_code = generateReferralCode(user_info.email);
+
         // Add new user data to collection
         const user_record   = create_user.data;
-        const add_user_info = user.doc(user_record.uid).set
+        delete user_info.password;
+        const add_user_info = MDB_USER.doc(user_record.uid).set
         ({
             emailVerified : user_record.emailVerified ? user_record.emailVerified : null,
             photoURL      : user_record.photoURL      ? user_record.photoURL      : null,

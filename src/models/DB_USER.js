@@ -2,7 +2,7 @@ import { DB, AUTH }   from "../boot/firebase";
 
 export default
 {
-    table: 'employees',
+    table: 'users',
 
     doc(id)
     {
@@ -11,16 +11,6 @@ export default
     collection(order_by = null)
     {
         let collection = DB.collection(this.table);
-
-        if(!order_by)
-        {
-            collection = collection.orderBy('series', 'desc');
-        }
-        else if(order_by === 'birthday')
-        {
-            collection = collection.orderBy('birthday', 'desc');
-        }
-
         return collection;
     },
     async add(data)
@@ -66,7 +56,30 @@ export default
     {
         return AUTH.currentUser
     },
-    logout() {
-        // Logout thingy here
-    }
+    getUserByEmailAddress(email) {
+        console.log('zz', email)
+        return this.collection()
+            .where("email", "==", email)
+            .limit(1)
+            .get()
+            .then(user => {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error => {
+                return {error}
+            })
+    },
+    getUserByReferralCode(referral_code) {
+        return this.collection()
+            .where("referral_code", "==", referral_code)
+            .limit(1)
+            .get()
+            .then(user => {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error => {
+                return {error}
+            })
+    },
+
 }

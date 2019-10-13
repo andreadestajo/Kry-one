@@ -61,7 +61,7 @@
 </template>
 
 <script>
-    import DB_USER           from "../../models/DB_USER"
+    import DB_USER           from "../../../models/DB_USER"
 
     import {
         required,
