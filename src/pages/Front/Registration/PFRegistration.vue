@@ -185,20 +185,21 @@
             async register()
             {
                 this.$v.registration_form_data.$touch();
-                if(!this.$v.registration_form_data.$error) {return 0}
+                if(!this.$v.registration_form_data.$error && this.$v.registration_form_data.$pending) { return 0}
 
                 this.$_showPageLoading({message: 'Creating an account.'});
                 await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
                 .then(data =>
                 {
-                    console.log(data);
-                    if(data.error)
-                    {
-                        console.log('Something went wrong!');
-                        return 0;
-                    }
+                    console.log('success')
                     this.$_hidePageLoading();
                     this.isRegistered = true;
+                })
+                .catch(error =>
+                {
+                    console.log('error');
+                    console.log(error.message);
+                    this.$_hidePageLoading();
                 })
             }
         },

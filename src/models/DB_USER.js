@@ -57,7 +57,6 @@ export default
         return AUTH.currentUser
     },
     getUserByEmailAddress(email) {
-        console.log('zz', email)
         return this.collection()
             .where("email", "==", email)
             .limit(1)

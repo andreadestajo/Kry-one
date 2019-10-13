@@ -1,4 +1,7 @@
-const {ADMIN_AUTH} = require('../plugin/firebase');
+const {
+    ADMIN_AUTH,
+    HTTPS_ERROR
+} = require('../plugin/firebase');
 const MDB_USER     = require('../models/MDB_USER');
 
 const {sendMail}   = require('../globals/EmailHelper');
@@ -72,7 +75,8 @@ module.exports =
         })
         .catch(function (error)
         {
-            return {error}
+            console.log(error);
+            HTTPS_ERROR('failed-precondition', error.errorInfo.message)
         });
 
         // Throw error and halt process

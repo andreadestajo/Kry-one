@@ -11,4 +11,4 @@ ADMIN.initializeApp({
 exports.ADMIN_DB   = ADMIN.firestore();
 exports.ADMIN_AUTH = ADMIN.auth();
 
-exports.HTTPS_ERROR = FUNCTIONS.https.HttpsError;
+exports.HTTPS_ERROR = (code, message) => {throw new FUNCTIONS.https.HttpsError(code, message)};
