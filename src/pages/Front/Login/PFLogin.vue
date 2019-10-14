@@ -29,14 +29,14 @@
                          outlined
                          autocomplete="password"
                          v-model="login_form_data.password"
-                         :type="isPassword ? 'password' : 'text'"
+                         :type="is_password ? 'password' : 'text'"
                          :error="$v.login_form_data.password.$error"
                          :error-message="passwordError"
                          @blur="$v.login_form_data.password.$touch()">
                     <template v-slot:append>
-                        <q-icon :name="isPassword ? 'visibility_off' : 'visibility'"
+                        <q-icon :name="is_password ? 'visibility_off' : 'visibility'"
                                 class="cursor-pointer"
-                                @click="isPassword = !isPassword"/>
+                                @click="is_password = !is_password"/>
                     </template>
                 </q-input>
 
@@ -78,7 +78,9 @@
                 email         : '',
                 password      : '',
             },
-            isPassword: true
+            is_password      : true,
+            is_show_message  : false,
+            unverified_email : ''
         }),
         computed: {
             emailError()
@@ -103,21 +105,22 @@
                 this.$v.login_form_data.$touch();
                 if(this.$v.login_form_data.$error) {return 0}
 
-                if(!DB_USER.getCurrentUser())
+                DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
+                .then(data =>
                 {
-                    DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
-                    .then(() =>
+                    // Check if user if email is verified.
+                    if(!data.user.emailVerified)
                     {
-                        // Do something here for successfully logged in user
-                        console.log(DB_USER.getCurrentUser())
-                    })
-                    .catch(error => {
-                        // Show a snackbar here
-                        console.log(error)
-                    })
-                } else {
-                    console.log(DB_USER.getCurrentUser())
-                }
+                        this.$router.push('unverified');
+                        return 0
+                    }
+
+                    // Continue with the login process here
+                })
+                .catch(error => {
+                    // Show a snackbar here
+                    console.log(error.message)
+                })
             }
         },
         validations: 

@@ -52,6 +52,9 @@ export default
     signIn(email, password) {
         return AUTH.signInWithEmailAndPassword(email, password)
     },
+    signOut() {
+        return AUTH.signOut()
+    },
     getCurrentUser()
     {
         return AUTH.currentUser

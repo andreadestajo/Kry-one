@@ -185,7 +185,7 @@
             async register()
             {
                 this.$v.registration_form_data.$touch();
-                if(!this.$v.registration_form_data.$error && this.$v.registration_form_data.$pending) { return 0}
+                if(this.$v.registration_form_data.$error || this.$v.registration_form_data.$pending) {return 0}
 
                 this.$_showPageLoading({message: 'Creating an account.'});
                 await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
@@ -221,16 +221,17 @@
                             .then(user => !user)
                     }
                 },
-                referral_code : {
+                referral_code :
+                {
                     required,
                     async doesExists(referral_code)
                     {
                         // Returns true if referral code belongs to an existing user.
-                        return await DB_USER.getUserByReferralCode(referral_code)
-                            .then(user => {
-                                this.referral_name = user && !user.error ? user.fullname : null;
-                                return !!user
-                            })
+                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        {
+                            this.referral_name = user && !user.error ? user.fullname : null;
+                            return !!user
+                        })
                     }
                 }
             }

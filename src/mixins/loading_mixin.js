@@ -25,7 +25,8 @@ export default {
                 spinnerColor : opts.spinnerColor
             });
         },
-        $_hidePageLoading(){
+        $_hidePageLoading()
+        {
             Loading.hide();
         }
     }

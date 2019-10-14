@@ -41,7 +41,8 @@ const sendEmailVerificationLink = async (email, fullname) =>
     return sendMail(mail_options);
 };
 
-const generateReferralCode = (email) => {
+const generateReferralCode = (email) =>
+{
     // Concert email to unicode char
     const converted_email = email.split('').map((e,i) => email.charCodeAt(i));
     return generateHashedId(...converted_email)

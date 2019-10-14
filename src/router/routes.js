@@ -6,6 +6,7 @@ const routes = [
         [
 			{ path: ''               , component: () => import('pages/Front/PFHome.vue') },
 			{ path: 'login'          , component: () => import('pages/Front/Login/PFLogin.vue') },
+			{ path: 'unverified'     , component: () => import('pages/Front/Login/PFUnverifiedUser.vue') },
 			{ path: 'register'       , component: () => import('pages/Front/Registration/PFRegistration.vue')},
 			{ path: 'forgotPassword' , component: () => import('pages/Front/PFForgotPassword') }
 		]
