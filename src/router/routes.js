@@ -14,19 +14,22 @@ const routes = [
 	
 	{
 		path: '/member', component: () => import('layouts/MemberLayout.vue'),
-		children: [
+		children:
+        [
 			{ path: '', component: () => import('pages/Member/PMDashboard.vue') }
 		]
 	},
 	{
 		path: '/admin', component: () => import('layouts/AdminLayout.vue'),
-		children: [
+		children:
+        [
 			{ path: '', component: () => import('pages/Admin/PADashboard.vue') }
 		]
 	},	
 	{
 		path: '/developer', component: () => import('layouts/DeveloperLayout.vue'),
-		children: [
+		children:
+        [
 			{ path: '', component: () => import('pages/Developer/PDDashboard.vue') }
 		]
 	},	
