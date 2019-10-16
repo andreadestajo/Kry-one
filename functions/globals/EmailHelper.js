@@ -1,14 +1,22 @@
 const NODEMAILER     = require('nodemailer');
 const SMTP_TRANSPORT = require('nodemailer-smtp-transport');
 
-const TRANSPORTER = NODEMAILER.createTransport(SMTP_TRANSPORT({
-    service : process.env.SMTP_SERVICE,
-    auth    :
-    {
-        user: process.env.SMTP_MAIL,
+const TRANSPORTER = NODEMAILER.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+        user: process.env.SMTP_USERMAME,
         pass: process.env.SMTP_PASSWORD
     }
-}));
+});
+
+TRANSPORTER.verify(function(error, success) {
+    if (error) {
+        console.log(error);
+    } else {
+        console.log("Server is ready to take our messages");
+    }
+});
 
 // Parameters for the sendMail function
 const default_mail_options =
