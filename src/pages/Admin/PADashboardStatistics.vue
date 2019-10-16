@@ -33,7 +33,6 @@
             </span>
         </k-card>
         <!--END NUMBER OF USERS-->
-
     </div>
 </template>
 

@@ -1,10 +1,12 @@
 <template>
     <div class="q-ma-lg">
-        <span class="text-subtitle1">Sales Breakdown</span>
+        <p class="text-subtitle1 text-grey-5">Sales Breakdown</p>
         <k-card class="shadow-1" :content_padding="false">
             <span slot="content">
             <q-list separator>
-                <q-item clickable v-for="item in $options.salesBreakdownItems">
+                <q-item class="q-pa-md"
+                        v-for="item in $options.salesBreakdownItems"
+                        :key="item.label">
                     <q-item-section avatar>
                       <q-icon color="primary" :name="item.icon" />
                     </q-item-section>
@@ -30,7 +32,7 @@
         components: {KCard},
         salesBreakdownItems: [
             {label: 'Daily Sales'   , icon: 'fas fa-calendar-day'},
-            {label: 'Week;y Sales'  , icon: 'far fa-calendar-alt'},
+            {label: 'Weekly Sales'  , icon: 'far fa-calendar-alt'},
             {label: 'Monthly Sales' , icon: 'calendar_today'},
             {label: 'Annual Sales'  , icon: 'fas fa-calendar'}
         ]

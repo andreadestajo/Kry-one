@@ -27,18 +27,18 @@
                   bordered
                   content-class="bg-grey-2">
             <q-list bordered separator>
-                <q-item>
-                    <div class="text-center q-pa-lg">
-                        <q-avatar size="100px">
+                <q-item class="full-width column no-wrap justify-center items-center content-center q-pa-lg text-grey-7">
+                    <span class="q-pa-sm">
+                        <q-avatar size="120px">
                             <img src="https://cdn.quasar.dev/img/avatar.png">
                         </q-avatar>
-                        <p>
-                            Admin <br/>
-                            admin@kryptoone.com
-                        </p>
-                    </div>
+                    </span>
+                    <span class="text-weight-bold">ADMIN</span>
+                    <span>admin@krypto.com</span>
                 </q-item>
-                <q-item clickable v-ripple :active="false"
+
+                <q-item class="text-grey-7"
+                        clickable v-ripple :active="false"
                         v-for="item in $options.navigations"
                         :key="item.label">
                     <q-item-section avatar>
@@ -73,8 +73,8 @@
         {label: 'User'            , icon: 'people'                  , side: '', route: ''},
         {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: ''},
         {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: ''},
-        {label: 'Commissions'     , icon: 'mdi-piggy-bank'          , side: '', route: ''},
-        {label: 'Monarchy View'   , icon: ''                        , side: '', route: ''},
+        {label: 'Commissions'     , icon: 'fas fa-street-view'          , side: '', route: ''},
+        {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'                        , side: '', route: ''},
         {label: 'Logout'          , icon: 'logout'                  , side: '', route: ''},
     ]
   }
