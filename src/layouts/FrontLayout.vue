@@ -1,7 +1,10 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <router-view />
-  </q-layout>
+	<q-layout view="lHh Lpr lFf">
+		<div class="sample">
+			HELLO WORLD
+		</div>
+		<router-view />
+	</q-layout>
 </template>
 
 <script>
@@ -15,3 +18,7 @@
     }
   }
 </script>
+
+<style>
+
+</style>
