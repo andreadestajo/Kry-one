@@ -1,20 +1,25 @@
 <template>
     <q-page-container>
-        <q-page class="q-pa-lg">
+        <q-page class="q-pa-lg login">
+
+            <!-- LOGO -->
             <div class="text-center">
-                <div class="text-h6">
-                    KRYPTOONE
-                    <div class="text-subtitle2">
-                        Think Ahead!
-                    </div>
+                <div class="login__logo">
+                    <q-img spinner-size="0" src="../statics/logo3.png"></q-img>
                 </div>
             </div>
 
-            <q-form class="q-pa-lg">
-                <div class="q-pt-md">
+            <div class="login__title">
+                <div class="sub">Sign in to continue</div>
+            </div>
+
+            <q-form class="q-pa-lg login__form">
+                <div class="label">
                     E-mail Address
                 </div>
                 <q-input dense
+                         class="input"
+                         placeholder="yourname@gmail.com"
                          outlined
                          type="email"
                          v-model="login_form_data.email"
@@ -22,12 +27,14 @@
                          :error-message="emailError"
                          @blur="$v.login_form_data.email.$touch()"/>
 
-                <div class="q-pt-md">
+                <div class="label">
                     Password
                 </div>
                 <q-input dense
+                         class="input"
                          outlined
                          autocomplete="password"
+                         placeholder="•••••••••••••••"
                          v-model="login_form_data.password"
                          :type="is_password ? 'password' : 'text'"
                          :error="$v.login_form_data.password.$error"
@@ -48,11 +55,11 @@
                            class="full-width"
                            @click="signInWithEmailAndPassword()"/>
 
-                    <q-btn unelevated
+                    <q-btn outline
                            label="Back"
                            type="reset"
-                           color="grey"
-                           class="q-mt-sm full-width"
+                            color="primary"
+                            class="q-mt-sm full-width"
                            @click="$router.push('/')"/>
                 </div>
             </q-form>
@@ -61,7 +68,8 @@
 </template>
 
 <script>
-    import DB_USER           from "../../../models/DB_USER"
+    import styles           from './PFLogin.scss';
+    import DB_USER          from "../../../models/DB_USER"
 
     import {
         required,

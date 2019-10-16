@@ -1,0 +1,49 @@
+.login {
+    background-color: #f3f3f3;
+    
+    &__logo {
+        width: 250px;
+        height: 71px;
+        margin: auto;
+    }
+
+    &__title {
+        text-align: center;
+        margin-top: -20px;
+    
+        .sub {
+            font-size: 14px;
+            color: $text-two;
+            font-weight: bold;
+        }
+    }
+
+    &__form {
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #eee;
+        margin-top: 20px;
+        border-radius: 5px;
+
+        .label {
+            color: $text-one;
+            margin-top: 5px;
+        }
+        .input {
+            input {
+                &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+                    color: $text-light;
+                    opacity: 1; /* Firefox */
+                  }
+                  
+                &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+                    color: $text-light;
+                  }
+                  
+                &::-ms-input-placeholder { /* Microsoft Edge */
+                    color: $text-light;
+                  }
+            }
+        }
+    }
+}

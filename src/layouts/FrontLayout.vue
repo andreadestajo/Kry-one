@@ -1,24 +1,18 @@
 <template>
 	<q-layout view="lHh Lpr lFf">
-		<div class="sample">
-			HELLO WORLD
-		</div>
 		<router-view />
 	</q-layout>
 </template>
 
 <script>
-  export default {
-    name: 'FrontLayout',
+import styles from './FrontLayout.scss';
 
-    data () {
-      return {
-        leftDrawerOpen: false
-      }
-    }
-  }
+export default
+{
+	name: 'FrontLayout',
+	data:() =>(
+	{
+		leftDrawerOpen: false
+	}),
+}
 </script>
-
-<style>
-
-</style>
