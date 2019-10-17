@@ -21,7 +21,7 @@
         <!-- BITCOIN -->
         <div class="dashboard__wallet member__card q-mt-md">
             <div class="value">0.00000028 BTC</div>
-            <div class="conversion">PHP 1,500.00 | USD 24.30 </div>
+            <div class="conversion">PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30 </div>
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
                 <q-btn flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
@@ -32,7 +32,7 @@
         <!-- UNIQ -->
         <div class="dashboard__wallet member__card q-mt-md">
             <div class="value">0.00000028 UNIQ</div>
-            <div class="conversion">PHP 1,500.00 | USD 24.30 </div>
+            <div class="conversion">PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30 </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
                 <q-btn flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
