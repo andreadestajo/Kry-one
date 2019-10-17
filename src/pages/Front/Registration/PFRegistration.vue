@@ -1,22 +1,26 @@
 <template>
     <div>
         <q-page-container>
-            <q-page class="q-pa-lg">
-                <div class="text-center q-pa-lg">
-                    <div class="text-h6">
-                        KRYPTOONE
-                        <div class="text-subtitle2">
-                            Think Ahead!
-                        </div>
+            <q-page class="q-pa-lg registration">
+
+                <!-- LOGO -->
+                <div class="text-center">
+                    <div class="login__logo">
+                        <q-img spinner-size="0" src="../statics/logo3.png"></q-img>
                     </div>
                 </div>
 
-                <q-form class="q-pa-lg"
-                        v-if="!isRegistered">
-                    <div class="q-pa-none">
+                <div class="registration__title">
+                    <div class="sub">Create An Account</div>
+                </div>
+
+                <q-form class="q-pa-lg registration__form" v-if="!isRegistered">
+                    <div class="q-pa-none label">
                         Full Name
                     </div>
                     <q-input dense
+                             placeholder="John Doe"
+                             class="input"
                              outlined
                              stack-label
                              v-model="registration_form_data.fullname"
@@ -24,10 +28,12 @@
                              :error-message="'Fullname is required'"
                              @blur="$v.registration_form_data.fullname.$touch()"/>
 
-                    <div class="q-pt-sm">
+                    <div class="label">
                         E-mail
                     </div>
                     <q-input dense
+                             placeholder="yournam@gmail.com"
+                             class="input"
                              outlined
                              type="email"
                              v-model="registration_form_data.email"
@@ -35,10 +41,12 @@
                              :error-message="emailError"
                              @blur="$v.registration_form_data.email.$touch()"/>
 
-                    <div class="q-pt-sm">
+                    <div class="label">
                         Password
                     </div>
                     <q-input dense
+                             class="input"
+                             placeholder="•••••••••••••••"
                              outlined
                              autocomplete="password"
                              :type="isPassword ? 'password' : 'text'"
@@ -53,10 +61,11 @@
                         </template>
                     </q-input>
 
-                    <div class="q-pt-sm">
+                    <div class="label">
                         Country
                     </div>
                     <q-select outlined
+                              class="input"
                               dense
                               v-model="registration_form_data.country"
                               :options="$options.country_options"
@@ -67,10 +76,12 @@
                               @blur="$v.registration_form_data.country.$touch()">
                     </q-select>
 
-                    <div class="q-pt-sm">
+                    <div class="label">
                         Referral Code
                     </div>
                     <q-input dense
+                             placeholder="KRPT01"
+                             class="input"
                              outlined
                              stack-label
                              v-model="registration_form_data.referral_code"
@@ -118,6 +129,7 @@
 
 <script>
     import PFRegistrationConfirmation from "./PFRegistrationConfirmation"
+    import styles           from './PFRegistration.scss';
 
     import refs_countries from "../../../references/refs_countries";
     import DB_USER        from "../../../models/DB_USER"

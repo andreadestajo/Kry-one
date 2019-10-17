@@ -4,7 +4,7 @@ dotenv.config();
 
 const FUNCTIONS = require('firebase-functions');
 
-const FUNCTIONS_REGION    = FUNCTIONS.region('us-central1');
+const FUNCTIONS_REGION    = FUNCTIONS.region('asia-northeast1');
 const FUNCTIONS_HTTPS     = FUNCTIONS_REGION.https; // FUNCTIONS.https
 const FUNCTIONS_FIRESTORE = FUNCTIONS_REGION.firestore; // For triggers
 
