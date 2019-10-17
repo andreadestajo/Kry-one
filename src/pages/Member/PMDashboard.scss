@@ -41,10 +41,11 @@
             &-button {
                 padding: 10px;
                 text-align: center;
-                background-color: #fff;
+                background-color: #fefefe;
                 font-weight: bold;
                 color: $text-one;
-                border: none !important;
+                border: 0 solid #333 !important;
+                border-radius: 0;
             }
         }
     }

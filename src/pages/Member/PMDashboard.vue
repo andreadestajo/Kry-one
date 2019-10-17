@@ -11,8 +11,8 @@
                 <div class="group-value next">KNIGHT</div>
             </div>
             <div class="action">
-                <q-btn flat class="action-button">Nobility</q-btn>
-                <q-btn flat class="action-button">Accelerate</q-btn>
+                <q-btn flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
+                <q-btn flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
             </div>
         </div>
 
