@@ -11,12 +11,14 @@
         .group {
             text-align: center;
             font-size: 14px;
+            margin-bottom: 5px;
 
             &-label {
                 color: $text-one;
             }
             &-value {
                 font-size: 20px;
+                margin-top: -5px;
 
                 &.current {
                     color: $primary;
@@ -27,26 +29,45 @@
                     font-weight: bold;
                 }
             }
+        } 
+    }
+
+    &__wallet {
+        text-align: center;
+
+        .value {
+            padding-top: 30px;
+            font-size: 24px;
+            color: $primary;
+            font-weight: bold;
         }
+        .conversion {
+            margin-top: -5px;
+            color: $text-light;
+        }
+        .label {
+            font-weight: bold;
+        }
+    }
 
-        .action {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-gap: 1px;
-            background-color: #eee;
+    .action {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 1px;
+        background-color: #eee;
 
-            border-top: 1px solid #eee;
-            margin-top: 20px;
+        border-top: 1px solid #eee;
+        margin-top: 20px;
 
-            &-button {
-                padding: 10px;
-                text-align: center;
-                background-color: #fefefe;
-                font-weight: bold;
-                color: $text-one;
-                border: 0 solid #333 !important;
-                border-radius: 0;
-            }
+        &-button {
+            padding: 10px;
+            text-align: center;
+            background-color: #fefefe;
+            font-weight: bold;
+            color: $text-one;
+            border: 0 solid #333 !important;
+            border-radius: 0;
+            font-size: 12px;
         }
     }
 }
