@@ -20,18 +20,18 @@
                 </q-input>
             </k-field>
             <k-field label="Upload ID (Front)">
-                <q-uploader  auto-upload label="ID Front" bordered flat url="http://localhost:4444/upload" style="max-width: 300px"/>
+                <k-uploader></k-uploader>
             </k-field>
 
             <k-field label="Upload ID (Back)">
-                <q-uploader auto-upload label="ID Back"  bordered flat url="http://localhost:4444/upload" style="max-width: 300px"/>
+                <k-uploader></k-uploader>
             </k-field>
-            <k-field label="Upload ID (Selfie)">
-                <q-uploader auto-upload label="Selfie Verification"  bordered flat url="http://localhost:4444/upload" style="max-width: 300px"/>
+            <k-field label="Upload ID (Selfie)" note="Take a picture holding the ID">
+                <k-uploader></k-uploader>
             </k-field>
 
             <q-btn unelevated label="Submit KYC" type="submit" color="primary" class="full-width"></q-btn>
-            <q-btn outline label="Back" type="submit" color="primary" class="full-width q-mt-sm"></q-btn>
+            <q-btn @click="$router.go(-1)" outline label="Back" type="submit" color="primary" class="full-width q-mt-sm"></q-btn>
         </q-form>
     </div>
 </template>
@@ -39,13 +39,14 @@
 <script>
 import KHeader from '../../../components/Member/KHeader'
 import KField from '../../../components/Member/KField'
+import KUploader from '../../../components/Member/KUploader'
 import { Quasar } from 'quasar';
 import { date } from 'quasar'
 import styles from './PMVerification.scss';
 
 export default
 {  
-    components: { KHeader, KField },
+    components: { KHeader, KField, KUploader },
     filters: { },
     data:() =>(
     {

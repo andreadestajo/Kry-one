@@ -1,6 +1,7 @@
 <template>
     <div class="kfield">
-        <div class="kfield__label">{{ label }}</div>
+        <div v-if="label" class="kfield__label">{{ label }}</div>
+        <div v-if="note" class="kfield__note">{{ note }}</div>
         <slot></slot>
     </div>
 </template>
@@ -10,6 +11,6 @@
     export default
     {
         name: "KField",
-        props: ['label']
+        props: ['label', 'note']
     }
 </script>

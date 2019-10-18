@@ -23,7 +23,7 @@
             <div class="icon"><q-icon name="warning"></q-icon></div>
             <div class="message">
                 <div class="message-title">Please verify your account</div>
-                <div class="message-detail">This warning is shown because your account is not yet verified. Sending wallet is not allowed unless your account is verified.</div>
+                <div class="message-detail">This warning is shown because your account is not yet verified.</div>
             </div>
         </div>
 
