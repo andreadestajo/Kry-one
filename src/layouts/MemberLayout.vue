@@ -70,15 +70,7 @@ export default
             }
             else
             {
-                if(route === this.$route.name)
-                {
-                    this.drawer = false;
-                }
-                else
-                {
-                    this.$router.push({ name: route });
-                }
-                
+                (route === this.$route.name) ? this.drawer = false : this.$router.push({ name: route });
             }
             
         }

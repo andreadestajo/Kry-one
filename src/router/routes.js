@@ -18,6 +18,7 @@ const routes = [
         [
 			{ name: 'member_dashboard',     path: '', component: () => import('pages/Member/Dashboard/PMDashboard.vue') },
 			{ name: 'member_wallet',        path: 'wallet', component: () => import('pages/Member/Wallet/PMWallet.vue') },
+			{ name: 'member_verification',  path: 'verification', component: () => import('pages/Member/Verification/PMVerification.vue') },
 			{ name: 'member_send',          path: 'wallet/send', component: () => import('pages/Member/Wallet/PMWalletSend.vue') },
 			{ name: 'member_receive',       path: 'wallet/receive', component: () => import('pages/Member/Wallet/PMWalletReceive.vue') },
 		]

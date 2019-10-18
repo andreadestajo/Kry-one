@@ -18,6 +18,15 @@
             </div>
         </div>
 
+        <!-- WARNNING -->
+        <div @click="$router.push({ name: 'member_verification' })" class="dashboard__warning q-mt-md">
+            <div class="icon"><q-icon name="warning"></q-icon></div>
+            <div class="message">
+                <div class="message-title">Please verify your account</div>
+                <div class="message-detail">This warning is shown because your account is not yet verified. Sending wallet is not allowed unless your account is verified.</div>
+            </div>
+        </div>
+
         <!-- BITCOIN -->
         <div class="dashboard__wallet member__card q-mt-md">
             <div class="value">0.00000028 BTC</div>
