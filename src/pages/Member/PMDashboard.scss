@@ -1,4 +1,6 @@
 .dashboard {
+    padding-bottom: 30px;
+
     &__header {
         background-color: $primary;
         height: 100px;
@@ -47,6 +49,44 @@
         }
         .label {
             font-weight: bold;
+        }
+    }
+
+    &__breakdown {
+        .subtitle {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .breakdown {
+            &-list {
+                display: grid;
+                grid-template-columns: auto 1fr 1fr;
+                align-items: center;
+                padding: 10px 20px;
+                grid-gap: 15px;
+                border-bottom: 1px solid #eee;
+            }
+            &-icon {
+                font-size: 24px;
+                color: $text-one;
+            }
+            &-label {
+                font-size: 14px;
+                color: $text-three;
+            }
+            &-value {
+                text-align: right;
+
+                .amount {
+                    font-weight: bold;
+                    color: $primary;
+                }
+                .conversion {
+                    color: $text-light;
+                }
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 <template>
     <q-layout class="member" view="lHh Lpr lFf">
-        <!--START HEADER-->
+        <!-- HEADER -->
         <q-header>
             <q-toolbar>
                 <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"/>
@@ -13,9 +13,8 @@
                 </q-btn>
             </q-toolbar>
         </q-header>
-        <!--END HEADER-->
 
-        <!--START DRAWER-->
+        <!-- DRAWER-->
         <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-2">
             <q-list bordered separator>
                 <q-item class="full-width column no-wrap justify-center items-center content-center q-pa-lg text-grey-7">
@@ -37,12 +36,10 @@
                 </q-item>
             </q-list>
         </q-drawer>
-        <!--END DRAWER-->
 
+        <!-- PAGES -->
         <q-page-container>
-            <!--START PAGES-->
             <router-view />
-            <!--END PAGES-->
         </q-page-container>
     </q-layout>
 </template>

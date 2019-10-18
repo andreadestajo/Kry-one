@@ -40,6 +40,20 @@
             </div>
         </div>
 
+        <!-- EARNING BREAKDOWN -->
+        <div class="dashboard__breakdown member__card q-mt-md">
+            <div class="subtitle">Earning Breakdown</div>
+            <div class="breakdown">
+                <div v-for="earning in earning_breakdown" :key="earning.label" class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon :name="earning.icon"></q-icon></div>
+                    <div class="breakdown-label">{{ earning.label }} </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ earning.amount }}</div>
+                        <div class="conversion">{{ earning.conversion }}</div>
+                    </div>
+                </div>  
+            </div>
+        </div>
 
     </div>
 </template>
@@ -49,7 +63,16 @@ import styles from './PMDashboard.scss';
 
 export default
 {
-    name: "PMDashboard"
+    name: "PMDashboard",
+    data: () =>
+    ({
+        earning_breakdown:
+        [
+            { label: 'Direct Referral', icon: 'fa fa-users', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
+            { label: 'Knight Match', icon: 'fa fa-hands-helping', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
+            { label: 'Team Override', icon: 'fa fa-layer-group', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
+        ],
+    }),
 }
 </script>
 
