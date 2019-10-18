@@ -15,23 +15,23 @@
         </q-header>
 
         <!-- DRAWER-->
-        <q-drawer v-model="drawer" show-if-above bordered content-class="bg-grey-2">
-            <q-list bordered separator>
-                <q-item class="full-width column no-wrap justify-center items-center content-center q-pa-lg text-grey-7">
-                    <span class="q-pa-sm">
+        <q-drawer  v-model="drawer" show-if-above>
+            <q-list class="member__sidebar" separator>
+                <q-item class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
+                    <span class="profile-avatar q-pa-sm">
                         <q-avatar size="120px">
-                            <img src="https://cdn.quasar.dev/img/avatar.png">
+                            <q-img spinner-size="0" src="../statics/girl.jpg"></q-img>
                         </q-avatar>
                     </span>
-                    <span class="text-weight-bold">ADMIN</span>
-                    <span>admin@krypto.com</span>
+                    <span class="profile-name text-weight-bold">Janel Cala</span>
+                    <span class="profile-email">janelcala@gmail.com</span>
                 </q-item>
 
-                <q-item class="text-grey-7" clickable v-ripple :active="false" v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
+                <q-item class="nav" :class="item.route === $route.name ? 'active' : ''" clickable v-ripple v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
                     <q-item-section avatar>
-                        <q-icon :name="item.icon" ></q-icon>
+                        <q-icon class="nav-icon" :name="item.icon" ></q-icon>
                     </q-item-section>
-                    <q-item-section>{{item.label}}</q-item-section>
+                    <q-item-section class="nav-label">{{ item.label }}</q-item-section>
                     <q-item-section side><!--You can put badge here--></q-item-section>
                 </q-item>
             </q-list>
@@ -56,9 +56,14 @@ export default
     }),
     navigations:
     [
-        {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'member_dashboard' },
-        {label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: 'member_wallet' },
-        {label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
+        { label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'member_dashboard' },
+        { label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: 'member_wallet' },
+        { label: 'Enlist Knight'   , icon: 'fa fa-chess-knight '     , side: '', route: 'member_enlist' },
+        { label: 'Invite Friends'  , icon: 'fa fa-address-book '     , side: '', route: 'member_invite' },
+        { label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', route: 'member_nobilities' },
+        { label: 'Cash Out'        , icon: 'fa fa-money-bill-alt '   , side: '', route: 'member_cashout' },
+        { label: 'Monarchy View'   , icon: 'fa fa-sitemap '          , side: '', route: 'member_monarchy' },
+        { label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
     ],
     methods:
     {

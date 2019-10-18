@@ -32,7 +32,8 @@
         {
             let thisref = this;
             this.file_reader = new FileReader();
-            this.file_reader.onload = function(fileLoadedEvent) {
+            this.file_reader.onload = function(fileLoadedEvent)
+            {
                 var srcData = fileLoadedEvent.target.result; // <--- data: base64
 
                 var newImage = document.createElement('img');
