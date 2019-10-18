@@ -20,14 +20,14 @@
                 </q-input>
             </k-field>
             <k-field label="Upload ID (Front)">
-                <k-uploader></k-uploader>
+                <k-uploader v-model="form.front_id"></k-uploader>
             </k-field>
 
             <k-field label="Upload ID (Back)">
-                <k-uploader></k-uploader>
+                <k-uploader v-model="form.back_id"></k-uploader>
             </k-field>
             <k-field label="Upload ID (Selfie)" note="Take a picture holding the ID">
-                <k-uploader></k-uploader>
+                <k-uploader v-model="form.selfie"></k-uploader>
             </k-field>
 
             <q-btn unelevated label="Submit KYC" type="submit" color="primary" class="full-width"></q-btn>
@@ -54,6 +54,9 @@ export default
             first_name: '',
             last_name: '',
             birthday: new Date(),
+            front_id: '',
+            back_id: '',
+            selfie: '',
         },
     }),
 }
