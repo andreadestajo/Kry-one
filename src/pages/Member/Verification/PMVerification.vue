@@ -19,7 +19,6 @@
                     </template>
                 </q-input>
             </k-field>
-
             <k-field label="Upload ID (Front)">
                 <q-uploader  auto-upload label="ID Front" bordered flat url="http://localhost:4444/upload" style="max-width: 300px"/>
             </k-field>
