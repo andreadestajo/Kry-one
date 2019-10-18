@@ -3,7 +3,7 @@
         <!-- HEADER -->
         <q-header>
             <q-toolbar>
-                <q-btn flat dense round @click="leftDrawerOpen = !leftDrawerOpen" icon="menu" aria-label="Menu"/>
+                <q-btn flat dense round @click="drawer = !drawer" icon="menu" aria-label="Menu"/>
                 <q-toolbar-title class="text-center">
                     KryptoOne™
                 </q-toolbar-title>
@@ -15,7 +15,7 @@
         </q-header>
 
         <!-- DRAWER-->
-        <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-2">
+        <q-drawer v-model="drawer" show-if-above bordered content-class="bg-grey-2">
             <q-list bordered separator>
                 <q-item class="full-width column no-wrap justify-center items-center content-center q-pa-lg text-grey-7">
                     <span class="q-pa-sm">
@@ -27,7 +27,7 @@
                     <span>admin@krypto.com</span>
                 </q-item>
 
-                <q-item class="text-grey-7" clickable v-ripple :active="false" v-for="item in $options.navigations" :key="item.label">
+                <q-item class="text-grey-7" clickable v-ripple :active="false" v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
                     <q-item-section avatar>
                         <q-icon :name="item.icon" ></q-icon>
                     </q-item-section>
@@ -52,18 +52,36 @@ export default
     name: 'AdminLayout',
     data: () =>
     ({
-        leftDrawerOpen: false
+        drawer: false
     }),
     navigations:
     [
-        {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: ''},
-        {label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: ''},
-        {label: 'User'            , icon: 'people'                  , side: '', route: ''},
-        {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: ''},
-        {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: ''},
-        {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: ''},
-        {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: ''},
-        {label: 'Logout'          , icon: 'logout'                  , side: '', route: ''},
-    ]
+        {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'member_dashboard' },
+        {label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: 'member_wallet' },
+        {label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
+    ],
+    methods:
+    {
+        goToRoute(route)
+        {
+            if(route === 'logout')
+            {
+                this.$router.push({ name: 'front_login' });
+            }
+            else
+            {
+                if(route === this.$route.name)
+                {
+                    this.drawer = false;
+                }
+                else
+                {
+                    this.$router.push({ name: route });
+                }
+                
+            }
+            
+        }
+    }
 }
 </script>
