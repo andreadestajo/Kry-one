@@ -10,6 +10,11 @@
         text-align: center;
         box-sizing: content-box;
     }
+    &__output {
+        img {
+            max-width: 100%;
+        }
+    }
     .hidden-uploader {
         display: none;
     }
