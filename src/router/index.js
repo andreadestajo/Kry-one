@@ -1,7 +1,8 @@
-import Vue from 'vue'
+import Vue       from 'vue'
 import VueRouter from 'vue-router'
+import routes    from './routes'
 
-import routes from './routes'
+import RouteGuard from './route_guards'
 
 Vue.use(VueRouter);
 
@@ -22,13 +23,8 @@ export default function (/* { store, ssrContext } */) {
     base: process.env.VUE_ROUTER_BASE
     });
 
-    // Global Nav Guards
-/*
-    Router.beforeEach((to, from, next) => {
-        console.log('okay naman here');
-        next()
-    });
-*/
+    // Global Nav Guardsss
+    Router.beforeEach(RouteGuard.beforeEachCallback);
 
     return Router
 }
