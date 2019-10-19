@@ -1,4 +1,4 @@
-import RouteGuard from './route_guards'
+import RouteGuard             from './route_guards'
 
 const routes = [
 	{
@@ -6,13 +6,12 @@ const routes = [
 		children:
         [
 			{ name: 'front_home',               path: ''               , component: () => import('pages/Front/PFHome.vue') },
-			{ name: 'front_login',              path: 'login'          , component: () => import('pages/Front/Login/PFLogin.vue') },
+			{ name: 'front_login',              path: 'login'          , beforeEnter: RouteGuard.beforeEnterLogin, component: () => import('pages/Front/Login/PFLogin.vue') },
 			{ name: 'front_unverified',         path: 'unverified'     , component: () => import('pages/Front/Login/PFUnverifiedUser.vue') },
 			{ name: 'front_register',           path: 'register'       , component: () => import('pages/Front/Registration/PFRegistration.vue')},
 			{ name: 'front_forgot_password',    path: 'forgotPassword' , component: () => import('pages/Front/PFForgotPassword') }
 		]
 	},
-	
 	{
 		path: '/member', component: () => import('layouts/MemberLayout.vue'),
         beforeEnter: RouteGuard.beforeEnterMember,

@@ -122,13 +122,15 @@
 
                     if(data)
                     {
-                        // Store user data to vuex
+                        this.$router.push('member');
+                        console.log(data);
                     }
                     this.$_hidePageLoading();
                 })
                 .catch(error => {
                     // Show a snackbar here
-                    console.log(error.message)
+                    console.log(error.message);
+                    this.$_hidePageLoading();
                 })
             }
         },

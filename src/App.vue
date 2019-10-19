@@ -5,52 +5,38 @@
 </template>
 
 <script>
-    import DB_USER from './models/DB_USER'
-    import {AUTH}  from './boot/firebase'
-
+    import {mapGetters} from 'vuex'
+    import {AUTH} from './boot/firebase'
+    import {GETTER_USER_AUTH_ID} from "./store/user-module/getters";
+    import DB_USER from "./models/DB_USER";
     import {MUTATION_SET_CURRENT_USER_DATA} from "./store/user-module/mutations";
 
-    export default {
-
+    export default
+    {
         name: 'App',
         data: () =>
         ({
-           currentUser: {}
+            currentUserData: {}
         }),
-        methods:
+        computed:
         {
-            setAuthStateObserver()
+            ...mapGetters(
             {
-                this.$_showPageLoading();
-                AUTH.onAuthStateChanged(async (user) =>
+                currentAuthId: GETTER_USER_AUTH_ID
+            })
+        },
+        watch:
+        {
+            async currentAuthId(authId)
+            {
+                if(authId)
                 {
-                    if (user)
-                    {
-                        await this.$bind('currentUser', DB_USER.doc(user.uid));
-
-                        // Manually change emailVerified status, pwede trigger or something else
-                        if(user.emailVerified && !this.currentUser.emailVerified)
-                        {
-                            DB_USER.update(user.uid, {emailVerified: true})
-                        }
-
-                        this.$_hidePageLoading();
-                    } else {
-                        this.$_hidePageLoading();
-                    }
-                });
-            }
-        },
-        mounted()
-        {
-            this.setAuthStateObserver();
-        },
-        watch: {
-            currentUser(data)
+                    await this.$bind('currentUserData', DB_USER.doc(authId));
+                }
+            },
+            currentUserData(userData)
             {
-                // Just put the data you need or you could also store everything
-                const userData = Object.assign({}, data);
-                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, userData);
+                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, userData)
             }
         }
     }
