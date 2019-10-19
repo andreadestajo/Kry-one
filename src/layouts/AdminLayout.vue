@@ -73,8 +73,8 @@
         {label: 'User'            , icon: 'people'                  , side: '', route: ''},
         {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: ''},
         {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: ''},
-        {label: 'Commissions'     , icon: 'fas fa-street-view'          , side: '', route: ''},
-        {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'                        , side: '', route: ''},
+        {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: ''},
+        {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: ''},
         {label: 'Logout'          , icon: 'logout'                  , side: '', route: ''},
     ]
   }
