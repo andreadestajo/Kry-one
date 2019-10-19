@@ -1,3 +1,6 @@
+$icon-size: 30px;
+$icon-padding: 20px;
+
 .wallet {
     &__tabs {
         .tab {
@@ -42,8 +45,36 @@
                 }
             }
             &-actions {
-                border-bottom: 1px solid #eee;
+                border-top: 1px solid #eee;
+                padding-top: 20px;  
                 margin-top: 20px;
+
+                .action {
+                    display: inline-block;
+                    vertical-align: top;
+                    
+                    &-icon {
+                        width: $icon-size;
+                        height: $icon-size;
+                        color: #fff;
+                        text-align: center;
+                        border-radius: 100%;
+                        margin: 0 5px;
+                        font-size: $icon-size;
+                        line-height: $icon-size;
+                        padding: $icon-padding;
+                        box-sizing: content-box;
+                        letter-spacing: 0;
+                        word-spacing: 0;
+
+                    }
+                    &-label {
+                        text-align: center;
+                        color: $text-three;
+                        margin-top: 3px;
+                        font-size: 14px;
+                    }
+                }
             }
         }
     }
