@@ -1,5 +1,6 @@
-$icon-size: 30px;
-$icon-padding: 20px;
+$icon-size: 25px;
+$icon-padding: 18px;
+$icon-spacing: 8px;
 
 .wallet {
     &__tabs {
@@ -59,7 +60,7 @@ $icon-padding: 20px;
                         color: #fff;
                         text-align: center;
                         border-radius: 100%;
-                        margin: 0 5px;
+                        margin: 0 $icon-spacing;
                         font-size: $icon-size;
                         line-height: $icon-size;
                         padding: $icon-padding;
