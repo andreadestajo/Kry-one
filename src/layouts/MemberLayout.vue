@@ -61,7 +61,6 @@ export default
         { label: 'Enlist Knight'   , icon: 'fa fa-chess-knight '     , side: '', route: 'member_enlist' },
         { label: 'Invite Friends'  , icon: 'fa fa-address-book '     , side: '', route: 'member_invite' },
         { label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', route: 'member_nobilities' },
-        { label: 'Cash Out'        , icon: 'fa fa-money-bill-alt '   , side: '', route: 'member_cashout' },
         { label: 'Monarchy View'   , icon: 'fa fa-sitemap '          , side: '', route: 'member_monarchy' },
         { label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
     ],

@@ -19,7 +19,7 @@
     }
     .input {
 
-        input {
+        input,textarea {
 
             
             &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -40,6 +40,7 @@
                 display: none;
             }
         }
+        
     }
     .currency-append {
         font-size: 14px;
