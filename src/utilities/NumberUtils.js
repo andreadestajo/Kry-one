@@ -13,9 +13,25 @@ export const formatNumber = (number, options = {}) =>
 
     if(options && options instanceof Object)
     {
+
+        // Format with decimal
+        if(options.hasOwnProperty('decimal'))
+        {
+            formatted_number = formatted_number.toFixed(options.decimal);
+        }
+
+        formatted_number = formatted_number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+
         // Format with padding
-        if(options.hasOwnProperty('pad')) {
+        if(options.hasOwnProperty('pad'))
+        {
             formatted_number = pad(formatted_number , options.pad);
+        }
+
+        // Format with padding
+        if(options.hasOwnProperty('currency'))
+        {
+            formatted_number = formatted_number + " " + options.currency;
         }
     }
 

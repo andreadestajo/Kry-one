@@ -1,7 +1,7 @@
 <template>
     <div class="wallet">
         <k-header icon="fa fa-wallet" detail="What would you like to do?">Wallet</k-header>
-        <div class="q-pt-md">
+        <div class="q-pt-md" v-if="ready">
             <div class="q-gutter-y-md">
                 <k-card>
                     <q-tabs class="wallet__tabs text-grey" v-model="tab" dense active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
@@ -16,11 +16,11 @@
                                 <div class="label">{{ currency.label }}</div>
                                 <div class="amount">
                                     <div class="amount-value">
-                                        <div class="actual">0.000000124</div>
+                                        <div class="actual">{{ $_formatNumber(currency.amount || 0, { decimal: currency.decimals }) }}</div>
                                         <div class="currency">{{ currency.abb }}</div>
                                     </div>
                                     <div class="amount-conversion">
-                                        PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30
+                                        {{ $_convertRate(currency.amount, 'PHP') }} <q-icon name="fa fa-exchange-alt"></q-icon>  {{ $_convertRate(currency.amount, 'USD') }}
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +55,19 @@ export default
     data:() =>(
     {
 		tab: 'uniq',
+        ready: false,
     }),
+    mounted()
+    {
+        //add random value for now (temporary)
+        this.$options.currency_options.forEach((currency) =>
+        {  
+            currency.amount = Math.floor(Math.random() * 10000000000) / 10000000000;
+        });
+
+        this.ready = true;
+
+    },
     methods: 
     {
         actionsList(actions)

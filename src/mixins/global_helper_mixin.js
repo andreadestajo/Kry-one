@@ -1,5 +1,6 @@
-import {formatNumber} from '../utilities/NumberUtils'
-import {formatDate}   from '../utilities/DateUtils'
+import {formatNumber} from '../utilities/NumberUtils';
+import {formatDate}   from '../utilities/DateUtils';
+import {convertRate}   from '../utilities/ConversionUtils';
 
 export default {
     methods: {
@@ -27,6 +28,19 @@ export default {
             const formatted_date = formatDate(date, options);
             // Just in case you wanna add another condition or formatter
             return formatted_date
+        },
+
+        /**
+         *
+         * @param amount
+         * @param currency
+         * @param options
+         * @returns {string} conversionRate
+         */
+        $_convertRate(amount, currency, options)
+        {
+            const conversionRate = convertRate(amount, currency, options);
+            return conversionRate;
         }
     }
 }
