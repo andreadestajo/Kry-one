@@ -1,9 +1,9 @@
 <template>
     <div class="wallet">
         <k-header icon="fa fa-wallet" detail="What would you like to do?">Wallet</k-header>
-        <div class="q-pa-md">
+        <div class="q-pt-md">
             <div class="q-gutter-y-md">
-                <q-card>
+                <k-card>
                     <q-tabs class="wallet__tabs text-grey" v-model="tab" dense active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                         <q-tab class="tab" v-for="currency in $options.currency_options" :key="currency.key" :name="currency.key" :label="currency.label" />
                     </q-tabs>
@@ -36,20 +36,21 @@
                             </div>
                         </q-tab-panel>
                     </q-tab-panels>
-                </q-card>
+                </k-card>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import KHeader from '../../../components/Member/KHeader'
+import KHeader from '../../../components/Member/KHeader';
+import KCard from '../../../components/Member/KCard';
 import styles from './PMWallet.scss';
 import ref_currencies from '../../../references/refs_currencies';
 
 export default
 {
-    components: { KHeader },
+    components: { KHeader, KCard },
     filters: { },
     data:() =>(
     {
