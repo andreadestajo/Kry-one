@@ -1,0 +1,113 @@
+.buy {
+    &__step {
+        .step {
+            &-button {
+                .icon {
+                    font-size: 12px;
+                    margin-left: 5px;
+                }
+                &.next {
+
+                }
+                &.back {
+
+                }
+            }
+
+            &.one {
+                .question {
+                    text-align: center;
+                    font-weight: bold;
+                    color: $text-one;
+                    font-size: 24px;
+                }
+                .choices {
+                    margin-top: 10px;
+                    text-align: center;
+
+                    &-choice {
+                        text-align: center;
+                        display: inline-block;
+                        width: 120px;
+
+                        .image {
+                            .img {
+                                width: 80%;
+                            }
+                        }
+                        .label {
+                            color: $text-three;
+                            margin-top: 5px;
+                        }
+                    }
+                }
+            }
+
+            &.two {
+                .form {
+                    &-info {
+                        padding-bottom: 10px;
+
+                        .group {
+                            text-align: center;
+                            margin-bottom: 10px;
+
+                            &-label {
+                                font-weight: bold;
+                            }
+                            &-value {
+                                background-color: #eee;
+                                padding: 5px;
+                                border-radius: 10px;
+                                font-size: 16px;
+                                color: $text-two;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &.three {
+                .question {
+                    text-align: center;
+                    font-weight: bold;
+                    color: $text-one;
+                    font-size: 24px;
+                }
+                .group {
+                    text-align: center;
+                    margin-top: 10px;
+
+                    .label {
+                        color: $text-three;
+                    }
+                    .value {
+                        font-weight: bold;
+
+                        .blue {
+                            color: $primary;
+                        }
+                    }
+
+                }
+            }
+        }
+        .q-stepper__title {
+            font-size: 11px !important;
+        }
+    }
+
+    &__dialog {
+        text-align: center;
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: $primary;
+        }
+        .detail {
+            font-size: 16px;
+            color: $text-three;
+        }
+    }
+}
