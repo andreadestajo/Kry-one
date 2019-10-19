@@ -23,7 +23,6 @@
                        class="q-mt-sm full-width"
                        @click="$router.push('register')"/>
             </div>
-
         </q-page>
     </q-page-container>
 </template>
