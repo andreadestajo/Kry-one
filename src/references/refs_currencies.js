@@ -1,6 +1,6 @@
 export default 
 [
-    { key: 'uniq', label: 'Uniq Wallet', currency: 'UNIQ' },
-    { key: 'btc', label: 'Bitcoin', currency: 'BTC' },
-    { key: 'eth', label: 'Ethereum', currency: 'ETH' },
+    { key: 'uniq', label: 'Uniq Wallet', abb: 'UNIQ' },
+    { key: 'btc', label: 'Bitcoin', abb: 'BTC' },
+    { key: 'eth', label: 'Ethereum', abb: 'ETH' },
 ]
