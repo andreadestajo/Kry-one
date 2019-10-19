@@ -30,4 +30,25 @@ export default
         console.log('okay naman dito');
         next();
     },
+
+    beforeEnterAdmin: (to, from, next) =>
+    {
+        // Get current user info
+        const user = DB_USER.getCurrentUser();
+
+        // If not authenticated redirect to login page
+        if(!user)
+        {
+            next('login');
+            return 0;
+        }
+
+        if(!user.emailVerified)
+        {
+            next('unverified');
+            return 0;
+        }
+
+
+    }
 }
