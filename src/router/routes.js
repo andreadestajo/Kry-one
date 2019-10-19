@@ -45,7 +45,10 @@ const routes = [
         [
 			{ path: '', component: () => import('pages/Developer/PDDashboard.vue') }
 		]
-	},	
+	},
+    {
+        path: '/error404', component: () => import('pages/Error404.vue')
+    }
 ];
 
 if (process.env.MODE !== 'ssr')

@@ -14,7 +14,8 @@ export const formatNumber = (number, options = {}) =>
     if(options && options instanceof Object)
     {
         // Format with padding
-        if(options.hasOwnProperty('pad')) {
+        if(options.hasOwnProperty('pad'))
+        {
             formatted_number = pad(formatted_number , options.pad);
         }
     }

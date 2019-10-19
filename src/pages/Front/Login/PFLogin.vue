@@ -113,20 +113,17 @@
                 this.$v.login_form_data.$touch();
                 if(this.$v.login_form_data.$error) {return 0}
 
+                // Start authenticating the user
                 this.$_showPageLoading({message: 'Logging in...'});
                 DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
                 .then(data =>
                 {
-                    // Check if user if email is verified.
-                    if(!data.user.emailVerified)
+                    if(!data) {return 0}
+
+                    if(data)
                     {
-                        this.$router.push('unverified');
-                        return 0
+                        // Store user data to vuex
                     }
-
-                    // Continue with the login process here
-                    this.$router.push('member');
-
                     this.$_hidePageLoading();
                 })
                 .catch(error => {

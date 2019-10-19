@@ -1,4 +1,5 @@
-import DB_USER from '../models/DB_USER'
+import DB_USER         from '../models/DB_USER'
+import {isAuthorized}  from '../globals/AuthenticationHelper'
 
 export default
 {
@@ -49,6 +50,15 @@ export default
             return 0;
         }
 
+        // Check if role
+        if(isAuthorized('admin'))
+        {
+
+        }
+    },
+
+    beforeEnterFront: (to, from, next) =>
+    {
 
     }
 }
