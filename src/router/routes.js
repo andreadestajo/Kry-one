@@ -20,8 +20,10 @@ const routes = [
         [
 			{ name: 'member_dashboard',     path: '', component: () => import('pages/Member/Dashboard/PMDashboard.vue') },
 			{ name: 'member_wallet',        path: 'wallet', component: () => import('pages/Member/Wallet/PMWallet.vue') },
-			{ name: 'member_send',          path: 'wallet/send', component: () => import('pages/Member/Wallet/PMWalletSend.vue') },
-			{ name: 'member_receive',       path: 'wallet/receive', component: () => import('pages/Member/Wallet/PMWalletReceive.vue') },
+			{ name: 'member_send',          path: 'wallet/send/:currency', component: () => import('pages/Member/Wallet/PMWalletSend.vue') },
+			{ name: 'member_receive',       path: 'wallet/receive/:currency', component: () => import('pages/Member/Wallet/PMWalletReceive.vue') },
+			{ name: 'member_history',       path: 'wallet/history/:currency', component: () => import('pages/Member/Wallet/PMWalletHistory.vue') },
+			{ name: 'member_convert',       path: 'wallet/convert/:currency', component: () => import('pages/Member/Wallet/PMWalletConvert.vue') },
 			{ name: 'member_verification',  path: 'verification', component: () => import('pages/Member/Verification/PMVerification.vue') },
 			{ name: 'member_enlist',        path: 'enlist', component: () => import('pages/Member/Enlist/PMEnlist.vue') },
 			{ name: 'member_invite',        path: 'invite', component: () => import('pages/Member/Invite/PMInvite.vue') },

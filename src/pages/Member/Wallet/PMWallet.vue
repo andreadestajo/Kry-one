@@ -24,7 +24,7 @@
 						</div>
 					</div>
 					<div class="panel-actions">
-						<div v-for="action in actionsList(currency.actions)" :key="action.key" class="action">
+						<div v-for="action in actionsList(currency.actions)" :key="action.key" class="action" @click="$router.push({ name: action.route, params: { currency: currency.key } })">
 							<div class="action-icon" :style="`background-color: ${action.color}`">
 								<q-icon class="icon" :name="action.icon"></q-icon>
 							</div>
@@ -72,10 +72,10 @@ export default
 	currency_options: ref_currencies,
 	action_options:
 	[
-		{ key: 'send', label: 'Send', icon: 'fa fa-paper-plane', color: '#4DB6AC', route: '' },
-		{ key: 'receive', label: 'Receive', icon: 'fa fa-qrcode', color: '#1277A8', route: '' },
-		{ key: 'convert', label: 'Convert', icon: 'fa fa-exchange-alt', color: '#D15400', route: '' },
-		{ key: 'history', label: 'History', icon: 'fa fa-history', color: '#ea4848', route: '' },
+		{ key: 'send', label: 'Send', icon: 'fa fa-paper-plane', color: '#4DB6AC', route: 'member_send' },
+		{ key: 'receive', label: 'Receive', icon: 'fa fa-qrcode', color: '#1277A8', route: 'member_receive' },
+		{ key: 'convert', label: 'Convert', icon: 'fa fa-exchange-alt', color: '#D15400', route: 'member_convert' },
+		{ key: 'history', label: 'History', icon: 'fa fa-history', color: '#ea4848', route: 'member_history' },
 	],
 }
 </script>
