@@ -13,8 +13,8 @@
                 <div class="group-value next">KNIGHT</div>
             </div>
             <div class="action">
-                <q-btn flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
-                <q-btn flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
+                <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
+                <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
             </div>
         </k-card>
 
@@ -45,7 +45,7 @@
             <div class="label">Uniq Wallet</div>
             <div class="action">
                 <q-btn flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
-                <q-btn flat class="action-button"><q-icon name="fa fa-shopping-cart"></q-icon> &nbsp; Buy Uniq</q-btn>
+                <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-shopping-cart"></q-icon> &nbsp; Buy Uniq</q-btn>
             </div>
         </k-card>
 

@@ -1,12 +1,15 @@
 <template>
     <div class="page-name">
-        CASH OUT
+        <k-header icon="" label="">Cashout</k-header>
     </div>
 </template>
 
 <script>
+import KHeader from '../../../components/Member/KHeader';
+
 export default
 {
+    components: { KHeader },
     filters: { },
     data:() =>(
     {
