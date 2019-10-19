@@ -1,0 +1,51 @@
+.wallet {
+    &__tabs {
+        .tab {
+
+        }
+    }
+
+    &__panel {
+        .panel {
+            &-container {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                padding-top: 10px;
+
+                .label {
+                    font-weight: bold;
+                    font-size: 16px;
+                    color: $text-two;
+                }
+                .amount {
+                    text-align: right;
+                    
+                    &-value {
+                        .actual {
+                            vertical-align: top;
+                            display: inline-block;
+                            font-size: 25px;
+                            line-height: 25px;
+                        }
+                        .currency {
+                            vertical-align: top;
+                            display: inline-block;
+                            color: $text-light;
+                            margin-left: 5px;
+                            
+                        }
+                    }
+                    &-conversion {
+                        color: $text-three;
+                        font-size: 12px;
+                    }
+                }
+            }
+            &-actions {
+                border-bottom: 1px solid #eee;
+                margin-top: 20px;
+            }
+        }
+    }
+    
+}
