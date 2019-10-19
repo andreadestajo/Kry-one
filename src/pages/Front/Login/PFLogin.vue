@@ -113,6 +113,7 @@
                 this.$v.login_form_data.$touch();
                 if(this.$v.login_form_data.$error) {return 0}
 
+                this.$_showPageLoading({message: 'Logging in...'});
                 DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
                 .then(data =>
                 {
@@ -124,6 +125,9 @@
                     }
 
                     // Continue with the login process here
+                    this.$router.push('member');
+
+                    this.$_hidePageLoading();
                 })
                 .catch(error => {
                     // Show a snackbar here
