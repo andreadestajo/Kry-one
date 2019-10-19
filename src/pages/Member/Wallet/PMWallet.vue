@@ -24,7 +24,14 @@
 						</div>
 					</div>
 					<div class="panel-actions">
-						
+						<div v-for="action in actionsList(currency.actions)" :key="action.key" class="action">
+							<div class="action-icon" :style="`background-color: ${action.color}`">
+								<q-icon class="icon" :name="action.icon"></q-icon>
+							</div>
+							<div class="action-label">
+								{{ action.label }}
+							</div>
+						</div>
 					</div>
 				</q-tab-panel>
 			</q-tab-panels>
@@ -45,6 +52,30 @@ export default
     {
 		tab: 'uniq',
     }),
+    methods: 
+    {
+        actionsList(actions)
+        {
+            let res = [];
+
+            this.$options.action_options.forEach((action) =>
+            {
+                if(actions.includes(action.key))
+                {
+                    res.push(action);
+                }
+            })
+
+            return res;
+        }
+    },
 	currency_options: ref_currencies,
+	action_options:
+	[
+		{ key: 'send', label: 'Send', icon: 'fa fa-paper-plane', color: '#4DB6AC', route: '' },
+		{ key: 'receive', label: 'Receive', icon: 'fa fa-qrcode', color: '#1277A8', route: '' },
+		{ key: 'convert', label: 'Convert', icon: 'fa fa-exchange-alt', color: '#D15400', route: '' },
+		{ key: 'history', label: 'History', icon: 'fa fa-history', color: '#ea4848', route: '' },
+	],
 }
 </script>
