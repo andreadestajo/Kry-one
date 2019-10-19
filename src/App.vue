@@ -6,10 +6,8 @@
 
 <script>
     import DB_USER from './models/DB_USER'
+    import {AUTH}  from './boot/firebase'
 
-    import {AUTH} from './boot/firebase'
-
-    import {GETTER_CURRENT_USER_DATA}       from "./store/user-module/getters";
     import {MUTATION_SET_CURRENT_USER_DATA} from "./store/user-module/mutations";
 
     export default {
@@ -28,13 +26,19 @@
                 {
                     if (user)
                     {
-                        await this.$bind('user', DB_USER.doc(user.uid));
+                        await this.$bind('currentUser', DB_USER.doc(user.uid));
+
+                        // Manually change emailVerified status, pwede trigger or something else
+                        if(user.emailVerified && !this.currentUser.emailVerified)
+                        {
+                            DB_USER.update(user.uid, {emailVerified: true})
+                        }
+
                         this.$_hidePageLoading();
                     } else {
                         this.$_hidePageLoading();
                     }
                 });
-                console.log('hey ka din')
             }
         },
         mounted()
@@ -44,7 +48,9 @@
         watch: {
             currentUser(data)
             {
-                console.log(data)
+                // Just put the data you need or you could also store everything
+                const userData = Object.assign({}, data);
+                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, userData);
             }
         }
     }

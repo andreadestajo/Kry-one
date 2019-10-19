@@ -24,6 +24,7 @@
                        @click="$router.push('register')"/>
             </div>
 
+            {{$_current_user_data}}
         </q-page>
     </q-page-container>
 </template>
