@@ -1,9 +1,10 @@
-import Vue from 'vue'
+import Vue       from 'vue'
 import VueRouter from 'vue-router'
+import routes    from './routes'
 
-import routes from './routes'
+import RouteGuard from './route_guards'
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 /*
  * If not building with SSR mode, you can
@@ -11,7 +12,7 @@ Vue.use(VueRouter)
  */
 
 export default function (/* { store, ssrContext } */) {
-  const Router = new VueRouter({
+    const Router = new VueRouter({
     scrollBehavior: () => ({ x: 0, y: 0 }),
     routes,
 
@@ -20,7 +21,10 @@ export default function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     mode: process.env.VUE_ROUTER_MODE,
     base: process.env.VUE_ROUTER_BASE
-  })
+    });
 
-  return Router
+    // Global Nav Guardsss
+    Router.beforeEach(RouteGuard.beforeEachCallback);
+
+    return Router
 }

@@ -1,3 +1,4 @@
+import RouteGuard from './route_guards'
 
 const routes = [
 	{
@@ -14,6 +15,7 @@ const routes = [
 	
 	{
 		path: '/member', component: () => import('layouts/MemberLayout.vue'),
+        beforeEnter: RouteGuard.beforeEnterMember,
 		children:
         [
 			{ name: 'member_dashboard',     path: '', component: () => import('pages/Member/Dashboard/PMDashboard.vue') },
