@@ -1,6 +1,7 @@
 <template>
   <div id="q-app">
-    <router-view />
+      <ks-splash-screen v-if="isPageLoading"/>
+      <router-view v-else/>
   </div>
 </template>
 
@@ -10,13 +11,16 @@
     import {GETTER_USER_AUTH_ID} from "./store/user-module/getters";
     import DB_USER from "./models/DB_USER";
     import {MUTATION_SET_CURRENT_USER_DATA} from "./store/user-module/mutations";
+    import KsSplashScreen from './components/KSplashScreen'
 
     export default
     {
         name: 'App',
+        components: {KsSplashScreen},
         data: () =>
         ({
-            currentUserData: {}
+            currentUserData : {},
+            isPageLoading   : true
         }),
         computed:
         {
@@ -25,14 +29,19 @@
                 currentAuthId: GETTER_USER_AUTH_ID
             })
         },
+        mounted()
+        {
+        },
         watch:
         {
             async currentAuthId(authId)
             {
                 if(authId)
                 {
+                    // TODO jolina 1:04 am
                     await this.$bind('currentUserData', DB_USER.doc(authId));
                 }
+                this.isPageLoading = false;
             },
             currentUserData(userData)
             {
