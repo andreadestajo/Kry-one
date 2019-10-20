@@ -34,6 +34,7 @@ const routes = [
 	},
 	{
 		path: '/admin', component: () => import('layouts/AdminLayout.vue'),
+        beforeEnter: RouteGuard.beforeEnterAdmin,
 		children:
         [
 			{ path: '', component: () => import('pages/Admin/PADashboard.vue') }
