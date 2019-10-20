@@ -30,7 +30,6 @@
                 <k-field label="Upload ID (Front)">
                     <k-uploader v-model="form.front_id"></k-uploader>
                 </k-field>
-                {{form.front_id}}
 
                 <!-- UPLOAD ID BACK -->
                 <k-field label="Upload ID (Back)">

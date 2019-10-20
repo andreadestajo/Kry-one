@@ -11,8 +11,30 @@
         box-sizing: content-box;
     }
     &__output {
-        img {
-            max-width: 100%;
+        position: relative;
+        .image {
+            line-height: 0;
+            img {
+                max-width: 100%;
+            }
+        }
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            text-align: center;
+            display: grid;
+            grid-template-columns: 1fr;
+            align-items: center;
+            justify-items: center;
+
+            .loader {
+                color: #fff;
+            }
+            
         }
     }
     .hidden-uploader {
