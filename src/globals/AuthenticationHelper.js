@@ -13,7 +13,7 @@ export const isAuthorized = (allowed_roles = null) =>
     if(!user_data) {return}
 
     // User only
-    if(!allowed_roles) {return true}
+        if(!allowed_roles) {return true}
 
     let user_roles = [];
 

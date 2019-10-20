@@ -44,6 +44,9 @@
             },
             currentUserData(userData)
             {
+                const _userData = Object.assign(userData);
+                _userData.uid   = this.currentAuthId;
+
                 this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, userData)
             }
         }

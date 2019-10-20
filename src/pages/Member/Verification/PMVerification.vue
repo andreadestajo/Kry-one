@@ -30,6 +30,7 @@
                 <k-field label="Upload ID (Front)">
                     <k-uploader v-model="form.front_id"></k-uploader>
                 </k-field>
+                {{form.front_id}}
 
                 <!-- UPLOAD ID BACK -->
                 <k-field label="Upload ID (Back)">
@@ -67,7 +68,7 @@ export default
             first_name: '',
             last_name: '',
             birthday: new Date(),
-            front_id: '',
+            front_id: 'not changed',
             back_id: '',
             selfie: '',
         },
