@@ -38,7 +38,6 @@
             {
                 if(authId)
                 {
-                    // TODO jolina 1:04 am
                     await this.$bind('currentUserData', DB_USER.doc(authId));
                 }
                 this.isPageLoading = false;

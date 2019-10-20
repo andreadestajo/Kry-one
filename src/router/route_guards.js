@@ -34,6 +34,9 @@ export default
                 }
                 else
                 {
+                    // Remove session from vuex
+                    Store().commit(MUTATION_SET_CURRENT_AUTH_ID, null);
+                    Store().commit(MUTATION_SET_CURRENT_USER_DATA, null);
                     next()
                 }
             });
@@ -63,7 +66,6 @@ export default
         }
 
         // Check if verified user
-        console.log('okay naman dito');
         next();
     },
 
@@ -86,16 +88,38 @@ export default
         }
 
         // Check if role
-        if(isAuthorized('admin'))
+        if(!isAuthorized('admin'))
         {
-
+            next('error404');
+            return 0;
         }
+
+        // Finally
+        next();
     },
 
     beforeEnterLogin: (to, from, next) =>
     {
-        console.log(DB_USER.getCurrentUser());
-        console.log('before login enter');
-        next();
+        if(isAuthorized())
+        {
+            // Check access
+            if(isAuthorized('developer'))
+            {
+                next('developer');
+                return 0;
+            }
+            else if (isAuthorized('admin'))
+            {
+                next('admin');
+            }
+            else
+            {
+                next('member');
+            }
+        }
+        else
+        {
+            next();
+        }
     }
 }
