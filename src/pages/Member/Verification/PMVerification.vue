@@ -30,7 +30,6 @@
                 <k-field label="Upload ID (Front)">
                     <k-uploader v-model="form.front_id"></k-uploader>
                 </k-field>
-                {{form.front_id}}
 
                 <!-- UPLOAD ID BACK -->
                 <k-field label="Upload ID (Back)">
@@ -58,6 +57,8 @@ import { Quasar } from 'quasar';
 import { date } from 'quasar'
 import styles from './PMVerification.scss';
 
+import {STORE_MEMBER_IDS} from "../../../references/refs_cloud_storage";
+
 export default
 {  
     components: { KHeader, KField, KUploader, KCard },
@@ -68,14 +69,17 @@ export default
             first_name: '',
             last_name: '',
             birthday: new Date(),
-            front_id: 'not changed',
+            front_id: '',
             back_id: '',
             selfie: '',
         },
     }),
+    methods:
+    {
+    },
     watch:
     {
-        form()
+        'form.front_id'()
         {
             console.log(this.form);
         }

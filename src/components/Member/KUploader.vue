@@ -4,13 +4,13 @@
             <q-icon name="fa fa-upload"></q-icon> Click here to upload
         </div>
         <div  v-if="uploading" class="kuploader__output" ref="upload_output">
-                <q-knob
-                    class="text-light-blue q-ma-md"
-                    show-value
-                    v-model="progress"
-                    size="50px"
-                    color="light-blue"
-                />
+            <q-knob
+                class="text-light-blue q-ma-md"
+                show-value
+                v-model="progress"
+                size="50px"
+                color="light-blue"
+            />
         </div>
         <input accept="image/*" @change="uploadFile()" ref="uploader" class="hidden-uploader" type="file">
     </div>
@@ -19,12 +19,16 @@
 <script>
     import styles from './KUploader.scss';
 
-    import {STORE_MEMBER_IDS} from "../../references/refs_cloud_storage";
+    import {STORAGE_ROOT} from "../../references/refs_cloud_storage";
 
     export default
     {
         name: "KUploader",
-        props: ['value'],
+        props:
+        {
+            value       : {type: String},
+            storage_ref : ''
+        },
         data:() =>(
         {
             file_reader : null,
@@ -39,6 +43,7 @@
         }),
         mounted()
         {
+
             let thisref = this;
             this.file_reader = new FileReader();
             this.file_reader.onload = function(fileLoadedEvent)
@@ -57,6 +62,8 @@
         {
             uploadFile()
             {
+                console.log(this.storage_ref);
+
                 this.uploading = true;
                 let image = this.$refs.uploader.files[0];
                 this.image.name = image.name;
@@ -77,7 +84,7 @@
                 const user_id    = this.$_current_user_data.uid;
                 const metadata   = {contentType: file.type};
 
-                const uploadTask = STORE_MEMBER_IDS(`IDS_${user_id}`).put(file, metadata);
+                const uploadTask = STORAGE_ROOT(`IDS_${user_id}`).put(file, metadata);
 
                 const _this = this;
                 return new Promise((resolve, reject) => {

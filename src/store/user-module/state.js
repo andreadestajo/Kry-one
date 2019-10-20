@@ -1,5 +1,5 @@
 export default
 {
-    userAuthId      : null,
-    currentUserData : null
+    userAuthId      : '',
+    currentUserData : ''
 }
