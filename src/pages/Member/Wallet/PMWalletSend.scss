@@ -1,0 +1,94 @@
+.send {
+    &__form {
+        .source {
+            display: grid;
+            grid-gap: 10px;
+            grid-template-columns: auto 1fr auto;
+            border: 1px solid #ccc;
+            padding: 10px 15px  ;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px rgba(77, 57, 57, 0.05) !important;
+            align-items: center;
+            cursor: pointer;
+
+            &-icon {
+                color: $text-light;
+                font-size: 16px;
+            }
+            &-value {
+                color: $text-two;
+            }
+            &-dropdown {
+                color: $text-light;
+            }
+        }
+    }
+
+    &__cwallet {
+
+        .toolbar {
+            border-bottom: 1px solid #eee;
+            background-color: #fafafa;
+        }
+
+        .content {
+            &-group {
+                display: grid;
+                grid-template-columns: 1fr 2fr;
+                align-items: center;
+                border-bottom: 1px solid #eee;
+                padding: 5px;
+                padding: 5px 20px;
+                
+                .left {
+                    font-size: 20px;   
+                    color: $text-one;
+                    font-weight: bold;   
+                    min-width: 150px;
+                }
+                .right {
+                    text-align: right;
+                    ;
+                    &-value {
+                        font-size: 20px;
+                        color: $text-one;
+                        
+                    }
+                    &-conversion {
+                        text-align: right;
+                        color: $text-light;
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
+
+    &__confirmation {
+        .toolbar {
+            border-bottom: 1px solid #eee;
+            background-color: #fafafa;
+        }
+        .content {
+            background-color: #eee;
+            padding: 0 20px;
+            padding-bottom: 20px;
+
+            &-group {
+                .label {
+
+                }
+                .value {
+                    &.charge {
+                        color: red;
+                    }
+                }
+                .conversion {
+                    color: $text-light;
+                    font-size: 12px;
+                    margin-top: -2px;
+                }
+            }
+        }
+    }
+}
