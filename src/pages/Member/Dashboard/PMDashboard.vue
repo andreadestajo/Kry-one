@@ -33,8 +33,8 @@
             <div class="conversion">PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30 </div>
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
-                <q-btn flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
-                <q-btn flat class="action-button"><q-icon name="fa fa-qrcode"></q-icon> &nbsp; Receive</q-btn>
+                <q-btn @click="$router.push({ name: 'member_send', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
+                <q-btn @click="$router.push({ name: 'member_receive', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="fa fa-qrcode"></q-icon> &nbsp; Receive</q-btn>
             </div>
         </k-card>
 
@@ -44,7 +44,7 @@
             <div class="conversion">PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30 </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
-                <q-btn flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
+                <q-btn @click="$router.push({ name: 'member_send', params: { currency: 'uniq' }})" flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
                 <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-shopping-cart"></q-icon> &nbsp; Buy Uniq</q-btn>
             </div>
         </k-card>
@@ -63,7 +63,6 @@
                 </div>  
             </div>
         </k-card>
-
     </div>
 </template>
 
