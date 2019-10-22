@@ -30,13 +30,19 @@ export default
                     // commit here
                     Store().commit(MUTATION_SET_CURRENT_AUTH_ID, user.uid);
                     Store().commit(MUTATION_SET_CURRENT_USER_DATA, currentUser);
+
+                    // Set local storage
+                    localStorage.setItem('auth_id', user.uid);
+
                     next()
                 }
                 else
                 {
-                    // Remove session from vuex
+                    // Remove sessions
                     Store().commit(MUTATION_SET_CURRENT_AUTH_ID, null);
                     Store().commit(MUTATION_SET_CURRENT_USER_DATA, null);
+                    localStorage.removeItem('auth_id');
+
                     next()
                 }
             });
