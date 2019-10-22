@@ -13,6 +13,13 @@
         margin-top: -10px;
     }
 
+    &__error {
+        font-size: 12px;
+        color: #FF0000;
+        padding-top: 5px;
+        margin-bottom: 5px;
+        margin-top: -5px;
+    }
 
     .q-field__inner {
         box-shadow: 1px 1px 3px rgba(77, 57, 57, 0.05) !important;

@@ -8,7 +8,7 @@ module.exports =
 	{
 	    console.log(data)
 	    console.log('pwede na besh')
-		return "registration"
+            return "registration"
 	},
     verifyEmail(request, response) {
 	    return null

@@ -2,7 +2,7 @@ import { DB } from "../boot/firebase";
 
 export default
 {
-    table: 'employees',
+    table: 'kycVerifications',
 
     doc(id)
     {
@@ -11,16 +11,6 @@ export default
     collection(order_by = null)
     {
         let collection = DB.collection(this.table);
-
-        if(!order_by)
-        {
-            collection = collection.orderBy('series', 'desc');
-        }
-        else if(order_by === 'birthdaAy')
-        {
-            collection = collection.orderBy('birthday', 'desc');
-        }
-
         return collection;
     },
     async add(data)
@@ -32,7 +22,7 @@ export default
     {
         let res     = await this.doc(id).get();
         let data    = res.data();
-        data.id     = res.id; 
+        data.id     = res.id;
         return data;
     },
     async getMany(order_by = null)

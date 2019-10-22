@@ -16,8 +16,7 @@
 </template>
 
 <script>
-    import styles from './KUploader.scss';
-
+    import styles         from './KUploader.scss';
     import {STORAGE_ROOT} from "../../references/refs_cloud_storage";
 
     export default
@@ -26,7 +25,7 @@
         props:
         {
             value       : {type: String},
-            storage_ref : ''
+            storage_ref : '' // default cloud storage would be root
         },
         data:() =>(
         {
@@ -43,18 +42,16 @@
         }),
         mounted()
         {
-
-            let thisref = this;
-            this.file_reader = new FileReader();
-            this.file_reader.onload = function(fileLoadedEvent)
+            this.file_reader        = new FileReader();
+            this.file_reader.onload = (fileLoadedEvent) =>
             {
                 var srcData = fileLoadedEvent.target.result; // <--- data: base64
 
                 var newImage = document.createElement('img');
                 newImage.src = srcData;
 
-                thisref.$refs.upload_output.innerHTML = newImage.outerHTML;
-                thisref.image = newImage.outerHTML;
+                this.$refs.upload_output.innerHTML = newImage.outerHTML;
+                this.image = newImage.outerHTML;
             }
         },
 
@@ -62,8 +59,6 @@
         {
             uploadFile()
             {
-                console.log(this.storage_ref);
-
                 this.uploading = true;
                 this.is_done   = false;
                 let image = this.$refs.uploader.files[0];
@@ -72,7 +67,7 @@
 
                 this.file_reader.readAsDataURL(image);
 
-                // Start uploading file here
+                // Start uploading the file here
                 this.storeToCloudStorage(image)
                     .then(url => {
                         this.$emit('input', url);
@@ -82,6 +77,11 @@
 
             },
             storeToCloudStorage(file) {
+                let STORAGE = null;
+                if(!this.storage_ref)
+                {
+                    STORAGE = STORAGE_ROOT((new Date).getTime())
+                }
 
                 const user_id    = this.$_current_user_data.uid;
                 const metadata   = {contentType: file.type};
