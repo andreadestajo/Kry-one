@@ -27,8 +27,8 @@ module.exports =
         await axios.get(url).then(function (response)
         {
             res = response.data;
-        })
-        .catch(function (error)
+            
+        }).catch(function (error)
         {
         });
         
