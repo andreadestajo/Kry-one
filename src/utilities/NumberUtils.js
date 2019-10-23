@@ -20,7 +20,7 @@ export const formatNumber = (number, options = {}) =>
             formatted_number = formatted_number.toFixed(options.decimal);
         }
 
-        formatted_number = formatted_number.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        formatted_number = formatted_number.toString().replace(/[^\d.,]/g, '');
 
         // Format with padding
         if(options.hasOwnProperty('pad'))
