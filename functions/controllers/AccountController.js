@@ -1,16 +1,8 @@
-const {
-    ADMIN_AUTH,
-    HTTPS_ERROR
-} = require('../plugin/firebase');
-const MDB_USER     = require('../models/MDB_USER');
-
-const {sendMail}   = require('../globals/EmailHelper');
-const {generateHashedId} = require('../globals/HashHelper');
-
-const {
-    emailVerificationTemplate,
-    passwordResetTemplate
-} = require('../references/ref_email_templates');
+const { ADMIN_AUTH, HTTPS_ERROR }   = require('../plugin/firebase');
+const MDB_USER                      = require('../models/MDB_USER');
+const {sendMail}                    = require('../globals/EmailHelper');
+const {generateHashedId}            = require('../globals/HashHelper');
+const { emailVerificationTemplate, passwordResetTemplate} = require('../references/ref_email_templates');
 
 const sendEmailVerificationLink = async (email, fullname) =>
 {
