@@ -77,16 +77,10 @@
 
             },
             storeToCloudStorage(file) {
-                let STORAGE = null;
-                if(!this.storage_ref)
-                {
-                    STORAGE = STORAGE_ROOT((new Date).getTime())
-                }
+                let STORAGE     = this.storage_ref ? this.storage_ref : STORAGE_ROOT((new Date).getTime());
+                const metadata  = {contentType: file.type};
 
-                const user_id    = this.$_current_user_data.uid;
-                const metadata   = {contentType: file.type};
-
-                const uploadTask = STORAGE_ROOT(`IDS_${user_id}`).put(file, metadata);
+                const uploadTask = STORAGE.put(file, metadata);
 
                 const _this = this;
                 return new Promise((resolve, reject) => {

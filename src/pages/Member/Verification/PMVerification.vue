@@ -114,12 +114,14 @@ import KField      from '../../../components/Member/KField';
 import KUploader   from '../../../components/Member/KUploader';
 import KCard       from '../../../components/Member/KCard';
 
+import {required}          from "vuelidate/src/validators";
+import {fbCall} 	       from "../../../utilities/Callables";
+import {FN_SUBMIT_KYC}     from "../../../references/refs_functions";
+import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
+
+
 import refs_countries from "../../../references/refs_countries";
 import refs_id_types  from "../../../references/refs_id_types";
-
-import {required}          from "vuelidate/src/validators";
-import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
-import DB_KYC_VERIFICATION from '../../../models/DB_KYC_VERIFICATION'
 
 import styles     from './PMVerification.scss';
 import { Quasar } from 'quasar';
@@ -150,17 +152,26 @@ export default
     {
         getStorageRef(type)
         {
+            console.log(`${type}_${(new Date).getTime()}`);
             return STORE_MEMBER_IDS(`${type}_${(new Date).getTime()}`)
         },
-        submitForm()
+        async submitForm()
         {
-            // TODO jln for testing puroses only.
+            console.table(this.form);
+            return 0;
+            // TODO jln for testing purposes only.
             this.$_showPageLoading();
-            DB_KYC_VERIFICATION.add(this.form)
-                .then(() =>
-                {
-                    this.$_hidePageLoading();
-                })
+            await fbCall(FN_SUBMIT_KYC, {kyc_form_data: JSON.stringify(this.form)})
+            .then(data =>
+            {
+                console.log('success');
+                this.$_hidePageLoading();
+            })
+            .catch(error =>
+            {
+                console.log(error);
+                this.$_hidePageLoading();
+            })
         }
     },
     watch:
