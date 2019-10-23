@@ -17,17 +17,24 @@
 
                 <!-- LAST NAME -->
                 <k-field label="Last Name">
-                    <q-input v-model="form.last_name" dense placeholder="Doe" class="input" outlined stack-label></q-input>
+                    <q-input :error="$v.form.last_name.$error"
+                             :error-message="'Last Name is required'"
+                             @blur="$v.form.last_name.$touch()"
+                             v-model="form.last_name" dense placeholder="Doe" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- MIDDLE NAME -->
                 <k-field label="Middle Name">
-                    <q-input v-model="form.middle_name" dense placeholder="Smith" class="input" outlined stack-label></q-input>
+                    <q-input :error="false"
+                             v-model="form.middle_name" dense placeholder="Smith" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- DATE OF BIRTH -->
                 <k-field label="Date of Birth">
-                    <q-input dense outlined v-model="form.birthdate" mask="date">
+                    <q-input :error="$v.form.birthdate.$error"
+                             :error-message="'Birthdate is required'"
+                             @blur="$v.form.birthdate.$touch()"
+                             dense outlined v-model="form.birthdate" mask="date">
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
@@ -40,12 +47,18 @@
 
                 <!-- STATE/CITY -->
                 <k-field label="State/City">
-                    <q-input v-model="form.state_city" dense placeholder="Manila" class="input" outlined stack-label></q-input>
+                    <q-input :error="$v.form.state_city.$error"
+                             :error-message="'State/City is required'"
+                             @blur="$v.form.state_city.$touch()"
+                             v-model="form.state_city" dense placeholder="Manila" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- COUNTRY -->
                 <k-field label="Where is your document issued?">
-                    <q-select outlined
+                    <q-select :error="$v.form.country.$error"
+                              :error-message="'This field is required'"
+                              @blur="$v.form.country.$touch()"
+                              outlined
                               class="input"
                               dense
                               v-model="form.country"
@@ -57,16 +70,22 @@
 
                 <!-- ID NUMBER -->
                 <k-field label="ID Number">
-                    <q-input v-model="form.id_number" dense placeholder="" class="input" outlined stack-label></q-input>
+                    <q-input :error="$v.form.id_number.$error"
+                             :error-message="'ID Number is required'"
+                             @blur="$v.form.id_number.$touch()"
+                             v-model="form.id_number" dense placeholder="" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- ID TYPE -->
                 <k-field label="ID Type">
-                    <q-select outlined
+                    <q-select :error="$v.form.id_type.$error"
+                              :error-message="'ID Type is required'"
+                              @blur="$v.form.id_type.$touch()"
+                              outlined
                               class="input"
                               dense
                               placeholder="Select your ID Types."
-                              v-model="form.country"
+                              v-model="form.id_type"
                               :options="$options.id_types_options"
                               option-value="code"
                               option-label="name">
@@ -75,7 +94,10 @@
 
                 <!-- ID EXPIRATION DATE -->
                 <k-field label="ID Expiry Date">
-                    <q-input dense outlined v-model="form.id_expiration_date" mask="date">
+                    <q-input :error="$v.form.id_expiration_date.$error"
+                             :error-message="'ID Expiry is required'"
+                             @blur="$v.form.id_expiration_date.$touch()"
+                             dense outlined v-model="form.id_expiration_date" mask="date">
                         <template v-slot:append>
                             <q-icon name="event" class="cursor-pointer">
                                 <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
@@ -87,18 +109,24 @@
                 </k-field>
 
                 <!-- UPLOAD ID FRONT -->
-                <k-field label="Upload ID (Front)">
-                    <k-uploader v-model="form.front_id" :storage_ref="getStorageRef('id_front')"></k-uploader>
+                <k-field label="Upload ID (Front)" :error_message="$v.form.front_id_url.$error ? 'Please upload file' : ''">
+                    <k-uploader v-model="form.front_id_url"
+                                :storage_ref="$options.STORE_MEMBER_IDS(`front_${(new Date).getTime()}`)">
+                    </k-uploader>
                 </k-field>
 
                 <!-- UPLOAD ID BACK -->
-                <k-field label="Upload ID (Back)">
-                    <k-uploader v-model="form.back_id" :storage_ref="getStorageRef('id_back')"></k-uploader>
+                <k-field label="Upload ID (Back)" :error_message="$v.form.back_id_url.$error ? 'Please upload file' : ''">
+                    <k-uploader v-model="form.back_id_url"
+                                :storage_ref="$options.STORE_MEMBER_IDS(`back_${(new Date).getTime()}`)">
+                    </k-uploader>
                 </k-field>
 
                 <!-- UPLOAD ID SELFIE -->
-                <k-field label="Upload ID (Selfie)" note="Take a picture holding the ID">
-                    <k-uploader v-model="form.selfie" :storage_ref="getStorageRef('selfie')"></k-uploader>
+                <k-field label="Upload ID (Selfie)" note="Take a picture holding the ID" :error_message="$v.form.selfie_url.$error ? 'Please upload file' : ''">
+                    <k-uploader v-model="form.selfie_url"
+                                :storage_ref="$options.STORE_MEMBER_IDS(`selfie_${(new Date).getTime()}`)">
+                    </k-uploader>
                 </k-field>
 
                 <q-btn unelevated label="Submit KYC" type="submit" color="primary" class="full-width" @click="submitForm()"></q-btn>
@@ -146,7 +174,7 @@ export default
             front_id_url       : '',
             back_id_url        : '',
             selfie_url         : ''
-        },
+        }
     }),
     methods:
     {
@@ -157,9 +185,9 @@ export default
         },
         async submitForm()
         {
-            console.table(this.form);
-            return 0;
-            // TODO jln for testing purposes only.
+            this.$v.form.$touch();
+            if(this.$v.form.$error || this.$v.form.$pending) {return 0}
+
             this.$_showPageLoading();
             await fbCall(FN_SUBMIT_KYC, {kyc_form_data: JSON.stringify(this.form)})
             .then(data =>
@@ -172,13 +200,6 @@ export default
                 console.log(error);
                 this.$_hidePageLoading();
             })
-        }
-    },
-    watch:
-    {
-        'form.front_id'()
-        {
-            console.log(this.form);
         }
     },
     validations:
@@ -198,6 +219,7 @@ export default
             selfie_url         : {required}
         }
     },
+    STORE_MEMBER_IDS,
     country_options : refs_countries,
     id_types_options: refs_id_types
 }
