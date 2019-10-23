@@ -25,7 +25,7 @@
 </template>
 
 <script>
-    import KCard from '../../components/Admin/KCard'
+    import KCard from '../../../components/Admin/KCard'
 
     export default {
         name: "PADashboardSalesBreakdown",

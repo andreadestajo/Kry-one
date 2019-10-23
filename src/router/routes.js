@@ -37,7 +37,8 @@ const routes = [
         beforeEnter: RouteGuard.beforeEnterAdmin,
 		children:
         [
-			{ path: '', component: () => import('pages/Admin/PADashboard.vue') }
+			{ name: 'admin_dashboard',   path: '', component: () => import('pages/Admin/Dashboard/PADashboard.vue') },
+			{ name: 'admin_kyc_submits', path: 'kycsubmits', component: () => import('pages/Admin/KycSubmits/PAKycSubmits.vue') }
 		]
 	},	
 	{
