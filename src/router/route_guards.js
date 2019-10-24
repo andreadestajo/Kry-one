@@ -117,10 +117,12 @@ export default
             else if (isAuthorized('admin'))
             {
                 next('admin');
+                return 0;
             }
             else
             {
                 next('member');
+                return 0;
             }
         }
         else

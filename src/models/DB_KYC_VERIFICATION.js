@@ -49,5 +49,8 @@ export default
     {
         return await this.doc(id).delete();
     },
-
+    bindKycVerifications(_this, name =  "kycVerifications")
+    {
+        return _this.$bind(name, this.collection().orderBy("status"))
+    }
 }

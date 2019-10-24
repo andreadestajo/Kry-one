@@ -37,10 +37,13 @@
                     <span>admin@krypto.com</span>
                 </q-item>
 
+
                 <q-item class="text-grey-7"
-                        clickable v-ripple :active="false"
+                        clickable v-ripple
+                        :active="false"
                         v-for="item in $options.navigations"
-                        :key="item.label">
+                        :key="item.label"
+                        @click="goToRoute(item.route)">
                     <q-item-section avatar>
                         <q-icon :name="item.icon" ></q-icon>
                     </q-item-section>
@@ -66,12 +69,27 @@
     ({
         leftDrawerOpen: false
     }),
+    methods:
+    {
+      goToRoute(route)
+      {
+        if(route === 'logout')
+        {
+          this.$router.push({ name: 'front_login' });
+        }
+        else
+        {
+          (route === this.$route.name) ? this.drawer = false : this.$router.push({ name: route });
+        }
+
+      }
+    },
     navigations:
     [
         {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: ''},
         {label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: ''},
         {label: 'User'            , icon: 'people'                  , side: '', route: ''},
-        {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: ''},
+        {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: 'admin_kyc_submits'},
         {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: ''},
         {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: ''},
         {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: ''},
