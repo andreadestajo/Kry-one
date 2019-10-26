@@ -23,8 +23,8 @@
                             <q-img spinner-size="0" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </span>
-                    <span class="profile-name text-weight-bold">{{ $_current_user_data.fullname }}</span>
-                    <span class="profile-email">{{ $_current_user_data.email }}</span>
+                    <span class="profile-name text-weight-bold">{{ }}</span>
+                    <span class="profile-email">{{}}</span>
                 </q-item>
 
                 <q-item class="nav" :class="item.route === $route.name ? 'active' : ''" clickable v-ripple v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
@@ -69,9 +69,15 @@ export default
     {
         goToRoute(route)
         {
+            this.$_log(this.$_current_user_data);
+
             if(route === 'logout')
             {
-                DB_USER.signOut();
+                DB_USER.signOut()
+                .then(() => {
+                    localStorage.removeItem('auth_id');
+                    this.$router.push({name: 'front_login'})
+                })
             }
             else
             {

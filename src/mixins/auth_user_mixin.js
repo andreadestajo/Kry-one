@@ -5,8 +5,9 @@ export default
 {
     computed:
     {
-        ...mapGetters({
-            $_current_user_data: [GETTER_CURRENT_USER_DATA]
-        })
+        $_current_user_data()
+        {
+            return this.$store.getters[GETTER_CURRENT_USER_DATA];
+        }
     }
 }

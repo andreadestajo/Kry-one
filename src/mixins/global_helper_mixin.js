@@ -51,6 +51,11 @@ export default {
             base       = base === "UNIQ" ? "XRP" : base;
             conversion = conversion === "UNIQ" ? "XRP" : conversion;
             return conversion + " " + this.$_formatNumber(this.currency[base][conversion] * amount, { decimal: 2 });
+        },
+
+        $_log(log, title)
+        {
+            console.log(title ? title : this.$route.name, log)
         }
     }
 }

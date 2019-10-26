@@ -15,7 +15,7 @@
                                label="View"
                                type="submit"
                                color="primary"
-                               @click="viewKycDetails()"></q-btn>
+                               @click="viewKycDetails(props.row)"></q-btn>
                     </q-td>
                 </q-tr>
             </template>
@@ -45,19 +45,20 @@
                 return this.kycSubmits.map(k =>
                 {
                     return {
-                        name  : formatFullname(k.first_name, k.last_name, k.middle_name),
-                        date  : this.$_formatDate(k.date_time_submitted.toDate(), 'MMMM DD, YYYY'),
-                        time  : this.$_formatDate(k.date_time_submitted.toDate(), 'hh:mm A'),
-                        status: k.status
+                        name    : formatFullname(k.first_name, k.last_name, k.middle_name),
+                        date    : this.$_formatDate(k.date_time_submitted.toDate(), 'MMMM DD, YYYY'),
+                        time    : this.$_formatDate(k.date_time_submitted.toDate(), 'hh:mm A'),
+                        status  : k.status,
+                        details : k
                     }
                 })
             }
         },
         methods:
         {
-            viewKycDetails()
+            viewKycDetails(kyc_data)
             {
-                this.$refs.kycDetailsModal.showKycDetailsModal()
+                this.$refs.kycDetailsModal.showKycDetailsModal(kyc_data.details)
             }
         },
         async mounted()
