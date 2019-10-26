@@ -14,7 +14,7 @@
                         <div class="time">2 minutes ago</div>
                     </div>
                 </div>
-                <div class="list">
+                <div class="list" @click="goToPage('member_dashboard')">
                     <div class="list-image">
                         <q-avatar>
                         <q-img src="../statics/girl.jpg"></q-img>
@@ -50,5 +50,15 @@ import styles      from './PMNotification.scss';
 export default
 {
     components: { KHeader, KCard },
+    methods: 
+    {
+        goToPage(route, params = null)
+        {
+            if(route)
+            {
+                this.$router.push({ name: route }, params);
+            }
+        }
+    }
 }
 </script>
