@@ -1,5 +1,11 @@
 <template>
     <div class="q-pa-lg">
+
+        <div>
+            Filter:
+            <q-select :options="[1,2,3,4]"></q-select>
+        </div>
+
         <q-table title="KYC Submits"
                  :data="kycSubmitsData"
                  :columns="$options.columns"

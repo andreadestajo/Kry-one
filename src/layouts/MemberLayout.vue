@@ -74,10 +74,6 @@ export default
             if(route === 'logout')
             {
                 DB_USER.signOut()
-                .then(() => {
-                    localStorage.removeItem('auth_id');
-                    this.$router.push({name: 'front_login'})
-                })
             }
             else
             {

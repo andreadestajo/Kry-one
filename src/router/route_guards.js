@@ -34,7 +34,8 @@ export default
                     // Set local storage
                     localStorage.setItem('auth_id', user.uid);
 
-                    next()
+                    next();
+                    return 0;
                 }
                 else
                 {
@@ -43,7 +44,8 @@ export default
                     Store().commit(MUTATION_SET_CURRENT_USER_DATA, null);
                     localStorage.removeItem('auth_id');
 
-                    next()
+                    next();
+                    return 0;
                 }
             });
         }

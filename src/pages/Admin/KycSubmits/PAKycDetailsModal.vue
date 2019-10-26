@@ -15,12 +15,24 @@
                         </q-input>
                     </k-field>
                 </div>
+
+                <div class="col-xs-12 col-sm-4 q-pa-sm" v-for="field in $options.img_fields" :key="field.key">
+                    <k-field  :label="field.label">
+                        <q-avatar square size="150px">
+                            <img :src="kyc_details_value[field.key]">
+                        </q-avatar>
+                    </k-field>
+                </div>
             </div>
         </div>
 
         <div slot="modal-footer">
-            <q-btn flat label="Accept" @click="secondDialog = true" />
-            <q-btn color="red" flat label="Reject" v-close-popup />
+            <span v-if="kyc_details_value.status === 'pending'">
+                <q-btn flat label="Accept" @click="confirmSubmit(1)" />
+                <q-btn color="red" flat label="Reject" @click="confirmSubmit()"/>
+            </span>
+
+            <q-btn color="grey" flat label="Close" @click="$refs.kModalRef.hideModal()"/>
         </div>
     </k-modal>
 </template>
@@ -29,10 +41,13 @@
     import KField from "../../../components/Admin/KField";
     import KModal from "../../../components/Admin/KModal"
 
+    import DB_KYC_VERIFICATION from "../../../models/DB_KYC_VERIFICATION"
+
     export default
     {
         name: "PAKycDetailsModal",
-        components: {
+        components:
+        {
             KField,
             KModal
         },
@@ -59,7 +74,6 @@
         {
             showKycDetailsModal(kyc_details)
             {
-                // Initialize data here
                 this.setKycDetails(kyc_details);
                 this.$refs.kModalRef.showModal();
             },
@@ -69,10 +83,27 @@
                 {
                     birthdate          : this.$_formatDate(kyc_details.birthdate.toDate()),
                     country            : kyc_details.country.name,
-                    id_expiration_date : this.$_formatDate(kyc_details.id_expiration_date.toDate())
+                    id_expiration_date : this.$_formatDate(kyc_details.id_expiration_date.toDate()),
+                    id                 : kyc_details.id
                 };
 
                 this.kyc_details_value = Object.assign({}, kyc_details, formatted_details);
+            },
+            confirmSubmit(is_accepted)
+            {
+                const message  = `Are you sure you want to ${is_accepted ? 'accept' : 'reject'} kyc verification?`;
+
+                const callback = () =>
+                {
+                    DB_KYC_VERIFICATION.update
+                    (
+                        this.kyc_details_value.id,
+                        {status: is_accepted ? 'approved' : 'rejected'}
+                    );
+                    this.$refs.kModalRef.hideModal()
+                };
+
+                this.$_showConfirmDialog(message, callback);
             }
         },
         text_fields:
@@ -86,6 +117,12 @@
             {key: 'id_type'             , label: 'ID Type'},
             {key: 'id_number'           , label: 'ID Number'},
             {key: 'id_expiration_date'  , label: 'ID Expiry Date'},
+        ],
+        img_fields:
+        [
+            {key: 'front_id_url' , label: 'ID (Front)'},
+            {key: 'back_id_url'  , label: 'ID (Back)'},
+            {key: 'selfie_url'   , label: 'ID (Selfie)'}
         ]
     }
 </script>

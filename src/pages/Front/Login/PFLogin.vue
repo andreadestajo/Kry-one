@@ -123,7 +123,6 @@
                     if(data)
                     {
                         this.$router.push('member');
-                        console.log(data);
                     }
                     this.$_hidePageLoading();
                 })

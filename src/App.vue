@@ -2,11 +2,13 @@
   <div id="q-app">
       <ks-splash-screen v-if="is_page_loading"/>
       <router-view v-else/>
+      <k-confirm-dialog />
   </div>
 </template>
 
 <script>
     import KsSplashScreen from './components/KSplashScreen'
+    import KConfirmDialog from './components/Shared/KConfirmDialog'
 
     import DB_USER        from "./models/DB_USER";
     import DB_CURRENCY    from "./models/DB_CURRENCY"
@@ -24,7 +26,10 @@
     export default
     {
         name: 'App',
-        components: {KsSplashScreen},
+        components: {
+            KsSplashScreen,
+            KConfirmDialog
+        },
         data: () =>
         ({
             current_user_data : {},
@@ -44,7 +49,6 @@
 
             if(auth_id)
             {
-                console.log('luhhh di nag work?', auth_id);
                 this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, auth_id)
             }
         },

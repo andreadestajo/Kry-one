@@ -4,9 +4,10 @@ import Vuex from 'vuex'
 // import example from './module-example'
 import User     from './user-module'
 import Currency from './currency-module'
+import Shared   from './shared-module'
 
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 /*
  * If not building with SSR mode, you can
@@ -17,7 +18,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
         User,
-        Currency
+        Currency,
+        Shared
     },
 
     // enable strict mode (adds overhead!)
