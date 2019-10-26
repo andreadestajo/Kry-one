@@ -1,16 +1,23 @@
 <template>
 	<div>
-		<q-btn @click="callLogin()">Sample Login Call</q-btn>
-		<q-btn @click="callRegister()">Sample Register Call</q-btn>
-		<q-btn @click="callAddData()">Add Data on DB</q-btn>
-		<q-btn @click="callSingleGetData()">Get Single Data from DB</q-btn>
-		<q-btn @click="callManyGetData()">Get Collection Data from DB</q-btn>
-		<q-btn @click="callBindData()">Bind Data from DB</q-btn>
-		<q-btn @click="callBindManyData()">Bind Many Data from DB</q-btn>
-		<q-btn @click="callUpdateData()">Update Data on DB</q-btn>
-		<q-btn @click="callDeleteData()">Delete Data on DB</q-btn>
-		<q-btn @click="callCustom()">Call Custom</q-btn>
+        <div class="q-pa-lg">
+            <div class="q-pa-lg text-center">Initial Test</div>
+            <q-btn @click="callLogin()">Sample Login Call</q-btn>
+            <q-btn @click="callRegister()">Sample Register Call</q-btn>
+            <q-btn @click="callAddData()">Add Data on DB</q-btn>
+            <q-btn @click="callSingleGetData()">Get Single Data from DB</q-btn>
+            <q-btn @click="callManyGetData()">Get Collection Data from DB</q-btn>
+            <q-btn @click="callBindData()">Bind Data from DB</q-btn>
+            <q-btn @click="callBindManyData()">Bind Many Data from DB</q-btn>
+            <q-btn @click="callUpdateData()">Update Data on DB</q-btn>
+            <q-btn @click="callDeleteData()">Delete Data on DB</q-btn>
+            <q-btn @click="callCustom()">Call Custom</q-btn>
+        </div>
 
+        <div class="q-pa-lg">
+            <div class="q-pa-lg text-center">Trigger Testing</div>
+            <q-btn @click="triggerUserCreate()">User Create (createInitializeWallet)</q-btn>
+        </div>
 		<q-input v-model="last_id"></q-input>
 	</div>
 </template>
@@ -26,12 +33,17 @@ export default
 	name: "PDDeveloper",
 	data:  () => (
 	{ 
-		last_id: "NO ID YET",
+		last_id: "",
 		employee_list: [],
 		employee_info: null,
 	}),
 	methods:
 	{
+        async triggerUserCreate()
+        {
+			let res = await fbCall('testInitializeWallet', { uid: this.last_id });
+			console.log(res.data);
+        },
 		async callLogin()
 		{
 			console.log(FN_LOGIN);

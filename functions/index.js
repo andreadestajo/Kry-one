@@ -21,8 +21,11 @@ exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.regi
 exports.login                   = FUNCTIONS_HTTPS.onCall(account_controller.login);
 exports.resetPassword           = FUNCTIONS_HTTPS.onCall(account_controller.resetPassword);
 
-//schedules
-exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 5 minutes').onRun(schedule_controller.updateCurrency);
+// Schedules
+exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onRun(schedule_controller.updateCurrency);
 
-//Triggers
-exports.trigger_user_create     = FUNCTIONS_FIRESTORE.document('/user').onCreate(user_trigger.create);
+// Triggers
+exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onCreate(user_trigger.create);
+
+//Test Calls
+exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);
