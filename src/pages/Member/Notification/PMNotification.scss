@@ -1,0 +1,28 @@
+.notification {
+    &__list {
+        .list {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 20px;
+            border-bottom: 1px solid #eee;
+
+
+            &-image {
+
+            }
+            &-detail {
+                .detail {
+                    color: $text-one;
+                }
+                .time {
+                    color: $text-light;
+                }
+            }
+
+            &.new {
+                background-color: #fbfbfb;
+            }
+        }
+    }
+}

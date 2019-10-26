@@ -20,7 +20,7 @@
                 <q-item class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
                     <span class="profile-avatar q-pa-sm">
                         <q-avatar size="120px">
-                            <q-img spinner-size="0" src="../statics/boy.jpg"></q-img>
+                            <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </span>
                     <span class="profile-name text-weight-bold">{{ }}</span>
