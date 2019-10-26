@@ -20,12 +20,15 @@ module.exports =
         let currency_list = await MDB_CURRENCY.getMany();
         let promise_list  = [];
 
-        currency_list.forEach((currency, i) =>
+        if(uid)
         {
-            console.log(currency.id);
-            let initial_data = { key: currency.id, address: '', wallet: 0, last_update: new Date(), log_count: 0, index: i };
-            promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));
-        });
+            currency_list.forEach((currency, i) =>
+            {
+                console.log(currency.id);
+                let initial_data = { key: currency.id, address: '', wallet: 0, last_update: new Date(), log_count: 0, index: i };
+                promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));
+            });
+        }
 
         await Promise.all(promise_list).then((res) =>
         {
