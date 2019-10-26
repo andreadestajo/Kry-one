@@ -46,12 +46,14 @@ export default {
          * @param options
          * @returns {string} conversionRate
          */
-        $_convertRate(amount, base, conversion)
+        $_convertRate(amount, base, conversion, options)
         {
             base       = base === "UNIQ" ? "XRP" : base;
             conversion = conversion === "UNIQ" ? "XRP" : conversion;
 
-            console.log(this.currency);
+            console.log(this.currency[base][conversion]);
+
+            return conversion + " " + this.$_formatNumber(this.currency[base][conversion] * amount, { decimal: 2 });
         }
     }
 }
