@@ -6,7 +6,7 @@
                 <div class="list new">
                     <div class="list-image">
                         <q-avatar>
-                        <q-img src="../statics/boy.jpg"></q-img>
+                            <q-img spinner-size="0" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </div>
                     <div class="list-detail">
@@ -17,7 +17,7 @@
                 <div class="list" @click="goToPage('member_dashboard')">
                     <div class="list-image">
                         <q-avatar>
-                        <q-img src="../statics/girl.jpg"></q-img>
+                            <q-img  spinner-size="0" src="../statics/girl.jpg"></q-img>
                         </q-avatar>
                     </div>
                     <div class="list-detail">
@@ -29,11 +29,11 @@
                 <div class="list">
                     <div class="list-image">
                         <q-avatar>
-                        <q-img src="../statics/boy.jpg"></q-img>
+                            <q-img  spinner-size="0" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </div>
                     <div class="list-detail">
-                        <div class="detail"><b>Guillermo Tabligan</b> is crying.</div>
+                        <div class="detail"><b>Guillermo Tabligan</b> is crying. T____T</div>
                         <div class="time">30 minutes ago</div>
                     </div>
                 </div>
