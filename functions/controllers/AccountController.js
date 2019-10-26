@@ -86,9 +86,9 @@ module.exports =
         delete user_info.password;
         const add_user_info = MDB_USER.doc(user_record.uid).set
         ({
-            emailVerified : user_record.emailVerified ? user_record.emailVerified : null,
-            photoURL      : user_record.photoURL      ? user_record.photoURL      : null,
-            phoneNumber   : user_record.phoneNumber   ? user_record.phoneNumber   : null,
+            email_verified : user_record.emailVerified ? user_record.emailVerified : null,
+            photo_url      : user_record.photoURL      ? user_record.photoURL      : null,
+            phone_number   : user_record.phoneNumber   ? user_record.phoneNumber   : null,
             ...user_info,
         })
         .then(() =>

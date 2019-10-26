@@ -23,10 +23,10 @@
                              class="input"
                              outlined
                              stack-label
-                             v-model="registration_form_data.fullname"
-                             :error="$v.registration_form_data.fullname.$error"
-                             :error-message="'Fullname is required'"
-                             @blur="$v.registration_form_data.fullname.$touch()"/>
+                             v-model="registration_form_data.full_name"
+                             :error="$v.registration_form_data.full_name.$error"
+                             :error-message="'full name is required'"
+                             @blur="$v.registration_form_data.full_name.$touch()"/>
 
                     <div class="label">
                         E-mail
@@ -152,7 +152,7 @@
         ({
             registration_form_data:
             {
-                fullname      : '',
+                full_name      : '',
                 email         : '',
                 password      : '',
                 country       : '',
@@ -219,7 +219,7 @@
         {
             registration_form_data:
             {
-                fullname      : {required},
+                full_name     : {required},
                 password      : {required, minLength: minLength(6)},
                 country       : {required},
                 email         :
@@ -241,7 +241,7 @@
                         // Returns true if referral code belongs to an existing user.
                         return await DB_USER.getUserByReferralCode(referral_code).then(user =>
                         {
-                            this.referral_name = user && !user.error ? user.fullname : null;
+                            this.referral_name = user && !user.error ? user.full_name : null;
                             return !!user
                         })
                     }
