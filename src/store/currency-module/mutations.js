@@ -4,6 +4,16 @@ export default
 {
     [MUTATION_SET_CURRENCY]: (state, payload) =>
     {
-        state.currency = payload ? payload : []
+        if(payload && payload.length)
+        {
+            const currency = {};
+
+            // Get object keys
+            payload.forEach(c => {
+                currency[c.id] = c
+            });
+
+            state.currency = currency;
+        }
     }
 }
