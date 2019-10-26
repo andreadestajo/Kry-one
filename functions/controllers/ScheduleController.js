@@ -14,7 +14,8 @@ module.exports =
             await MDB_CURRENCY.update(currency, conversion);
         }
 
-        response.end("END");
+        console.log("Conversion Rate Update Done");
+        return "Conversion Rate Update Done";
 	},
     async getConversion(currency)
     {
@@ -27,7 +28,6 @@ module.exports =
         await axios.get(url).then(function (response)
         {
             res = response.data;
-            
         });
         
         return res;
