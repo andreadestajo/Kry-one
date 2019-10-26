@@ -48,7 +48,10 @@ export default {
          */
         $_convertRate(amount, base, conversion)
         {
+            base       = base === "UNIQ" ? "XRP" : base;
+            conversion = conversion === "UNIQ" ? "XRP" : conversion;
 
+            console.log(this.currency);
         }
     }
 }
