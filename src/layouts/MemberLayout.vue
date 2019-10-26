@@ -5,7 +5,7 @@
             <q-toolbar>
                 <q-btn flat dense round @click="drawer = !drawer" icon="menu" aria-label="Menu"/>
                 <q-toolbar-title class="text-center">
-                    KryptoOne™
+                    Krypto.One™
                 </q-toolbar-title>
 
                 <q-btn flat round dense icon="notifications">
