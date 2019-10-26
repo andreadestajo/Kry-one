@@ -48,6 +48,7 @@ module.exports =
     {
         return await this.doc(id).delete();
     },
+
     getUserByReferralCode(referral_code) {
         return this.collection()
             .where("referral_code", "==", referral_code)

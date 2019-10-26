@@ -8,7 +8,7 @@
                     Krypto.One™
                 </q-toolbar-title>
 
-                <q-btn flat round dense icon="notifications">
+                <q-btn @click="$router.push({ name: 'member_notification' })" flat round dense icon="notifications">
                     <!-- <q-badge floating color="red">2</q-badge> -->
                 </q-btn>
             </q-toolbar>
@@ -20,7 +20,7 @@
                 <q-item class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
                     <span class="profile-avatar q-pa-sm">
                         <q-avatar size="120px">
-                            <q-img spinner-size="0" src="../statics/boy.jpg"></q-img>
+                            <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </span>
                     <span class="profile-name text-weight-bold">{{ }}</span>

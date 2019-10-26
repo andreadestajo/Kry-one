@@ -4,7 +4,7 @@ module.exports =
 {
 	async updateCurrency (request, response)
 	{
-        let based_currency          = ['BTC', 'ETH', 'XRP'];
+        let based_currency          = ['BTC', 'ETH', 'XRP', 'XAU'];
 
         for(let key=0;key<based_currency.length;key++)
         {
@@ -14,11 +14,12 @@ module.exports =
             await MDB_CURRENCY.update(currency, conversion);
         }
 
-        response.end("END");
+        console.log("Conversion Rate Update Done");
+        return "Conversion Rate Update Done";
 	},
     async getConversion(currency)
     {
-        let conversion_currency     = ['USD', 'PHP', 'BTC', 'ETH', 'XRP'];
+        let conversion_currency     = ['USD', 'PHP', 'BTC', 'ETH', 'XRP', 'XAU'];
         let res;
 
         let conversion_api_key = process.env.CONVERSION_KEY;
@@ -27,7 +28,6 @@ module.exports =
         await axios.get(url).then(function (response)
         {
             res = response.data;
-            
         });
         
         return res;
