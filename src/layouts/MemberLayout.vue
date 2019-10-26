@@ -20,11 +20,11 @@
                 <q-item class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
                     <span class="profile-avatar q-pa-sm">
                         <q-avatar size="120px">
-                            <q-img spinner-size="0" src="../statics/girl.jpg"></q-img>
+                            <q-img spinner-size="0" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </span>
-                    <span class="profile-name text-weight-bold">Janel Cala</span>
-                    <span class="profile-email">janelcala@gmail.com</span>
+                    <span class="profile-name text-weight-bold">{{ $_current_user_data.fullname }}</span>
+                    <span class="profile-email">{{ $_current_user_data.email }}</span>
                 </q-item>
 
                 <q-item class="nav" :class="item.route === $route.name ? 'active' : ''" clickable v-ripple v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
@@ -46,6 +46,7 @@
 
 <script>
 import styles from './MemberLayout.scss';
+import DB_USER from '../models/DB_USER';
 
 export default
 {
@@ -70,7 +71,7 @@ export default
         {
             if(route === 'logout')
             {
-                this.$router.push({ name: 'front_login' });
+                DB_USER.signOut();
             }
             else
             {
