@@ -1,43 +1,41 @@
 <template>
-    <div class="q-pa-md q-gutter-sm">
-        <q-btn label="Click me" color="primary" @click="inception = true" />
+    <k-modal ref="kModalRef">
+        <div slot="modal-header">
+            <div class="text-h6">KYC Submits</div>
+        </div>
 
-        <q-dialog persistent v-model="inception">
-            <q-card>
-                <q-card-section>
-                    <div class="text-h6">KYC Submits</div>
-                </q-card-section>
+        <div slot="modal-content">
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 q-pa-sm" v-for="field in $options.text_fields" :key="field.key">
+                    <k-field :label="field.label">
+                        <q-input :value="''"
+                                 placeholder="John"
+                                 class="input"
+                                 dense outlined stack-label>
+                        </q-input>
+                    </k-field>
+                </div>
+            </div>
+        </div>
 
-                <q-card-section>
-                    <div class="row">
-                        <div class="col-4 q-pa-sm" v-for="n in 9" :key="n">
-                            <k-field label="Name">
-                                <q-input :value="'hello there'"
-                                         placeholder="John"
-                                         class="input"
-                                         dense outlined stack-label>
-                                </q-input>
-                            </k-field>
-                        </div>
-                    </div>
-                </q-card-section>
-
-                <q-card-actions align="right" class="text-primary">
-                    <q-btn flat label="Accept" @click="secondDialog = true" />
-                    <q-btn color="red" flat label="Reject" v-close-popup />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-    </div>
+        <div slot="modal-footer">
+            <q-btn flat label="Accept" @click="secondDialog = true" />
+            <q-btn color="red" flat label="Reject" v-close-popup />
+        </div>
+    </k-modal>
 </template>
 
 <script>
     import KField from "../../../components/Admin/KField";
+    import KModal from "../../../components/Admin/KModal"
 
     export default
     {
         name: "PAKycDetailsModal",
-        components: {KField},
+        components: {
+            KField,
+            KModal
+        },
         props:
         {
            kyc_details: {}
@@ -46,7 +44,27 @@
         ({
             inception    : false,
             secondDialog : false
-        })
+        }),
+        methods:
+        {
+            showKycDetailsModal()
+            {
+                // Initialize data here
+                this.$refs.kModalRef.showModal();
+            }
+        },
+        text_fields:
+        [
+            {key: 'last_name'           , label: 'Last Name'},
+            {key: 'first_name'          , label: 'First Name'},
+            {key: 'middle_name'         , label: 'Middle Name'},
+            {key: 'birthdate'           , label: 'Birhdate'},
+            {key: 'state_city'          , label: 'State/City'},
+            {key: 'country'             , label: 'Country'},
+            {key: 'id_type'             , label: 'ID Type'},
+            {key: 'id_number'           , label: 'ID Number'},
+            {key: 'id_expiration_date'  , label: 'ID Expiry Date'},
+        ]
     }
 </script>
 

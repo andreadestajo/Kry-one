@@ -2,7 +2,7 @@ import { DB } from "../boot/firebase";
 
 export default
 {
-    table: 'kycVerifications',
+    table: 'currency',
 
     doc(id)
     {
@@ -11,6 +11,7 @@ export default
     collection(order_by = null)
     {
         let collection = DB.collection(this.table);
+
         return collection;
     },
     async add(data)
@@ -50,20 +51,4 @@ export default
         return await this.doc(id).delete();
     },
 
-    /**
-     *
-     * @param _this
-     * @param options {name, limit, startAtId}
-     * @returns {Promise<firebase.firestore.DocumentData[]> | Promise<firebase.firestore.DocumentData>}
-     */
-    bindKycVerifications(_this, options)
-    {
-        // Set default name
-        if(!options.hasOwnProperty('name'))
-        {
-            options.name =  "kycVerifications"
-        }
-        return _this.$bind(options.name, this.collection()
-            .orderBy("status"))
-    }
 }

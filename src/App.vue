@@ -1,6 +1,6 @@
 <template>
   <div id="q-app">
-      <ks-splash-screen v-if="isPageLoading"/>
+      <ks-splash-screen v-if="is_page_loading"/>
       <router-view v-else/>
   </div>
 </template>
@@ -9,14 +9,17 @@
     import KsSplashScreen from './components/KSplashScreen'
 
     import DB_USER        from "./models/DB_USER";
+    import DB_CURRENCY    from "./models/DB_CURRENCY"
 
     import {mapGetters}          from 'vuex'
     import {GETTER_USER_AUTH_ID} from "./store/user-module/getters";
 
     import {
         MUTATION_SET_CURRENT_USER_DATA,
-        MUTATION_SET_CURRENT_AUTH_ID
+        MUTATION_SET_CURRENT_AUTH_ID,
     } from "./store/user-module/mutations";
+
+    import {MUTATION_SET_CURRENCY} from "./store/currency-module/mutations";
 
     export default
     {
@@ -24,41 +27,48 @@
         components: {KsSplashScreen},
         data: () =>
         ({
-            currentUserData : {},
-            isPageLoading   : true
+            current_user_data : {},
+            currency_data     : [],
+            is_page_loading   : true
         }),
         computed:
         {
             ...mapGetters(
             {
-                currentAuthId: GETTER_USER_AUTH_ID
+                current_auth_id: GETTER_USER_AUTH_ID
             })
         },
         mounted()
         {
             const auth_id = localStorage.getItem('auth_id');
+
             if(auth_id)
             {
-                console.log('luhhh di nag work?', auth_id)
+                console.log('luhhh di nag work?', auth_id);
                 this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, auth_id)
             }
         },
         watch:
         {
-            async currentAuthId(authId)
+            async current_auth_id(authId)
             {
                 if(authId)
                 {
-                    await this.$bind('currentUserData', DB_USER.doc(authId));
+                    await this.$bind('current_user_data', DB_USER.doc(authId));
+                    await this.$bind('currency_data'    , DB_CURRENCY.collection());
                 }
-                this.isPageLoading = false;
+                this.is_page_loading = false;
             },
-            currentUserData(userData)
+            current_user_data(user_data)
             {
-                const _userData = Object.assign(userData);
-                _userData.uid   = this.currentAuthId;
+                const _userData = Object.assign({}, user_data);
+                _userData.uid   = this.current_auth_id;
 
-                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, userData)
+                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, user_data)
+            },
+            currency_data(currency_data)
+            {
+                this.$store.commit(MUTATION_SET_CURRENCY, currency_data)
             }
         }
     }

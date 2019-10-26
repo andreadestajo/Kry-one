@@ -1,9 +1,18 @@
 import {formatNumber} from '../utilities/NumberUtils';
 import {formatDate}   from '../utilities/DateUtils';
-import {convertRate}   from '../utilities/ConversionUtils';
+
+import {mapGetters}      from 'vuex'
+import {GETTER_CURRENCY} from "../store/currency-module/getters";
 
 export default {
-    methods: {
+    computed:
+    {
+        ...mapGetters({
+            currency: GETTER_CURRENCY
+       })
+    },
+    methods:
+    {
         /**
          * Some description here
          * @param number
@@ -37,10 +46,9 @@ export default {
          * @param options
          * @returns {string} conversionRate
          */
-        $_convertRate(amount, currency, options)
+        $_convertRate(amount, base, conversion)
         {
-            const conversionRate = convertRate(amount, currency, options);
-            return conversionRate;
+
         }
     }
 }

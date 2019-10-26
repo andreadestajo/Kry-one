@@ -6,11 +6,11 @@
                  row-key="name">
             <template v-slot:body="props">
                 <q-tr :props="props">
-                    <q-td key="name" :props="props">{{ props.row.name }}</q-td>
-                    <q-td key="date" :props="props">{{ props.row.date }}</q-td>
-                    <q-td key="time" :props="props">{{ props.row.time }}</q-td>
-                    <q-td key="status" :props="props">{{ props.row.status }}</q-td>
-                    <q-td key="action" :props="props">
+                    <q-td key="name">{{ props.row.name }}</q-td>
+                    <q-td key="date">{{ props.row.date }}</q-td>
+                    <q-td key="time">{{ props.row.time }}</q-td>
+                    <q-td key="status">{{ props.row.status }}</q-td>
+                    <q-td key="action">
                         <q-btn unelevated
                                label="View"
                                type="submit"
@@ -21,7 +21,7 @@
             </template>
         </q-table>
 
-        <pa-kyc-details-modal />
+        <pa-kyc-details-modal ref="kycDetailsModal" />
     </div>
 </template>
 
@@ -57,12 +57,12 @@
         {
             viewKycDetails()
             {
-                console.log('hey there')
+                this.$refs.kycDetailsModal.showKycDetailsModal()
             }
         },
         async mounted()
         {
-            DB_KYC_VERIFICATION.bindKycVerifications(this, "kycSubmits")
+            DB_KYC_VERIFICATION.bindKycVerifications(this, {name: "kycSubmits"})
         },
         columns:
         [
@@ -70,7 +70,7 @@
           { name: 'date'    , label: 'Date Submitted' , field: 'date'   , align: 'center', sortable: true},
           { name: 'time'    , label: 'Time'           , field: 'time'   , align: 'center', sortable: true},
           { name: 'status'  , label: 'Status'         , field: 'status' , align: 'center', sortable: true},
-          { name: 'action'  , label: 'Action'         , field: ''        , align: 'center', sortable: true},
+          { name: 'action'  , label: 'Action'         , field: ''       , align: 'center', sortable: true},
         ],
     }
 </script>
