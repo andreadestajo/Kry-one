@@ -17,7 +17,6 @@
         MUTATION_SET_CURRENT_USER_DATA,
         MUTATION_SET_CURRENT_AUTH_ID
     } from "./store/user-module/mutations";
-
     export default
     {
         name: 'App',

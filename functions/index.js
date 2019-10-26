@@ -21,4 +21,5 @@ exports.register        = FUNCTIONS_HTTPS.onCall(account_controller.register);
 exports.login           = FUNCTIONS_HTTPS.onCall(account_controller.login);
 exports.resetPassword   = FUNCTIONS_HTTPS.onCall(account_controller.resetPassword);
 exports.updateCurrencyM = FUNCTIONS_HTTPS.onRequest(schedule_controller.updateCurrency);
+
 exports.updateCurrency  = FUNCTIONS_PUBSUB.schedule('every 5 minutes').onRun(schedule_controller.updateCurrency);

@@ -20,7 +20,7 @@
                                         <div class="currency">{{ currency.abb }}</div>
                                     </div>
                                     <div class="amount-conversion">
-                                        {{ $_convertRate(currency.amount, 'PHP') }} <q-icon name="fa fa-exchange-alt"></q-icon>  {{ $_convertRate(currency.amount, 'USD') }}
+                                        {{ $_convertRate(currency.amount, currency.abb, 'PHP') }} <q-icon name="fa fa-exchange-alt"></q-icon>  {{ $_convertRate(currency.amount, currency.abb, 'USD') }}
                                     </div>
                                 </div>
                             </div>
