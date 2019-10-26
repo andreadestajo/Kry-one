@@ -30,6 +30,7 @@ const routes = [
 			{ name: 'member_cashout',       path: 'cashout', component: () => import('pages/Member/Cashout/PMCashout.vue') },
 			{ name: 'member_monarchy',      path: 'monarchy', component: () => import('pages/Member/Monarchy/PMMonarchy.vue') },
 			{ name: 'member_buy',           path: 'buy', component: () => import('pages/Member/Buy/PMBuy.vue') },
+			{ name: 'member_notification',  path: 'notification', component: () => import('pages/Member/Notification/PMNotification.vue') },
 		]
 	},
 	{

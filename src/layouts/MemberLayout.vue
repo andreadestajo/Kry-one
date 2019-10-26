@@ -8,7 +8,7 @@
                     Krypto.One™
                 </q-toolbar-title>
 
-                <q-btn flat round dense icon="notifications">
+                <q-btn @click="$router.push({ name: 'member_notification' })" flat round dense icon="notifications">
                     <!-- <q-badge floating color="red">2</q-badge> -->
                 </q-btn>
             </q-toolbar>
