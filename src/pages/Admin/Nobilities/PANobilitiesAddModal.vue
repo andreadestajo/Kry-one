@@ -89,7 +89,7 @@
                 price           : 0,
                 rank_order      : 0,
                 required_direct : 0,
-                required_rank   : 0,
+                required_rank   : null,
                 override_bonus  : 0,
                 perks           : '',
                 details         : '',
@@ -105,8 +105,18 @@
             },
             addNobility()
             {
+                const nobility_data = Object.assign({}, this.nobility);
+
+                // Prepare numbers
+                nobility_data.price           = Number(this.nobility.price);
+                nobility_data.rank_order      = Number(this.nobility.rank_order);
+                nobility_data.required_direct = Number(this.nobility.required_direct );
+                nobility_data.override_bonus  = Number(this.nobility.override_bonus );
+
+                console.log(nobility_data);
+
                 this.$_showPageLoading();
-                Nobility.add(this.nobility)
+                Nobility.add(nobility_data)
                     .then(() =>
                     {
                         console.log('successfully added new nobility.');
