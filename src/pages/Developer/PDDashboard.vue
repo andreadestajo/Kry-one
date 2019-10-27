@@ -14,24 +14,53 @@
             <q-btn class="full-width q-mb-sm" @click="callCustom()">Call Custom</q-btn>
         </div> -->
 
-        <div class="q-px-lg q-mt-lg">
-		    <q-input @keydown="clear()" outlined dense class="input text-center" v-model="last_id"></q-input>
-            <div v-if="user_info" style="border: 2px dashed #eee; margin: 10px; padding: 10px;">
-                <div class="text-center"><b>User Information</b></div>
-                <pre>{{ user_info }}</pre>
-            </div>
-
-            <div v-if="wallet_info" style="border: 2px dashed #eee; margin: 10px; padding: 10px;">
-                <div class="text-center"><b>Wallet Information</b></div>
-                <pre>{{ wallet_info }}</pre>
-            </div>
-        </div>
-
         <div class="q-pa-lg">
-            <q-btn class="full-width q-mb-sm" @click="testUserCreate()">User Create Test</q-btn>
-            <q-btn class="full-width q-mb-sm" @click="bindUserInformation()">Bind User Information</q-btn>
-            <q-btn class="full-width q-mb-sm q-mt-lg" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="testUserCreate()">User Create Test</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="bindUserInformation()">Bind User Information</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="issueBitcoin()">Issue Bitcoin</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="issueBitcoin()">Issue Ethereum</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="clear()">Clear</q-btn>
         </div>
+
+
+        <div class="q-px-lg">
+		    <q-input @keydown="clear()" outlined dense class="input text-center" v-model="last_id"></q-input>
+        </div>
+
+        <div class="q-pa-md">
+            <div v-if="user_info" class="q-gutter-y-md">
+                <q-card>
+                    <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary"
+                        align="justify" narrow-indicator>
+                        <q-tab name="user_info" label="User" />
+                        <q-tab name="wallet_info" label="Wallet" />
+                        <q-tab name="wallet_logs" label="Logs" />
+                    </q-tabs>
+
+                    <q-separator />
+
+                    <q-tab-panels v-model="tab" animated>
+                        <q-tab-panel name="user_info">
+                            <div class="text-h6">User Information</div>
+                            <pre>{{ user_info }}</pre>
+                        </q-tab-panel>
+
+                        <q-tab-panel name="wallet_info">
+                            <div class="text-h6">Wallet Info</div>
+                            <pre>{{ wallet_info }}</pre>
+                        </q-tab-panel>
+
+                        <q-tab-panel name="wallet_logs">
+                            <div class="text-h6">Wallet Logs</div>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        </q-tab-panel>
+                    </q-tab-panels>
+                </q-card>
+            </div>
+        </div>
+
+
 
 
 	</div>
@@ -50,6 +79,7 @@ export default
 	name: "PDDeveloper",
 	data:  () => (
 	{ 
+        tab: "user_info",
 		last_id: "",
 		employee_list: [],
 		employee_info: null,
@@ -72,6 +102,14 @@ export default
             this.wallet_info    = null;
             this.user_info      = null;
         },
+        async issueBitcoin()
+        {
+            console.log("UNDER DEVELOPMENT")
+        },
+        async bindWalletLogs()
+        {
+            console.log("UNDER DEVELOPMENT")
+        },
         async testUserCreate()
         {
             this.clear();
@@ -90,16 +128,10 @@ export default
         },
         async bindUserInformation()
         {
-            this.bindWallet();
-            await this.$bind('user_info', DB_USER.doc(this.last_id));
-            console.log(this.user_info);
+            this.$bind('user_info', DB_USER.doc(this.last_id));
+            this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
         },
-        async bindWallet()
-        {
-            console.log("BIND WALLET");
-            await this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
-            console.log(this.wallet_info);
-        },
+
         async triggerUserCreate()
         {
 			let res = await fbCall('testInitializeWallet', { uid: this.last_id });
