@@ -61,6 +61,7 @@ module.exports =
         })
         .then(function(userRecord)
         {
+
             return {
                 data : userRecord.toJSON(),
                 error: null
