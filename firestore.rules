@@ -15,9 +15,13 @@ service cloud.firestore
         {
             allow read, write;
         }
-        match /currency/{currencyId}
+        match /currency/{currencyID}
         {
             allow read;
+        }
+        match /nobilities/{nobilityID}
+        {
+            allow read, write;
         }
 	}
 }
