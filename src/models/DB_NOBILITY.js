@@ -48,5 +48,15 @@ export default
     async remove(id)
     {
         return await this.doc(id).delete();
+    },
+
+    bindNobilities(_this, options = {})
+    {
+        // Set default name
+        if(!options.hasOwnProperty('name'))
+        {
+            options.name =  "nobilities"
+        }
+        return _this.$bind(options.name, this.collection())
     }
 }

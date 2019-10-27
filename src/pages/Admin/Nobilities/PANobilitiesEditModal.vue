@@ -66,7 +66,7 @@
         </span>
 
         <span slot="modal-footer">
-            <q-btn flat label="Save" @click="addNobility()" />
+            <q-btn flat label="Save" @click="confirmUpdateNobility()" />
             <q-btn flat label="Close" @click="$refs.kModalRef.hideModal()"/>
         </span>
     </k-modal>
@@ -84,38 +84,6 @@
         data: () =>
         ({
             nobility:
-            {
-                title           : '',
-                price           : 0,
-                rank_order      : 0,
-                required_direct : 0,
-                required_rank   : 0,
-                override_bonus  : 0,
-                perks           : '',
-                details         : '',
-                badge_color     : ''
-            }
-        }),
-        methods:
-        {
-            showModal()
-            {
-                this.clearData();
-                this.$refs.kModalRef.showModal();
-            },
-            addNobility()
-            {
-                this.$_showPageLoading();
-                Nobility.add(this.nobility)
-                    .then(() =>
-                    {
-                        console.log('successfully added new nobility.');
-                        this.$_hidePageLoading();
-                    })
-            },
-            clearData()
-            {
-                this.nobility =
                 {
                     title           : '',
                     price           : 0,
@@ -127,6 +95,32 @@
                     details         : '',
                     badge_color     : ''
                 }
+        }),
+        methods:
+        {
+            showModal(nobility)
+            {
+                // initialize data
+                this.nobility = Object.assign({}, nobility);
+
+                this.$refs.kModalRef.showModal();
+            },
+            confirmUpdateNobility()
+            {
+                console.log(this.nobility);
+                const message = "Are you sure you want to update nobility ?";
+                const callback = () => {
+                    this.$_showPageLoading();
+                    Nobility.update(this.nobility.id, this.nobility)
+                    .then(() =>
+                    {
+                        console.log('successfully updatenobility.');
+                        this.$_hidePageLoading();
+                    })
+                };
+
+                this.$_showConfirmDialog(message, callback);
+
             }
         }
     }

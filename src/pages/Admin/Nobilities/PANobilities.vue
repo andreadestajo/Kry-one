@@ -11,44 +11,98 @@
         </div>
 
         <!--TABLE-->
-        <q-table title="Nobilities"
-                 :data="nobilitiesData"
-                 :columns="$options.columns"
-                 row-key="name">
-            <template v-slot:body="props">
-                <q-tr :props="props">
-                    <q-td key="name">{{ props.row.name }}</q-td>
-                    <q-td key="date">{{ props.row.date }}</q-td>
-                    <q-td key="time">{{ props.row.time }}</q-td>
-                    <q-td key="status">{{ props.row.status }}</q-td>
-                    <q-td key="action">
-                        <q-btn unelevated
-                               label="View"
-                               type="submit"
-                               color="primary"
-                               @click="viewKycDetails(props.row)"></q-btn>
-                    </q-td>
-                </q-tr>
-            </template>
-        </q-table>
+        <div class="q-pa-lg">
+            <q-table title="Nobilities"
+                     :data="nobilitiesData"
+                     :columns="$options.columns"
+                     row-key="name">
+                <template v-slot:body="props">
+                    <q-tr :props="props">
+                        <q-td v-for="column in mappedColumns">
+                            {{props.row[column]}}
+                        </q-td>
+
+                        <q-td key="action">
+                            <q-btn unelevated
+                                   class="q-ma-xs"
+                                   label="EDIT"
+                                   type="submit"
+                                   color="primary"
+                                   @click="showEditNobilityModal(props.row)"></q-btn>
+                            <q-btn unelevated
+                                   class="q-ma-xs"
+                                   label="DELETE"
+                                   type="submit"
+                                   color="red"
+                                   @click="confirmDeleteNobility(props.row)"></q-btn>
+                        </q-td>
+                    </q-tr>
+                </template>
+            </q-table>
+        </div>
 
         <!--ADD MODAL-->
         <pa-nobilities-add-modal ref="nobilitiesAddModalRef" />
+
+        <!--EDIT MODAL-->
+        <pa-nobilities-edit-modal ref="nobilitiesEditModalRef" />
     </div>
 </template>
 
 <script>
-    import PaNobilitiesAddModal from './PANobilitiesAddModal'
+    import Nobility              from "../../../models/DB_NOBILITY"
+    import PaNobilitiesAddModal  from './PANobilitiesAddModal'
+    import PaNobilitiesEditModal from './PANobilitiesEditModal'
 
     export default {
         name: "PANobilities",
-        components: {PaNobilitiesAddModal},
+        components: {
+            PaNobilitiesAddModal,
+            PaNobilitiesEditModal
+        },
+        data: () =>
+        ({
+            nobilities: []
+        }),
+        computed:
+        {
+            nobilitiesData()
+            {
+                return this.nobilities
+            },
+            mappedColumns()
+            {
+                const mappedColumns = this.$options.columns.map(c => c.field);
+                mappedColumns.pop();
+                return mappedColumns
+            }
+        },
         methods:
         {
             showAddNobilityModal()
             {
                 this.$refs.nobilitiesAddModalRef.showModal();
+            },
+            showEditNobilityModal(nobility)
+            {
+                this.$refs.nobilitiesEditModalRef.showModal(nobility);
+            },
+            confirmDeleteNobility(nobility)
+            {
+                const message = "Are you sure you want to delete nobility ?";
+                const callback = () => {
+                    Nobility.remove(nobility.id)
+                };
+
+                this.$_showConfirmDialog(message, callback);
             }
+        },
+        async mounted()
+        {
+            // Bind nobilities here
+            this.$_showPageLoading();
+            await Nobility.bindNobilities(this);
+            this.$_hidePageLoading();
         },
         columns:
         [
