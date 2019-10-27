@@ -113,15 +113,14 @@
                 nobility_data.required_direct = Number(this.nobility.required_direct );
                 nobility_data.override_bonus  = Number(this.nobility.override_bonus );
 
-                console.log(nobility_data);
-
                 this.$_showPageLoading();
                 Nobility.add(nobility_data)
-                    .then(() =>
-                    {
-                        console.log('successfully added new nobility.');
-                        this.$_hidePageLoading();
-                    })
+                .then(() =>
+                {
+                    console.log('successfully added new nobility.');
+                    this.$_hidePageLoading();
+                    this.$refs.kModalRef.hideModal();
+                })
             },
             clearData()
             {

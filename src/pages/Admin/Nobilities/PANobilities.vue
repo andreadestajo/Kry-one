@@ -15,7 +15,9 @@
             <q-table title="Nobilities"
                      :data="nobilitiesData"
                      :columns="$options.columns"
-                     row-key="name">
+                     row-key="name"
+                     :pagination="{rowsPerPage: 0}"
+                     hide-bottom>
                 <template v-slot:body="props">
                     <q-tr :props="props">
                         <q-td v-for="column in mappedColumns">
@@ -85,7 +87,8 @@
             },
             showEditNobilityModal(nobility)
             {
-                this.$refs.nobilitiesEditModalRef.showModal(nobility);
+                const nobility_data = Object.assign({id: nobility.id}, nobility);
+                this.$refs.nobilitiesEditModalRef.showModal(nobility_data);
             },
             confirmDeleteNobility(nobility)
             {

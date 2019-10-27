@@ -102,20 +102,19 @@
             {
                 // initialize data
                 this.nobility = Object.assign({}, nobility);
-
                 this.$refs.kModalRef.showModal();
             },
             confirmUpdateNobility()
             {
-                console.log(this.nobility);
                 const message = "Are you sure you want to update nobility ?";
                 const callback = () => {
                     this.$_showPageLoading();
                     Nobility.update(this.nobility.id, this.nobility)
                     .then(() =>
                     {
-                        console.log('successfully updatenobility.');
+                        console.log('successfully update nobility.');
                         this.$_hidePageLoading();
+                        $refs.kModalRef.hideModal();
                     })
                 };
 
