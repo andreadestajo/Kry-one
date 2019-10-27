@@ -30,7 +30,7 @@
         <div class="q-pa-lg">
             <q-btn class="full-width q-mb-sm" @click="testUserCreate()">User Create Test</q-btn>
             <q-btn class="full-width q-mb-sm" @click="bindUserInformation()">Bind User Information</q-btn>
-            <q-btn class="full-width q-mb-sm q-mt-lg" @click="triggerUserCreate()">Trigger Initialize Wallet</q-btn>
+            <q-btn class="full-width q-mb-sm q-mt-lg" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
         </div>
 
 
