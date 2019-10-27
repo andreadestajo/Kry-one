@@ -19,16 +19,18 @@
                 <template v-slot:body="props">
                     <q-tr :props="props">
                         <q-td v-for="column in mappedColumns">
-                            {{column}}
+                            {{props.row[column]}}
                         </q-td>
 
                         <q-td key="action">
                             <q-btn unelevated
+                                   class="q-ma-xs"
                                    label="EDIT"
                                    type="submit"
                                    color="primary"
                                    @click="showEditNobilityModal(props.row)"></q-btn>
                             <q-btn unelevated
+                                   class="q-ma-xs"
                                    label="DELETE"
                                    type="submit"
                                    color="red"
@@ -41,16 +43,23 @@
 
         <!--ADD MODAL-->
         <pa-nobilities-add-modal ref="nobilitiesAddModalRef" />
+
+        <!--EDIT MODAL-->
+        <pa-nobilities-edit-modal ref="nobilitiesEditModalRef" />
     </div>
 </template>
 
 <script>
-    import Nobility             from "../../../models/DB_NOBILITY"
-    import PaNobilitiesAddModal from './PANobilitiesAddModal'
+    import Nobility              from "../../../models/DB_NOBILITY"
+    import PaNobilitiesAddModal  from './PANobilitiesAddModal'
+    import PaNobilitiesEditModal from './PANobilitiesEditModal'
 
     export default {
         name: "PANobilities",
-        components: {PaNobilitiesAddModal},
+        components: {
+            PaNobilitiesAddModal,
+            PaNobilitiesEditModal
+        },
         data: () =>
         ({
             nobilities: []
@@ -63,7 +72,7 @@
             },
             mappedColumns()
             {
-                const mappedColumns = this.$options.columns.map(c => c.field)
+                const mappedColumns = this.$options.columns.map(c => c.field);
                 mappedColumns.pop();
                 return mappedColumns
             }
@@ -74,25 +83,26 @@
             {
                 this.$refs.nobilitiesAddModalRef.showModal();
             },
-            showEditNobilityModal()
+            showEditNobilityModal(nobility)
             {
-
+                this.$refs.nobilitiesEditModalRef.showModal(nobility);
             },
-            confirmDeleteNobility()
+            confirmDeleteNobility(nobility)
             {
-                const message = "Are you sure you want delete nobility ?";
+                const message = "Are you sure you want to delete nobility ?";
                 const callback = () => {
-                    Nobility.remove()
+                    Nobility.remove(nobility.id)
                 };
-                
+
                 this.$_showConfirmDialog(message, callback);
             }
         },
-        mounted()
+        async mounted()
         {
-            console.log(Nobility.getMany())
             // Bind nobilities here
-            Nobility.bindNobilities(this);
+            this.$_showPageLoading();
+            await Nobility.bindNobilities(this);
+            this.$_hidePageLoading();
         },
         columns:
         [

@@ -100,6 +100,7 @@
         {
             showModal()
             {
+                this.clearData();
                 this.$refs.kModalRef.showModal();
             },
             addNobility()
@@ -111,6 +112,21 @@
                         console.log('successfully added new nobility.');
                         this.$_hidePageLoading();
                     })
+            },
+            clearData()
+            {
+                this.nobility =
+                {
+                    title           : '',
+                    price           : 0,
+                    rank_order      : 0,
+                    required_direct : 0,
+                    required_rank   : 0,
+                    override_bonus  : 0,
+                    perks           : '',
+                    details         : '',
+                    badge_color     : ''
+                }
             }
         }
     }
