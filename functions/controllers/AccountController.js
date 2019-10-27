@@ -85,14 +85,14 @@ module.exports =
         // Add new user data to collection
         const user_record   = create_user.data;
         delete user_info.password;
-        const add_user_info = MDB_USER.doc(user_record.uid).set
+        const add_user_info = await MDB_USER.doc(user_record.uid).set
         ({
             email_verified : user_record.emailVerified ? user_record.emailVerified : null,
             photo_url      : user_record.photoURL      ? user_record.photoURL      : null,
             phone_number   : user_record.phoneNumber   ? user_record.phoneNumber   : null,
             ...user_info,
         })
-        .then(() =>
+        .then((res) =>
         {
             return {error: false}
         })
@@ -107,8 +107,9 @@ module.exports =
             return {error: add_user_info.error}
         }
 
-        // Last step of registration
-        return sendEmailVerificationLink(user_info.email, user_info.fullname);
+        await sendEmailVerificationLink(user_info.email, user_info.fullname);
+
+        return user_record.uid;
     },
 
     async resetPassword(data, context)

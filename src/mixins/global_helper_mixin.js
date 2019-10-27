@@ -48,8 +48,8 @@ export default {
          */
         $_convertRate(amount, base, conversion, options)
         {
-            base       = base === "UNIQ" ? "XRP" : base;
-            conversion = conversion === "UNIQ" ? "XRP" : conversion;
+            base       = base === "UNIQ" ? "XAU" : base;
+            conversion = conversion === "UNIQ" ? "XAU" : conversion;
             return conversion + " " + this.$_formatNumber(this.currency[base][conversion] * amount, { decimal: 2 });
         },
 
