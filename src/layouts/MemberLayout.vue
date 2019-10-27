@@ -69,7 +69,7 @@ export default
     {
         goToRoute(route)
         {
-            this.$_log(this.$_current_user_data);
+            this.$_log(this.$_current_user_data, "Check Current User Data");
 
             if(route === 'logout')
             {
