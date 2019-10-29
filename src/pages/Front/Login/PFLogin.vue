@@ -14,6 +14,10 @@
             </div>
 
             <q-form class="q-pa-lg login__form">
+                <q-banner v-if="!!loginError" inline-actions class="q-mb-md text-white bg-red">
+                    {{loginError}}
+                </q-banner>
+
                 <div class="label">
                     E-mail Address
                 </div>
@@ -68,8 +72,8 @@
 </template>
 
 <script>
-    import styles           from './PFLogin.scss';
-    import DB_USER          from "../../../models/DB_USER"
+    import styles   from './PFLogin.scss';
+    import DB_USER  from "../../../models/DB_USER"
 
     import {
         required,
@@ -87,8 +91,8 @@
                 password      : '',
             },
             is_password      : true,
-            is_show_message  : false,
-            unverified_email : ''
+            unverified_email : '',
+            login_error_code : ''
         }),
         computed: {
             emailError()
@@ -104,6 +108,16 @@
                     ? 'Password is required'
                        : !this.$v.login_form_data.email.minLength
                     ? 'Must be atleast 6 characters long.' : ''
+            },
+            loginError()
+            {
+                return !this.login_error_code
+                    ? false
+                        : this.login_error_code === 'auth/user-not-found'
+                    ? 'E-mail and Password do not match.'
+                        : this.login_error_code === 'auth/wrong-password'
+                    ? 'E-mail and Password do not match.'
+                        : 'Something went wrong. Please try again.'
             }
         },
         methods:
@@ -128,7 +142,7 @@
                 })
                 .catch(error => {
                     // Show a snackbar here
-                    console.log(error.message);
+                    this.login_error_code = error.code;
                     this.$_hidePageLoading();
                 })
             }

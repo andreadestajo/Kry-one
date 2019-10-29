@@ -35,6 +35,15 @@
                              outlined
                              type="text"
                              v-model="nobility.required_rank"/>
+
+                    <q-select outlined
+                              class="input"
+                              dense
+                              v-model="nobility.country"
+                              :options="$options.country_options"
+                              option-value="code"
+                              option-label="name">
+                    </q-select>
                 </k-field>
 
                 <k-field label="Bonus">
@@ -105,7 +114,7 @@
                 this.clearData();
                 this.$refs.kModalRef.showModal();
             },
-            addNobility()
+            async addNobility()
             {
                 const nobility_data = Object.assign({}, this.nobility);
 
@@ -114,6 +123,10 @@
                 nobility_data.rank_order      = Number(this.nobility.rank_order);
                 nobility_data.required_direct = Number(this.nobility.required_direct );
                 nobility_data.override_bonus  = Number(this.nobility.override_bonus );
+
+                // Prepare required_rank_id and required_rank_title
+                nobility_data.required_rank_id   = nobility_data.required_rank;
+                nobility_data.required_rank_name = ''; // STOPPED HERE
 
                 this.$_showPageLoading();
                 Nobility.add(nobility_data)

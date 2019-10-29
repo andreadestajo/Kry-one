@@ -20,7 +20,7 @@
                      hide-bottom>
                 <template v-slot:body="props">
                     <q-tr :props="props">
-                        <q-td v-for="column in mappedColumns">
+                        <q-td v-for="column in mappedColumns" :key="column">
                             {{props.row[column]}}
                         </q-td>
 

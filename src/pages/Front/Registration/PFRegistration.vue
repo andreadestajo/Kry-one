@@ -36,7 +36,7 @@
                              class="input"
                              outlined
                              type="email"
-                             v-model="registration_form_data.email"
+                             v-model.lazy="registration_form_data.email"
                              :error="$v.registration_form_data.email.$error"
                              :error-message="emailError"
                              @blur="$v.registration_form_data.email.$touch()"/>
@@ -153,15 +153,15 @@
             registration_form_data:
             {
                 full_name      : '',
-                email         : '',
-                password      : '',
-                country       : '',
-                referral_code : '',
-                is_agree      : ''
+                email          : '',
+                password       : '',
+                country        : '',
+                referral_code  : '',
+                is_agree       : ''
             },
-            isPassword    : true,
-            isRegistered  : false,
-            referral_name : null
+            isPassword     : true,
+            isRegistered   : false,
+            referral_name  : null
         }),
         computed:
         {
@@ -228,6 +228,7 @@
                     email,
                     async isUnique(email)
                     {
+                        console.log(email);
                         // Returns true if no user found, meaning the email is available.
                         return await DB_USER.getUserByEmailAddress(email)
                             .then(user => !user)
