@@ -3,6 +3,7 @@ import AuthUser      from '../mixins/auth_user_mixin'
 import ConfirmDialog from '../mixins/confirm_dialog_mixin'
 import GlobalHelper  from '../mixins/global_helper_mixin'
 import Loading       from '../mixins/loading_mixin'
+import Notify        from '../mixins/notify_mixin'
 
 // leave the export, even if you don't use it
 export default ({ Vue }) => {
@@ -10,4 +11,5 @@ export default ({ Vue }) => {
     Vue.mixin(ConfirmDialog);
     Vue.mixin(GlobalHelper);
     Vue.mixin(Loading);
+    Vue.mixin(Notify);
 }

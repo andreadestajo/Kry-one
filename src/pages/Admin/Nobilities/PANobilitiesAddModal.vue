@@ -132,7 +132,7 @@
                 Nobility.add(nobility_data)
                 .then(() =>
                 {
-                    console.log('successfully added new nobility.');
+                    this.$_notify({message: 'sucessfully added new nobility.'});
                     this.$_hidePageLoading();
                     this.$refs.kModalRef.hideModal();
                 })
