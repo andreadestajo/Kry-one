@@ -63,7 +63,10 @@
 </template>
 
 <script>
-  export default {
+    import DB_USER from '../models/DB_USER';
+
+
+    export default {
     name: 'AdminLayout',
     data: () =>
     ({
@@ -71,18 +74,17 @@
     }),
     methods:
     {
-      goToRoute(route)
-      {
-        if(route === 'logout')
-        {
-          this.$router.push({ name: 'front_login' });
-        }
-        else
-        {
-          (route === this.$route.name) ? this.drawer = false : this.$router.push({ name: route });
-        }
-
-      }
+         goToRoute(route)
+         {
+             if(route === 'logout')
+             {
+                 DB_USER.signOut();
+             }
+             else
+             {
+               (route === this.$route.name) ? this.drawer = false : this.$router.push({ name: route });
+             }
+         }
     },
     navigations:
     [

@@ -50,6 +50,10 @@
             if(auth_id)
             {
                 this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, auth_id)
+            } else
+            {
+                this.$router.push({name: 'front_login'});
+                this.is_page_loading = false;
             }
         },
         watch:
@@ -60,8 +64,9 @@
                 {
                     await this.$bind('current_user_data', DB_USER.doc(authId));
                     await this.$bind('currency_data'    , DB_CURRENCY.collection());
+                } else {
+                    this.$router.push({name: 'front_login'})
                 }
-
                 this.is_page_loading = false;
             },
             current_user_data(user_data)

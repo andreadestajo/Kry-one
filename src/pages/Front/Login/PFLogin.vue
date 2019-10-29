@@ -141,7 +141,6 @@
 
                     if(data)
                     {
-                        console.log('you just signed in ');
                         // Get user data
                         let current_user = await DB_USER.doc(data.user.uid).get();
                         current_user = Object.assign(current_user.data(), {id: current_user.id});
@@ -150,12 +149,19 @@
                         this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, data.user.uid);
                         this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, current_user);
 
-                        console.log(this.$_current_user_data);
-
                         // Set local storage
                         localStorage.setItem('auth_id', data.user.uid);
 
+                        // Redirect user
+                        const route_name = !current_user.hasOwnProperty('roles') || !current_user.roles
+                            ? 'member_dashboard'
+                                : current_user.roles.includes('developer')
+                            ? 'developer_dashboard'
+                                : current_user.roles.includes('admin')
+                            ? 'admin_dashboard'
+                                : 'member_dashboard';
 
+                        this.$router.push({name: route_name})
                     }
                     this.$_hidePageLoading();
                 })

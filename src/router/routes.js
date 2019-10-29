@@ -47,7 +47,7 @@ const routes = [
 		path: '/developer', component: () => import('layouts/DeveloperLayout.vue'),
 		children:
         [
-			{ path: '', component: () => import('pages/Developer/PDDashboard.vue') }
+			{ name: 'developer_dashboard', path: '', component: () => import('pages/Developer/PDDashboard.vue') }
 		]
 	},
     {
