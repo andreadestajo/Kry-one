@@ -1,5 +1,6 @@
 import {formatNumber} from '../utilities/NumberUtils';
 import {formatDate}   from '../utilities/DateUtils';
+import {isAuthorized} from "../globals/AuthenticationHelper";
 
 import {mapGetters}      from 'vuex'
 import {GETTER_CURRENCY} from "../store/currency-module/getters";
@@ -56,6 +57,11 @@ export default {
         $_log(log, title)
         {
             console.log(title ? title : this.$route.name, log)
+        },
+
+        $_isAuthorize(allowed_roles = null)
+        {
+            return isAuthorized(allowed_roles)
         }
     }
 }

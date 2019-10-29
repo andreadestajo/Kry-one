@@ -61,6 +61,7 @@
                     await this.$bind('current_user_data', DB_USER.doc(authId));
                     await this.$bind('currency_data'    , DB_CURRENCY.collection());
                 }
+
                 this.is_page_loading = false;
             },
             current_user_data(user_data)

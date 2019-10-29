@@ -18,18 +18,20 @@ export default
 
         if(!user)
         {
+            console.log('onAuthStateChanged is invoked');
             // Set observable
             AUTH.onAuthStateChanged(async function(user)
             {
                 if (user)
                 {
+                    console.log('user is logged in');
                     // Get user data
-                    let currentUser = await DB_USER.doc(user.uid).get();
-                    currentUser = Object.assign(currentUser.data(), {id: currentUser.id});
+                    let current_user = await DB_USER.doc(user.uid).get();
+                    current_user = Object.assign(current_user.data(), {id: current_user.id});
 
                     // commit here
                     Store().commit(MUTATION_SET_CURRENT_AUTH_ID, user.uid);
-                    Store().commit(MUTATION_SET_CURRENT_USER_DATA, currentUser);
+                    Store().commit(MUTATION_SET_CURRENT_USER_DATA, current_user);
 
                     // Set local storage
                     localStorage.setItem('auth_id', user.uid);
@@ -39,6 +41,7 @@ export default
                 }
                 else
                 {
+                    console.log('user is logged out');
                     // Remove sessions
                     Store().commit(MUTATION_SET_CURRENT_AUTH_ID, null);
                     Store().commit(MUTATION_SET_CURRENT_USER_DATA, null);
@@ -51,6 +54,7 @@ export default
         }
         else
         {
+            console.log('used is logged out');
             next();
         }
     },

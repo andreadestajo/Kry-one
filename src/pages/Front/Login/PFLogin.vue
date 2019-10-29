@@ -76,6 +76,11 @@
     import DB_USER  from "../../../models/DB_USER"
 
     import {
+        MUTATION_SET_CURRENT_AUTH_ID,
+        MUTATION_SET_CURRENT_USER_DATA
+    } from "../../../store/user-module/mutations";
+
+    import {
         required,
         email,
         minLength
@@ -130,17 +135,32 @@
                 // Start authenticating the user
                 this.$_showPageLoading({message: 'Logging in...'});
                 DB_USER.signIn(this.login_form_data.email, this.login_form_data.password)
-                .then(data =>
+                .then(async data =>
                 {
                     if(!data) {return 0}
 
                     if(data)
                     {
-                        this.$router.push('member');
+                        console.log('you just signed in ');
+                        // Get user data
+                        let current_user = await DB_USER.doc(data.user.uid).get();
+                        current_user = Object.assign(current_user.data(), {id: current_user.id});
+
+                        // commit here
+                        this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, data.user.uid);
+                        this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, current_user);
+
+                        console.log(this.$_current_user_data);
+
+                        // Set local storage
+                        localStorage.setItem('auth_id', data.user.uid);
+
+
                     }
                     this.$_hidePageLoading();
                 })
                 .catch(error => {
+                    console.log(error);
                     // Show a snackbar here
                     this.login_error_code = error.code;
                     this.$_hidePageLoading();

@@ -5,10 +5,10 @@ export default
 {
     [MUTATION_SET_CURRENT_USER_DATA]: (state, payload) =>
     {
-        state.currentUserData = payload ? Object.assign({}, payload) : null;
+        state.current_user_data = payload ? Object.assign({}, payload) : null;
     },
     [MUTATION_SET_CURRENT_AUTH_ID]: (state, payload) =>
     {
-        state.userAuthId = payload;
+        state.user_auth_id = payload;
     },
 }
