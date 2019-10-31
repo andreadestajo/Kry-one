@@ -3,7 +3,7 @@
         <span slot="content">
             <q-list separator>
                 <q-item class="text-center">
-                    <p>SALES BREAKDOWN</p>
+                    <p>PROMOTIONS</p>
                 </q-item>
 
                 <q-item class="q-pa-md"
@@ -29,7 +29,7 @@
     import KCard from '../../../components/Admin/KCard'
 
     export default {
-        name: "PADashboardSalesBreakdown",
+        name: "PADashboardPromotions",
         components: {KCard},
         salesBreakdownItems: [
             {label: 'Daily Sales'   , icon: 'fas fa-calendar-day'},

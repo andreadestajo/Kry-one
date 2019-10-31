@@ -1,0 +1,13 @@
+.dashboard {
+    padding-bottom: 30px;
+
+    &__header {
+        background-color: $primary;
+        height: 100px;
+    }
+
+    &__statistics {
+        margin-top: -100px;
+        padding-top: 30px;
+    }
+}

@@ -1,0 +1,57 @@
+.admin {
+    background-color: #fafafa;
+
+    &__sidebar {
+        background-color: #fff;
+        border-right: none;
+
+        .profile {
+
+            &-avatar {
+                background-color: #fff;
+                padding: 5px;
+                border-radius: 100%;
+                margin-bottom: 5px;
+
+            }
+            &-name {
+                color: $primary;
+            }
+            &-email {
+                color: $text-three;
+                opacity: 0.7;
+            }
+        }
+
+        .nav {
+            border-top: 0px !important;
+            padding-left: 30px;
+            border-left: 3px solid #fff;
+            margin: 5px 0;
+            min-height: 0;
+
+            &-icon {
+                color: $text-three;
+                font-size: 22px;
+            }
+
+            &-label {
+                color: $text-three;
+                font-size: 12px;
+            }
+
+            &.active {
+                border-left: 3px solid $primary;
+
+                .nav-icon {
+                    color: $text-one;
+                }
+
+                .nav-label {
+                    color: $text-one;
+
+                }
+            }
+        }
+    }
+}

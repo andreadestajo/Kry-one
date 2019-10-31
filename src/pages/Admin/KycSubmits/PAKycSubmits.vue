@@ -1,6 +1,6 @@
 <template>
-    <div class="q-pa-lg">
-
+    <q-page class="q-pa-lg">
+        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Enlist Knight</k-header>
         <!--TODO Jln filters here-->
 
         <q-table title="KYC Submits"
@@ -25,18 +25,20 @@
         </q-table>
 
         <pa-kyc-details-modal ref="kycDetailsModal" />
-    </div>
-</template>
+    </q-page>
+</template>s
 
 <script>
+    import KHeader             from '../../../components/Admin/Kheader'
     import PaKycDetailsModal   from './PAKycDetailsModal'
+
     import DB_KYC_VERIFICATION from '../../../models/DB_KYC_VERIFICATION'
 
     import {formatFullname} from "../../../utilities/StringUtils";
 
     export default {
         name: "PAKycSubmits",
-        components: {PaKycDetailsModal},
+        components: {PaKycDetailsModal, KHeader},
         data: () =>
         ({
             separator   : 'cell',

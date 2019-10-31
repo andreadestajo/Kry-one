@@ -1,5 +1,5 @@
 <template>
-    <q-card class="my-card">
+    <q-card class="kcard">
         <q-card-section v-if="content_padding">
             <slot name="section"></slot>
         </q-card-section>
@@ -9,6 +9,8 @@
 </template>
 
 <script>
+    import './KCard.scss';
+
     export default
     {
         name: "KCard",
@@ -19,7 +21,5 @@
 </script>
 
 <style scoped>
-    .q-card {
-        border-radius: 20px;
-    }
+
 </style>

@@ -25,7 +25,6 @@
                         <div class="time">5 minutes ago</div>
                     </div>
                 </div>
-
                 <div class="list">
                     <div class="list-image">
                         <q-avatar>
@@ -35,6 +34,17 @@
                     <div class="list-detail">
                         <div class="detail"><b>Guillermo Tabligan</b> is crying. T____T</div>
                         <div class="time">30 minutes ago</div>
+                    </div>
+                </div>
+                <div class="list" @click="goToPage('member_dashboard')">
+                    <div class="list-image">
+                        <q-avatar>
+                            <q-img  spinner-size="0" src="../statics/girl.jpg"></q-img>
+                        </q-avatar>
+                    </div>
+                    <div class="list-detail">
+                        <div class="detail"><b>Jolina</b> Whuatttt ???</div>
+                        <div class="time">1 hour ago</div>
                     </div>
                 </div>
             </div>
