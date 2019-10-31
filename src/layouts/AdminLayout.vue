@@ -63,10 +63,11 @@
 </template>
 
 <script>
-    import DB_USER from '../models/DB_USER';
+import DB_USER from '../models/DB_USER';
 
 
-    export default {
+export default
+{
     name: 'AdminLayout',
     data: () =>
     ({
@@ -74,11 +75,11 @@
     }),
     methods:
     {
-         goToRoute(route)
+         async goToRoute(route)
          {
-             if(route === 'logout')
+             if(route === 'admin_logout')
              {
-                 DB_USER.signOut();
+                 await DB_USER.signOut();
              }
              else
              {
@@ -88,15 +89,15 @@
     },
     navigations:
     [
-        {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: ''},
-        {label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: ''},
-        {label: 'User'            , icon: 'people'                  , side: '', route: ''},
+        {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'admin_dashboard'},
+        {label: 'User'            , icon: 'people'                  , side: '', route: 'admin_users'},
+        {label: 'Promotions'      , icon: 'people'                  , side: '', route: 'admin_promotions'},
         {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: 'admin_kyc_submits'},
-        {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: ''},
-        {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: ''},
+        {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: 'admin_cashout_requests'},
+        {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: 'admin_commissions'},
         {label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', route: 'admin_nobilities' },
-        {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: ''},
-        {label: 'Logout'          , icon: 'logout'                  , side: '', route: ''},
+        {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: 'admin_monarchy'},
+        {label: 'Logout'          , icon: 'logout'                  , side: '', route: 'admin_logout'},
     ]
-  }
+}
 </script>

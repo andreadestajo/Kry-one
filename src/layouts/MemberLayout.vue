@@ -23,8 +23,8 @@
                             <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
                         </q-avatar>
                     </span>
-                    <span class="profile-name text-weight-bold">{{$_current_user_data.email}}</span>
-                    <span class="profile-email">{{$_current_user_data.full_name}}</span>
+                    <span class="profile-name text-weight-bold">{{$_current_user_data ? $_current_user_data.email : ''}}</span>
+                    <span class="profile-email">{{$_current_user_data ? $_current_user_data.full_name : ''}}</span>
                 </q-item>
 
                 <q-item class="nav" :class="item.route === $route.name ? 'active' : ''" clickable v-ripple v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
@@ -69,8 +69,6 @@ export default
     {
         goToRoute(route)
         {
-            this.$_log(this.$_current_user_data, "Check Current User Data");
-
             if(route === 'logout')
             {
                 DB_USER.signOut();

@@ -1,10 +1,7 @@
 <template>
     <div class="q-pa-lg">
 
-        <div>
-            Filter:
-            <q-select :options="[1,2,3,4]"></q-select>
-        </div>
+        <!--TODO Jln filters here-->
 
         <q-table title="KYC Submits"
                  :data="kycSubmitsData"
