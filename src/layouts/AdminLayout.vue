@@ -80,7 +80,7 @@
         navigations:
         [
             {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'admin_dashboard'},
-            {label: 'User'            , icon: 'people'                  , side: '', route: 'admin_users'},
+            {label: 'Users'           , icon: 'people'                  , side: '', route: 'admin_users'},
             {label: 'Promotions'      , icon: 'people'                  , side: '', route: 'admin_promotions'},
             {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: 'admin_kyc_submits'},
             {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: 'admin_cashout_requests'},

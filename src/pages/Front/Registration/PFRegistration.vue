@@ -15,6 +15,10 @@
                 </div>
 
                 <q-form class="q-pa-lg registration__form" v-if="!isRegistered">
+                    <q-banner v-if="!!registrationError" inline-actions class="q-mb-md text-white bg-red">
+                        {{registrationError}}
+                    </q-banner>
+
                     <div class="q-pa-none label">
                         Full Name
                     </div>
@@ -28,10 +32,24 @@
                              :error-message="'full name is required'"
                              @blur="$v.registration_form_data.full_name.$touch()"/>
 
+                    <div class="q-pa-none label">
+                        Contact Number
+                    </div>
+                    <q-input dense
+                             placeholder=""
+                             class="input"
+                             outlined
+                             stack-label
+                             v-model="registration_form_data.contact_number"
+                             :error="$v.registration_form_data.contact_number.$error"
+                             :error-message="'Contact Number is required'"
+                             @blur="$v.registration_form_data.contact_number.$touch()"/>
+
                     <div class="label">
                         E-mail
                     </div>
-                    <q-input dense
+                    <q-input debounce="500"
+                             dense
                              placeholder="yournam@gmail.com"
                              class="input"
                              outlined
@@ -79,7 +97,8 @@
                     <div class="label">
                         Referral Code
                     </div>
-                    <q-input dense
+                    <q-input debounce="500"
+                             dense
                              placeholder="KRPT01"
                              class="input"
                              outlined
@@ -153,15 +172,21 @@
             registration_form_data:
             {
                 full_name      : '',
+                contact_number : '',
                 email          : '',
                 password       : '',
                 country        : '',
                 referral_code  : '',
                 is_agree       : ''
             },
-            isPassword     : true,
-            isRegistered   : false,
-            referral_name  : null
+            isPassword         : true,
+            isRegistered       : false,
+            referral_name      : null,
+            registration_error :
+            {
+                code    : '',
+                message : ''
+            }
         }),
         computed:
         {
@@ -190,6 +215,12 @@
                         : !this.$v.registration_form_data.referral_code.doesExists
                     ? 'Referral Code does not belong to anyone.'
                     :   `Referral from ${this.referral_name}`
+            },
+            registrationError()
+            {
+                return !this.registration_error.code
+                    ? false
+                    : this.registration_error.message
             }
         },
         methods:
@@ -203,14 +234,13 @@
                 await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
                 .then(data =>
                 {
-                    console.log('success');
                     this.$_hidePageLoading();
                     this.isRegistered = true;
                 })
                 .catch(error =>
                 {
-                    console.log('error');
-                    console.log(error.message);
+                    this.registration_error.code    = error.code;
+                    this.registration_error.message = error.message;
                     this.$_hidePageLoading();
                 })
             }
@@ -219,10 +249,11 @@
         {
             registration_form_data:
             {
-                full_name     : {required},
-                password      : {required, minLength: minLength(6)},
-                country       : {required},
-                email         :
+                full_name      : {required},
+                contact_number : {required},
+                password       : {required, minLength: minLength(6)},
+                country        : {required},
+                email          :
                 {
                     required,
                     email,

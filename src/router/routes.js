@@ -52,7 +52,8 @@ const routes = [
 		path: '/developer', component: () => import('layouts/DeveloperLayout.vue'),
 		children:
         [
-			{ name: 'developer_dashboard', path: '', component: () => import('pages/Developer/PDDashboard.vue') }
+			{ name: 'developer_dashboard' , path: '', component: () => import('pages/Developer/PDDashboard.vue') },
+			{ name: 'developer_dashboard2', path: 'dash2', component: () => import('pages/Developer/PDDashboard2.vue') }
 		]
 	},
     {

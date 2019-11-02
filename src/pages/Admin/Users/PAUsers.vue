@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-lg">
-        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">KYC Submits</k-header>
+        <k-header icon="people" detail="Lorem ipsum dolor sit amet">Users</k-header>
         <!--TODO Jln filters here-->
 
         <k-table :data="usersData" :columns="$options.columns" class="text-center">
@@ -39,7 +39,7 @@
                 <q-td key="email">{{ kyc.data.email }}</q-td>
                 <q-td key="nobility">{{ kyc.data.nobility }}</q-td>
                 <q-td key="contact_number">{{ kyc.data.contact_number}}</q-td>
-                <q-td key="kyc_status">{{ kyc.data.kyc_status.toUpperCase()}}</q-td>
+                <q-td key="kyc_status">{{ kyc.data.kyc_status}}</q-td>
                 <q-td key="action">
                     <q-btn-dropdown unelevated
                                     color="primary"
@@ -49,8 +49,8 @@
                                     v-close-popup
                                     v-for="action in $options.actions"
                                     :key="action.key"
-                                    @click="onClickAction(action)">
-                                <q-item-section avatar >
+                                    @click="onClickAction({action, data: kyc.data})">
+                                <q-item-section avatar  >
                                     <q-icon color="primary"
                                             size="xs"
                                             :name="action.icon"/>
@@ -96,8 +96,8 @@
                         name           : u.full_name,
                         email          : u.email,
                         nobility       : u.hasOwnProperty('nobility_info') ? u.nobility_info.title : '',
-                        contact_number : '', // TODO
-                        kyc_status     : 'pending' // TODO
+                        contact_number : u.contact_number,
+                        kyc_status     : u.kyc_status.toUpperCase()
                     }
                 })
             }
@@ -116,7 +116,6 @@
         async mounted()
         {
             await DB_USER.bindAllUsers(this);
-            console.log(this.users);
         },
         columns:
         [
