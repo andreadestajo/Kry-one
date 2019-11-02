@@ -38,7 +38,7 @@
                 <q-td key="name">{{ kyc.data.name }}</q-td>
                 <q-td key="email">{{ kyc.data.email }}</q-td>
                 <q-td key="nobility">{{ kyc.data.nobility }}</q-td>
-                <q-td key="contact_number">{{ kyc.data.contact_number s}}</q-td>
+                <q-td key="contact_number">{{ kyc.data.contact_number}}</q-td>
                 <q-td key="kyc_status">{{ kyc.data.kyc_status.toUpperCase()}}</q-td>
                 <q-td key="action">
                     <q-btn-dropdown unelevated
