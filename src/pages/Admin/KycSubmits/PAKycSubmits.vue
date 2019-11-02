@@ -3,33 +3,59 @@
         <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Enlist Knight</k-header>
         <!--TODO Jln filters here-->
 
-        <q-table title="KYC Submits"
-                 :data="kycSubmitsData"
-                 :columns="$options.columns"
-                 row-key="name">
-            <template v-slot:body="props">
-                <q-tr :props="props">
-                    <q-td key="name">{{ props.row.name }}</q-td>
-                    <q-td key="date">{{ props.row.date }}</q-td>
-                    <q-td key="time">{{ props.row.time }}</q-td>
-                    <q-td key="status">{{ props.row.status }}</q-td>
-                    <q-td key="action">
-                        <q-btn unelevated
-                               label="View"
-                               type="submit"
-                               color="primary"
-                               @click="viewKycDetails(props.row)"></q-btn>
-                    </q-td>
-                </q-tr>
+        <k-table :data="kycSubmitsData" :columns="$options.columns" class="text-center">
+            <template slot="table_top_left">
+                 <q-input dense
+                          placeholder="Search"
+                          v-model="search_text">
+                    <template v-slot:append>
+                        <q-btn flat round color="primary" icon="search" />
+                    </template>
+                </q-input>
             </template>
-        </q-table>
+
+            <template slot="table_top_right">
+                <q-select dense
+                          placeholder="Status"
+                          v-model="filters"
+                          :options="$options.filter_options"
+                          multiple emit-value map-options>
+                    <template v-slot:option="scope">
+                        <q-item v-bind="scope.itemProps"
+                                v-on="scope.itemEvents">
+                            <q-item-section>
+                                <q-item-label v-html="scope.opt.label" ></q-item-label>
+                            </q-item-section>
+                            <q-item-section side>
+                                <q-toggle v-model="filters" :val="scope.opt.value" />
+                            </q-item-section>
+                        </q-item>
+                    </template>
+                </q-select>
+            </template>
+
+            <template slot="table_rows" slot-scope="kyc">
+                <q-td key="name">{{ kyc.data.name }}</q-td>
+                <q-td key="date">{{ kyc.data.date }}</q-td>
+                <q-td key="time">{{ kyc.data.time }}</q-td>
+                <q-td key="status">{{ kyc.data.status }}</q-td>
+                <q-td key="action">
+                    <q-btn unelevated
+                           label="View"
+                           type="submit"
+                           color="primary"
+                           @click="viewKycDetails(kyc.data)"></q-btn>
+                </q-td>
+            </template>
+        </k-table>
 
         <pa-kyc-details-modal ref="kycDetailsModal" />
     </q-page>
-</template>s
+</template>
 
 <script>
-    import KHeader             from '../../../components/Admin/Kheader'
+    import KHeader             from '../../../components/Admin/KHeader'
+    import KTable              from '../../../components/Admin/KTable'
     import PaKycDetailsModal   from './PAKycDetailsModal'
 
     import DB_KYC_VERIFICATION from '../../../models/DB_KYC_VERIFICATION'
@@ -38,11 +64,13 @@
 
     export default {
         name: "PAKycSubmits",
-        components: {PaKycDetailsModal, KHeader},
+        components: {PaKycDetailsModal, KHeader, KTable},
         data: () =>
         ({
-            separator   : 'cell',
-            kycSubmits  : []
+            kycSubmits  : [],
+
+            search_text: '',
+            filters: ['pending', 'approved', 'rejected']
         }),
         computed: {
             kycSubmitsData()
@@ -78,6 +106,12 @@
           { name: 'status'  , label: 'Status'         , field: 'status' , align: 'center', sortable: true},
           { name: 'action'  , label: 'Action'         , field: ''       , align: 'center', sortable: true},
         ],
+        filter_options:
+        [
+            {label: 'Pending'  , value: 'pending'},
+            {label: 'Approved' , value: 'approved'},
+            {label: 'Rejected' , value: 'rejected'},
+        ]
     }
 </script>
 

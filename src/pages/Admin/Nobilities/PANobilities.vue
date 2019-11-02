@@ -1,5 +1,7 @@
 <template>
-    <div>
+    <q-page>
+        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Nobilities</k-header>
+
         <!--ADD BUTTON-->
         <div class="q-pa-lg">
             <q-btn unelevated
@@ -16,8 +18,7 @@
                      :data="nobilitiesData"
                      :columns="$options.columns"
                      row-key="name"
-                     :pagination="{rowsPerPage: 0}"
-                     hide-bottom>
+                     :pagination="{rowsPerPage: 0}">
                 <template v-slot:body="props">
                     <q-tr :props="props">
                         <q-td v-for="column in mappedColumns" :key="column">
@@ -48,10 +49,12 @@
 
         <!--EDIT MODAL-->
         <pa-nobilities-edit-modal ref="nobilitiesEditModalRef" />
-    </div>
+    </q-page>
 </template>
 
 <script>
+    import KHeader               from '../../../components/Admin/KHeader'
+
     import Nobility              from "../../../models/DB_NOBILITY"
     import PaNobilitiesAddModal  from './PANobilitiesAddModal'
     import PaNobilitiesEditModal from './PANobilitiesEditModal'
@@ -59,6 +62,7 @@
     export default {
         name: "PANobilities",
         components: {
+            KHeader,
             PaNobilitiesAddModal,
             PaNobilitiesEditModal
         },
