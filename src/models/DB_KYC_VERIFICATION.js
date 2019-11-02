@@ -56,7 +56,7 @@ export default
      * @param options {name, limit, startAtId}
      * @returns {Promise<firebase.firestore.DocumentData[]> | Promise<firebase.firestore.DocumentData>}
      */
-    bindKycVerifications(_this, options)
+    bindKycVerifications(_this, options = {})
     {
         // Set default name
         if(!options.hasOwnProperty('name'))

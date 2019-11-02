@@ -49,17 +49,20 @@ export default
     {
         return await this.doc(id).delete();
     },
-    signIn(email, password) {
+    signIn(email, password)
+    {
         return AUTH.signInWithEmailAndPassword(email, password)
     },
-    signOut() {
+    signOut()
+    {
         return AUTH.signOut()
     },
     getCurrentUser()
     {
         return AUTH.currentUser
     },
-    getUserByEmailAddress(email) {
+    getUserByEmailAddress(email)
+    {
         return this.collection()
             .where("email", "==", email)
             .limit(1)
@@ -71,7 +74,8 @@ export default
                 return {error}
             })
     },
-    getUserByReferralCode(referral_code) {
+    getUserByReferralCode(referral_code)
+    {
         return this.collection()
             .where("referral_code", "==", referral_code)
             .limit(1)
@@ -82,5 +86,23 @@ export default
             .catch(error => {
                 return {error}
             })
+    },
+
+    /**
+     *
+     * @param _this
+     * @param options {name, limit, startAtId}
+     * @returns {Promise<firebase.firestore.DocumentData[]> | Promise<firebase.firestore.DocumentData>}
+     */
+    bindAllUsers(_this, options = {})
+    {
+        // Set default name
+        if(!options.hasOwnProperty('name'))
+        {
+            options.name =  "users"
+        }
+
+        return _this.$bind(options.name, this.collection()
+            .orderBy("full_name"))
     }
 }

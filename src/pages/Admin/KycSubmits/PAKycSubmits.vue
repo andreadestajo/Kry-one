@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-lg">
-        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Enlist Knight</k-header>
+        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">KYC Submits</k-header>
         <!--TODO Jln filters here-->
 
         <k-table :data="kycSubmitsData" :columns="$options.columns" class="text-center">
@@ -38,7 +38,7 @@
                 <q-td key="name">{{ kyc.data.name }}</q-td>
                 <q-td key="date">{{ kyc.data.date }}</q-td>
                 <q-td key="time">{{ kyc.data.time }}</q-td>
-                <q-td key="status">{{ kyc.data.status }}</q-td>
+                <q-td key="status">{{ kyc.data.status.toUpperCase() }}</q-td>
                 <q-td key="action">
                     <q-btn unelevated
                            label="View"
