@@ -37,7 +37,7 @@
             <template slot="table_rows" slot-scope="kyc">
                 <q-td key="name">{{ kyc.data.name }}</q-td>
                 <q-td key="email">{{ kyc.data.email }}</q-td>
-                <q-td key="nobility">{{ kyc.data.nobility }}</q-td>
+                <q-td key="nobility">{{ kyc.data.nobility_info.title }}</q-td>
                 <q-td key="contact_number">{{ kyc.data.contact_number}}</q-td>
                 <q-td key="kyc_status">{{ kyc.data.kyc_status}}</q-td>
                 <q-td key="action">
@@ -66,21 +66,30 @@
         </k-table>
 
         <!--MODALS-->
-        <pa-users-wallet-modal ref="usersWalletModalRef"/>
+        <pa-users-wallet-modal     ref="usersWalletModalRef"/>
+        <pa-users-accelerate-modal ref="userAccelerateModalRef"/>
+
     </q-page>
 </template>
 
 <script>
-    import KHeader             from '../../../components/Admin/KHeader'
-    import KTable              from '../../../components/Admin/KTable'
-    import PaUsersWalletModal  from './PAUsersWalletModal'
+    import KHeader                 from '../../../components/Admin/KHeader'
+    import KTable                  from '../../../components/Admin/KTable'
+    import PaUsersWalletModal      from './PAUsersWalletModal'
+    import PaUsersAccelerateModal  from './PAUsersAccelerateModal'
 
     import DB_USER   from '../../../models/DB_USER'
 
 
     export default {
         name: "PAUsers",
-        components: {KHeader, KTable, PaUsersWalletModal},
+        components:
+        {
+            KHeader,
+            KTable,
+            PaUsersWalletModal,
+            PaUsersAccelerateModal
+        },
         data: () =>
         ({
             kycSubmits  : [],
@@ -97,10 +106,10 @@
                     return {
                         name           : u.full_name,
                         email          : u.email,
-                        nobility       : u.hasOwnProperty('nobility_info') ? u.nobility_info.title : '',
+                        nobility_info  : u.hasOwnProperty('nobility_info') ? u.nobility_info : {title: ''},
                         contact_number : u.contact_number,
                         kyc_status     : u.kyc_status ? u.kyc_status.toUpperCase() : '',
-                        id             : u.id
+                        id             : u.id,
                     }
                 })
             }
@@ -122,6 +131,7 @@
                     case 'edit_user':
                         break;
                     case 'accelerate_user':
+                        this.$refs.userAccelerateModalRef.showUsersAccelerateModal(item.data);
                         break;
                     case 'referrals':
                         break;

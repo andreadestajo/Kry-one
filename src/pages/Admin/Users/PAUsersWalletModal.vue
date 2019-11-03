@@ -10,55 +10,82 @@
                     Name: {{user_details.name}}
                 </div>
 
-                <!--UNIQ-->
-                <k-card class="col q-ma-xs">
+                <!--WALLET-->
+                <k-card class="col q-ma-xs"
+                        v-for="wallet in walletDetails" :key="wallet.key">
                     <span slot="section">
-                        Uniq details here
-                    </span>
-                </k-card>
+                        <div class="q-mb-md text-center">
+                            {{wallet.key}}
+                        </div>
 
-                <!--BTC-->
-                <k-card class="col q-ma-xs">
-                    <span slot="section">
-                        BTC details here
-                    </span>
-                </k-card>
+                        <div class="col">
+                            <k-field label="Wallet Address">
+                                <q-input dense outlined readonly
+                                         :value="''"
+                                         type="text"/>
+                            </k-field>
 
-                <!--ETH-->
-                <k-card class="col q-ma-xs">
-                    <span slot="section">
-                        ETH details here
+                            <k-field label="Balance">
+                                <q-input dense outlined readonly
+                                         :value="wallet.wallet"
+                                         type="text"/>
+                            </k-field>
+                        </div>
                     </span>
                 </k-card>
             </div>
         </div>
         <div slot="modal-footer">
             <q-btn flat label="Send BTC" @click="" />
-            <q-btn flat color="grey" label="Close" @click="$refs.kModalRef.hideModal()"/>
+            <q-btn flat color="grey" label="Close" @click="hideWalletModal"/>
         </div>
     </k-modal>
 </template>
 
 <script>
     import KCard  from '../../../components/Admin/KCard'
+    import KField from '../../../components/Admin/KField'
     import KModal from '../../../components/Admin/KModal'
+
+    import DB_USER_WALLET from '../../../models/DB_USER_WALLET'
 
     export default {
         name: "PAUsersWalletModal",
-        components: {KModal, KCard},
+        components: {KModal, KField, KCard},
         data: () =>
         ({
             user_details:
             {
                 name: ''
-            }
+            },
+            user_wallet: []
         }),
+        computed:
+        {
+            walletDetails()
+            {
+                return this.user_wallet
+            }
+        },
         methods:
         {
-            showUsersWalletModal(user_details)
+            async showUsersWalletModal(user_details)
             {
-                console.log(user_details);
-                this.$refs.kModalRef.showModal()
+                this.$refs.kModalRef.showModal();
+                this.$refs.kModalRef.showLoading();
+
+                // Assign user details
+                this.user_details = Object.assign({}, user_details);
+
+                // Get user wallet
+                this.user_wallet = await DB_USER_WALLET.getMany(user_details.id);
+
+                this.$refs.kModalRef.hideLoading();
+            },
+            hideWalletModal()
+            {
+                this.user_wallet = [];
+                this.$refs.kModalRef.hideModal()
             }
         }
     }

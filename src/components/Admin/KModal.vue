@@ -1,12 +1,15 @@
 <template>
-    <q-dialog persistent v-model="isShow">
-        <q-card>
+    <q-dialog persistent v-model="is_show">
+        <q-card :style="`width: ${card_width}; max-width: 900px`">
             <q-card-section>
                 <slot name="modal-header"></slot>
             </q-card-section>
 
-            <q-card-section>
-                <slot name="modal-content"></slot>
+            <q-card-section style="max-height: 70vh" class="scroll">
+                <slot v-if="!is_loading" name="modal-content"></slot>
+                <q-inner-loading :showing="is_loading">
+                    <q-spinner size="50px" :thickness="4" color="primary" />
+                </q-inner-loading>
             </q-card-section>
 
             <q-card-actions align="right" class="text-primary">
@@ -21,17 +24,31 @@
         name: "KModal",
         data: () =>
         ({
-            isShow: false
+            is_show    : false,
+            is_loading : false
         }),
+        props:
+        {
+            card_width          : {type: String, default: '500px'},
+            card_section_height : {type: String, default: '70vh'}
+        },
         methods:
         {
             showModal()
             {
-                this.isShow = true;
+                this.is_show = true;
             },
             hideModal()
             {
-                this.isShow = false;
+                this.is_show = false;
+            },
+            showLoading()
+            {
+                this.is_loading = true;
+            },
+            hideLoading()
+            {
+                this.is_loading = false;
             }
         }
     }
