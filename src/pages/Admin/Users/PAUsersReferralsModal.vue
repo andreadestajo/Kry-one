@@ -6,7 +6,7 @@
 
         <div slot="modal-content">
             <k-table :data="referralsData" :columns="$options.columns" class="text-center">
-                <template slot="table_top_left">
+                <template slot="table_top_right">
                     <q-input dense
                              placeholder="Search"
                              v-model="search_text">

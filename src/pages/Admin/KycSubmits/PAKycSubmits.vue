@@ -4,7 +4,7 @@
         <!--TODO Jln filters here-->
 
         <k-table :data="kycSubmitsData" :columns="$options.columns" class="text-center">
-            <template slot="table_top_left">
+            <template slot="table_top">
                  <q-input dense
                           placeholder="Search"
                           v-model="search_text">
@@ -12,9 +12,7 @@
                         <q-btn flat round color="primary" icon="search" />
                     </template>
                 </q-input>
-            </template>
-
-            <template slot="table_top_right">
+                <q-space />
                 <q-select dense
                           placeholder="Status"
                           v-model="filters"

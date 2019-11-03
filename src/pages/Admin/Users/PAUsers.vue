@@ -4,34 +4,15 @@
         <!--TODO Jln filters here-->
 
         <k-table :data="usersData" :columns="$options.columns" class="text-center">
-            <template slot="table_top_left">
-                <q-input dense
-                         placeholder="Search"
+            <template slot="table_top">
+                <q-input dense class="full-width"
+                         placeholder="Search by email"
+                         @keyup.enter="searchUser"
                          v-model="search_text">
                     <template v-slot:append>
-                        <q-btn flat round color="primary" icon="search" />
+                        <q-btn flat round color="primary" icon="search" @click="searchUser"/>
                     </template>
                 </q-input>
-            </template>
-
-            <template slot="table_top_right">
-                <q-select dense
-                          placeholder="Status"
-                          v-model="filters"
-                          :options="$options.filter_options"
-                          multiple emit-value map-options>
-                    <template v-slot:option="scope">
-                        <q-item v-bind="scope.itemProps"
-                                v-on="scope.itemEvents">
-                            <q-item-section>
-                                <q-item-label v-html="scope.opt.label" ></q-item-label>
-                            </q-item-section>
-                            <q-item-section side>
-                                <q-toggle v-model="filters" :val="scope.opt.value" />
-                            </q-item-section>
-                        </q-item>
-                    </template>
-                </q-select>
             </template>
 
             <template slot="table_rows" slot-scope="kyc">
@@ -149,6 +130,17 @@
                     default:
                         this.$_notify({message: 'Invalid action. Please try again'})
                 }
+            },
+            async searchUser()
+            {
+                const params = {};
+
+                if(this.search_text)
+                {
+                    params.search_text = this.search_text
+                }
+
+                await DB_USER.bindAllUsers(this, params);
             }
         },
         async mounted()

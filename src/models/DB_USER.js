@@ -96,14 +96,21 @@ export default
      */
     bindAllUsers(_this, options = {})
     {
+        let query = this.collection();
+
+        // Filter or pagination here
+        if(options.hasOwnProperty('search_text'))
+        {
+            query = query.where("email", "==", options.search_text)
+        }
+
         // Set default name
         if(!options.hasOwnProperty('name'))
         {
             options.name =  "users"
         }
 
-        return _this.$bind(options.name, this.collection()
-            .orderBy("full_name"))
+        return _this.$bind(options.name, query)
     },
 
     bindReferrals(_this, referral_code, options ={})

@@ -5,12 +5,10 @@
              row-key="name"
              :pagination="{rowsPerPage: 0}"
              hide-bottom>
-        <template v-slot:top-left>
-            <slot name="table_top_left"></slot>
-        </template>
 
-        <template v-slot:top-right>
-            <slot name="table_top_right"></slot>
+
+        <template v-slot:top>
+            <slot name="table_top"></slot>
         </template>
 
         <q-tr slot="body" slot-scope="props">
