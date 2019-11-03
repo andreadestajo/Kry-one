@@ -1,11 +1,12 @@
 <template>
     <q-dialog persistent v-model="is_show">
-        <q-card :style="`width: ${card_width}; max-width: 900px`">
+        <q-card :style="`width: ${card_width}; max-width: 900px;`">
             <q-card-section>
                 <slot name="modal-header"></slot>
             </q-card-section>
 
-            <q-card-section style="max-height: 70vh" class="scroll">
+            <q-card-section :style="`max-height: 70vh; height: ${card_section_height}`"
+                            class="scroll">
                 <slot v-if="!is_loading" name="modal-content"></slot>
                 <q-inner-loading :showing="is_loading">
                     <q-spinner size="50px" :thickness="4" color="primary" />
@@ -29,8 +30,8 @@
         }),
         props:
         {
-            card_width          : {type: String, default: '500px'},
-            card_section_height : {type: String, default: '70vh'}
+            card_width          : {type: String, default: '600px'},
+            card_section_height : {type: String, default: '20vh'}
         },
         methods:
         {

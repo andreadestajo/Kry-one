@@ -104,5 +104,18 @@ export default
 
         return _this.$bind(options.name, this.collection()
             .orderBy("full_name"))
+    },
+
+    bindReferrals(_this, referral_code, options ={})
+    {
+        // Set default name
+        if(!options.hasOwnProperty('name'))
+        {
+            options.name =  "referrals"
+        }
+
+        return _this.$bind(options.name, this.collection()
+            .where("referred_by", "==", referral_code)
+            .orderBy("full_name"))
     }
 }

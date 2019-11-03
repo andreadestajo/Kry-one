@@ -69,6 +69,7 @@
         <pa-users-wallet-modal     ref="usersWalletModalRef"/>
         <pa-users-accelerate-modal ref="userAccelerateModalRef"/>
 
+        <router-view></router-view>
     </q-page>
 </template>
 
@@ -110,6 +111,7 @@
                         contact_number : u.contact_number,
                         kyc_status     : u.kyc_status ? u.kyc_status.toUpperCase() : '',
                         id             : u.id,
+                        referral_code  : u.referral_code
                     }
                 })
             }
@@ -134,6 +136,11 @@
                         this.$refs.userAccelerateModalRef.showUsersAccelerateModal(item.data);
                         break;
                     case 'referrals':
+                        this.$router.push
+                        ({
+                            name  : 'admin_users_referrals',
+                            params: {referral_code: item.data.referral_code}
+                        });
                         break;
                     case 'monarchy':
                         break;

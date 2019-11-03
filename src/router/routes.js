@@ -39,14 +39,22 @@ const routes = [
 		children:
         [
 			{ name: 'admin_dashboard'        , path: ''                , component: () => import('pages/Admin/Dashboard/PADashboard.vue') },
-			{ name: 'admin_users'            , path: 'users'           , component: () => import('pages/Admin/Users/PAUsers.vue') },
 			{ name: 'admin_promotions'       , path: 'promotions'      , component: () => import('pages/Admin/Promotions/PAPromotions.vue') },
 			{ name: 'admin_kyc_submits'      , path: 'kycsubmits'      , component: () => import('pages/Admin/KycSubmits/PAKycSubmits.vue') },
 			{ name: 'admin_cashout_requests' , path: 'cashoutrequests' , component: () => import('pages/Admin/CashoutRequests/PACashoutRequests.vue') },
 			{ name: 'admin_commissions'      , path: 'commissions'     , component: () => import('pages/Admin/Commissions/PACommissions.vue') },
 			{ name: 'admin_nobilities'       , path: 'nobilities'      , component: () => import('pages/Admin/Nobilities/PANobilities.vue') },
-			{ name: 'admin_monarchy'         , path: 'monarchy'        , component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') }
-		]
+			{ name: 'admin_monarchy'         , path: 'monarchy'        , component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') },
+            {
+                name: 'admin_users',
+                path: 'users',
+                component: () => import('pages/Admin/Users/PAUsers.vue'),
+                children:
+                [
+                    { name: 'admin_users_referrals' , path: 'referrals/:referral_code' , component: () => import('pages/Admin/Users/PAUsersReferralsModal.vue') }
+                ]
+            }
+        ]
 	},	
 	{
 		path: '/developer', component: () => import('layouts/DeveloperLayout.vue'),

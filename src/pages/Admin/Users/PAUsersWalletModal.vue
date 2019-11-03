@@ -1,5 +1,5 @@
 <template>
-    <k-modal ref="kModalRef">
+    <k-modal ref="kModalRef" card_width="800px" card_section_height="50vh">
         <div slot="modal-header">
             <div class="text-h6">Wallet</div>
         </div>
