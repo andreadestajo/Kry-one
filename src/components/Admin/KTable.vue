@@ -4,7 +4,8 @@
              :columns="columns"
              row-key="name"
              :pagination="{rowsPerPage: 0}"
-             hide-bottom>
+             hide-bottom
+             :loading="is_loading">
 
 
         <template v-slot:top>
@@ -28,7 +29,19 @@
         },
         data: () =>
         ({
-        })
+            is_loading: false
+        }),
+        methods:
+        {
+            showLoading()
+            {
+                this.is_loading = true;
+            },
+            hideLoading()
+            {
+                this.is_loading = false;
+            }
+        }
     }
 </script>
 

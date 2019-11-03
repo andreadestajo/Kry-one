@@ -1,5 +1,5 @@
 <template>
-    <k-modal ref="kModalRef">
+    <k-modal ref="kModalRef" card_width="800px" card_section_height="70vh">
         <div slot="modal-header">
             <div class="text-h6">KYC Submits</div>
         </div>
@@ -18,9 +18,8 @@
 
                 <div class="col-xs-12 col-sm-4 q-pa-sm" v-for="field in $options.img_fields" :key="field.key">
                     <k-field  :label="field.label">
-                        <q-avatar square size="150px">
-                            <img :src="kyc_details_value[field.key]">
-                        </q-avatar>
+                            <img :src="kyc_details_value[field.key]"
+                                 width="230px">
                     </k-field>
                 </div>
             </div>

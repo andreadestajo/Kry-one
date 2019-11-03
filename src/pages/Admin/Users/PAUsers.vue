@@ -3,7 +3,7 @@
         <k-header icon="people" detail="Lorem ipsum dolor sit amet">Users</k-header>
         <!--TODO Jln filters here-->
 
-        <k-table :data="usersData" :columns="$options.columns" class="text-center">
+        <k-table ref="kTableRef" :data="users_data" :columns="$options.columns" class="text-center">
             <template slot="table_top">
                 <q-input dense class="full-width"
                          placeholder="Search by email"
@@ -75,28 +75,11 @@
         data: () =>
         ({
             kycSubmits  : [],
-            users       : [],
             search_text : '',
-            filters     : ['pending', 'approved', 'rejected']
+            filters     : ['pending', 'approved', 'rejected'],
+            users       : [],
+            users_data  : []
         }),
-        computed:
-        {
-            usersData()
-            {
-                return this.users.map(u =>
-                {
-                    return {
-                        name           : u.full_name,
-                        email          : u.email,
-                        nobility_info  : u.hasOwnProperty('nobility_info') ? u.nobility_info : {title: ''},
-                        contact_number : u.contact_number,
-                        kyc_status     : u.kyc_status ? u.kyc_status.toUpperCase() : '',
-                        id             : u.id,
-                        referral_code  : u.referral_code
-                    }
-                })
-            }
-        },
         methods:
         {
             viewKycDetails(kyc_data)
@@ -137,7 +120,7 @@
 
                 if(this.search_text)
                 {
-                    params.search_text = this.search_text
+                    params.search_text = this.search_text.trim()
                 }
 
                 await DB_USER.bindAllUsers(this, params);
@@ -145,7 +128,32 @@
         },
         async mounted()
         {
+            this.$refs.kTableRef.showLoading();
             await DB_USER.bindAllUsers(this);
+        },
+        watch:
+        {
+            users(users)
+            {
+                const users_data = [];
+
+                users.forEach(u =>
+                {
+                    users_data.push
+                    ({
+                        name           : u.full_name,
+                        email          : u.email,
+                        nobility_info  : u.hasOwnProperty('nobility_info') ? u.nobility_info : {title: ''},
+                        contact_number : u.contact_number,
+                        kyc_status     : u.kyc_status ? u.kyc_status.toUpperCase() : '',
+                        id             : u.id,
+                        referral_code  : u.referral_code
+                    })
+                });
+
+                this.users_data = users_data;
+                this.$refs.kTableRef.hideLoading();
+            }
         },
         columns:
         [

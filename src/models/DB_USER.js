@@ -110,6 +110,9 @@ export default
             options.name =  "users"
         }
 
+        // order
+        query = query.orderBy('full_name');
+
         return _this.$bind(options.name, query)
     },
 
