@@ -140,7 +140,7 @@
                     </div>
                 </q-form>
 
-                <p-f-registration-confirmation v-if="isRegistered" />
+                <p-f-registration-confirmation v-if="isRegistered" :email="registration_form_data.email"/>
             </q-page>
         </q-page-container>
     </div>

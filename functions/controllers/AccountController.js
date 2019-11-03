@@ -1,8 +1,14 @@
-const { ADMIN_AUTH, HTTPS_ERROR }   = require('../plugin/firebase');
-const MDB_USER                      = require('../models/MDB_USER');
-const {sendMail}                    = require('../globals/EmailHelper');
-const {generateHashedId}            = require('../globals/HashHelper');
-const { emailVerificationTemplate, passwordResetTemplate} = require('../references/ref_email_templates');
+const moment   = require('moment-timezone');
+const momentTZ = moment.tz('Asia/Manila');
+
+const {ADMIN_AUTH, HTTPS_ERROR}   = require('../plugin/firebase');
+const MDB_USER                    = require('../models/MDB_USER');
+
+const {sendMail}                  = require('../globals/EmailHelper');
+const {generateHashedId}          = require('../globals/HashHelper');
+
+const {
+    emailVerificationTemplate, passwordResetTemplate} = require('../references/ref_email_templates');
 
 const sendEmailVerificationLink = async (email, fullname) =>
 {
@@ -56,8 +62,9 @@ module.exports =
         // Create new user and return result
         const create_user = await ADMIN_AUTH.createUser
         ({
-            email   : user_info.email,
-            password: user_info.password,
+            email       : user_info.email,
+            password    : user_info.password,
+            phoneNumber : user_info.contact_number
         })
         .then(function(userRecord)
         {
@@ -82,9 +89,14 @@ module.exports =
         // Generate short id as a referral code
         user_info.referral_code = generateReferralCode(user_info.email);
 
+        // Initialize kyc status and add created_at
+        user_info.kyc_status = '';
+        user_info.created_at = momentTZ.toDate();
+
         // Add new user data to collection
-        const user_record   = create_user.data;
+        const user_record = create_user.data;
         delete user_info.password;
+
         const add_user_info = await MDB_USER.doc(user_record.uid).set
         ({
             email_verified : user_record.emailVerified ? user_record.emailVerified : null,

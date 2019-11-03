@@ -8,8 +8,8 @@
 
         <q-card-section>
             <div class="text-subtitle1">
-                Thanks for signing up. Please confirm your e-mail address <i>(email-address)</i> to activate
-                your account. Check the inbox for activation link.
+                Thanks for signing up. Please confirm your e-mail address <b>({{email}})</b> to activate
+                your account. Check your inbox for the activation link.
             </div>
         </q-card-section>
 
@@ -25,7 +25,11 @@
 
 <script>
     export default {
-        name: "PFRegistrationConfirmation"
+        name: "PFRegistrationConfirmation",
+        props:
+        {
+            email: {type: String}
+        }
     }
 </script>
 

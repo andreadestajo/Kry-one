@@ -65,20 +65,22 @@
             </template>
         </k-table>
 
+        <!--MODALS-->
+        <pa-users-wallet-modal ref="usersWalletModalRef"/>
     </q-page>
 </template>
 
 <script>
     import KHeader             from '../../../components/Admin/KHeader'
     import KTable              from '../../../components/Admin/KTable'
+    import PaUsersWalletModal  from './PAUsersWalletModal'
 
     import DB_USER   from '../../../models/DB_USER'
 
-    import {formatFullname} from "../../../utilities/StringUtils";
 
     export default {
         name: "PAUsers",
-        components: {KHeader, KTable},
+        components: {KHeader, KTable, PaUsersWalletModal},
         data: () =>
         ({
             kycSubmits  : [],
@@ -97,7 +99,8 @@
                         email          : u.email,
                         nobility       : u.hasOwnProperty('nobility_info') ? u.nobility_info.title : '',
                         contact_number : u.contact_number,
-                        kyc_status     : u.kyc_status.toUpperCase()
+                        kyc_status     : u.kyc_status ? u.kyc_status.toUpperCase() : '',
+                        id             : u.id
                     }
                 })
             }
@@ -110,7 +113,25 @@
             },
             onClickAction(item)
             {
-                console.log(item)
+                // We currently have 5 actions
+                switch (item.action.key)
+                {
+                    case 'view_wallet':
+                        this.$refs.usersWalletModalRef.showUsersWalletModal(item.data);
+                        break;
+                    case 'edit_user':
+                        break;
+                    case 'accelerate_user':
+                        break;
+                    case 'referrals':
+                        break;
+                    case 'monarchy':
+                        break;
+                    case 'block_user':
+                        break;
+                    default:
+                        this.$_notify({message: 'Invalid action. Please try again'})
+                }
             }
         },
         async mounted()
@@ -129,7 +150,7 @@
         actions:
         [
             { label: 'View Wallet'    , icon: 'far fa-eye'   , key: 'view_wallet'},
-            { label: 'Edit'           , icon: 'far fa-edit'  , key: 'edit'},
+            { label: 'Edit'           , icon: 'far fa-edit'  , key: 'edit_user'},
             { label: 'Accelerate User', icon: 'trending_up'  , key: 'accelerate_user'},
             { label: 'Referrals'      , icon: 'people'       , key: 'referrals'},
             { label: 'Monarchy'       , icon: 'fas fa-users' , key: 'monarchy'},
