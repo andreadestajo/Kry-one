@@ -158,6 +158,7 @@
                 });
 
                 this.users_data = users_data;
+                this.$refs.kTableRef.hideLoading();
             }
         },
         columns:
