@@ -118,6 +118,7 @@
             },
             async searchUser()
             {
+                this.$refs.kTableRef.showLoading();
                 const params = {};
 
                 if(this.search_text)
@@ -131,13 +132,15 @@
         async mounted()
         {
             this.$refs.kTableRef.showLoading();
-            console.log('nag bind')
             await DB_USER.bindAllUsers(this);
         },
         watch:
         {
             users(users)
             {
+                if(!users.length) {return 0}
+
+                this.$refs.kTableRef.showLoading();
                 const users_data = [];
 
                 users.forEach(u =>
@@ -155,7 +158,6 @@
                 });
 
                 this.users_data = users_data;
-                this.$refs.kTableRef.hideLoading();
             }
         },
         columns:

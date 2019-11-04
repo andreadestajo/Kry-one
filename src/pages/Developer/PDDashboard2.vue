@@ -4,9 +4,7 @@
             <q-expansion-item expand-separator label="Users Collection">
                 <q-card>
                     <q-card-section>
-                        <q-btn flat color="primary" @click="addContactNumber">ADD CONTACT NUMBER</q-btn>
-                        <q-btn flat color="primary" @click="addCreatedAt">ADD DATE REGISTERED</q-btn>
-                        <q-btn flat color="primary" @click="addKycStatus">ADD KYC STATUS</q-btn>
+                        <q-btn flat color="primary" @click="addFilters">ADD FILTERS</q-btn>
                     </q-card-section>
                 </q-card>
             </q-expansion-item>
@@ -21,45 +19,22 @@
         name: "PDDashboard2",
         methods:
         {
-            async addContactNumber()
+            async addFilters()
             {
                 this.$_showPageLoading();
                 const users = await DB_USER.getMany();
                 Promise.all(users.map(user =>
                 {
-                    return DB_USER.update(user.id, {contact_number: '1234567891'})
-                }))
-                .then(res =>
-                {
-                    this.$_notify({message: 'Successfully added contact number.'});
-                    this.$_hidePageLoading();
-                })
-            },
-            async addCreatedAt()
-            {
-                this.$_showPageLoading();
-                const users = await DB_USER.getMany();
-                Promise.all(users.map(user =>
-                {
-                    return DB_USER.update(user.id, {created_at: new Date()})
+                    const filters = [
+                        String(user.email).trim().toLowerCase(),
+                        user.referral_code,
+                        String(user.full_name).trim().toLowerCase()
+                    ];
+                    return DB_USER.update(user.id, {filters})
                 }))
                     .then(res =>
                     {
-                        this.$_notify({message: 'Successfully added created at.'});
-                        this.$_hidePageLoading();
-                    })
-            },
-            async addKycStatus()
-            {
-                this.$_showPageLoading();
-                const users = await DB_USER.getMany();
-                Promise.all(users.map(user =>
-                {
-                    return DB_USER.update(user.id, {kyc_status: 'pending'})
-                }))
-                    .then(res =>
-                    {
-                        this.$_notify({message: 'Successfully added pending kyc status.'});
+                        this.$_notify({message: 'Successfully updated filters.'});
                         this.$_hidePageLoading();
                     })
             }
