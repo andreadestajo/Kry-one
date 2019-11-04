@@ -1,8 +1,8 @@
 <template>
-    <k-modal ref="kModalRef" card_width="600px">
-        <div slot="modal-header">
-            <div class="text-h6">Accelerate User</div>
-        </div>
+    <k-modal ref="kModalRef"
+             card_width="600px"
+             title="Accelerate User"
+             @close="hideUsersAccelerateModal">
 
         <div slot="modal-content">
                 <span slot="section">
@@ -31,7 +31,6 @@
 
         <div slot="modal-footer">
             <q-btn flat label="Promote" @click="" />
-            <q-btn flat color="grey" label="Close" @click="hideUsersAccelerateModal"/>
         </div>
     </k-modal>
 </template>

@@ -1,14 +1,14 @@
 <template>
     <div>
-        <k-modal ref="kModalRef" card_width="800px" card_section_height="50vh">
-            <div slot="modal-header">
-                <div class="text-h6">Wallet</div>
-            </div>
-
+        <k-modal ref="kModalRef"
+                 card_width="800px"
+                 card_section_height="50vh"
+                 title="Wallet"
+                 @close="hideWalletModal">
             <div slot="modal-content">
                 <div class="row">
                     <div class="col-12 q-ma-xs">
-                        Name: {{user_details.name}}
+                        Name: {{user_details.full_name}}
                     </div>
 
                     <!--WALLET-->
@@ -39,7 +39,6 @@
 
             <div slot="modal-footer">
                 <q-btn flat label="Send BTC" @click="showSendBtcModal" />
-                <q-btn flat color="grey" label="Close" @click="hideWalletModal"/>
             </div>
         </k-modal>
 
@@ -55,6 +54,7 @@
     import UsersSendBtcModal  from './PAUsersSendBtcModal'
 
     import DB_USER_WALLET from '../../../models/DB_USER_WALLET'
+    import DB_USER        from '../../../models/DB_USER'
 
     export default {
         name: "PAUsersWalletModal",
@@ -82,7 +82,8 @@
                 this.$refs.kModalRef.showLoading();
 
                 // Get user details
-                this.user_details = Object.assign({}, {});
+                this.user_details = await DB_USER.get(user_id);
+                console.log(this.user_details);
 
                 // Get user wallet
                 this.user_wallet = await DB_USER_WALLET.getMany(user_id);
@@ -96,7 +97,7 @@
             },
             showSendBtcModal()
             {
-                this.$refs.usersSendBtcModalRef.showSendBtcModal();
+                this.$refs.usersSendBtcModalRef.showSendBtcModal(this.user_details);
             }
         },
         mounted()

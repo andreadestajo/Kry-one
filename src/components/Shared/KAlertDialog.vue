@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="alert">
+    <q-dialog v-model="is_show">
         <q-card>
             <q-card-section>
                 <div class="text-h6">{{options.title}}</div>
