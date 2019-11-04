@@ -7,6 +7,7 @@
 
             <q-card-section>
                 {{options.message}}
+                <slot name="custom-body"></slot>
             </q-card-section>
 
             <q-card-actions align="right">

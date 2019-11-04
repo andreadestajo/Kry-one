@@ -51,7 +51,8 @@ const routes = [
                 component: () => import('pages/Admin/Users/PAUsers.vue'),
                 children:
                 [
-                    { name: 'admin_users_referrals' , path: 'referrals/:referral_code' , component: () => import('pages/Admin/Users/PAUsersReferralsModal.vue') }
+                    { name: 'admin_users_referrals' , path: 'referrals/:referral_code' , component: () => import('pages/Admin/Users/PAUsersReferralsModal.vue')},
+                    { name: 'admin_users_wallet'    , path: 'wallet/:user_id'          , component: () => import('pages/Admin/Users/PAUsersWalletModal.vue')}
                 ]
             }
         ]

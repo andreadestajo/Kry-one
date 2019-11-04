@@ -47,7 +47,6 @@
         </k-table>
 
         <!--MODALS-->
-        <pa-users-wallet-modal     ref="usersWalletModalRef"/>
         <pa-users-accelerate-modal ref="userAccelerateModalRef"/>
 
         <router-view></router-view>
@@ -69,7 +68,6 @@
         {
             KHeader,
             KTable,
-            PaUsersWalletModal,
             PaUsersAccelerateModal
         },
         data: () =>
@@ -92,7 +90,11 @@
                 switch (item.action.key)
                 {
                     case 'view_wallet':
-                        this.$refs.usersWalletModalRef.showUsersWalletModal(item.data);
+                        this.$router.push
+                        ({
+                            name  : 'admin_users_wallet',
+                            params: {user_id: item.data.id}
+                        });
                         break;
                     case 'edit_user':
                         break;
@@ -129,6 +131,7 @@
         async mounted()
         {
             this.$refs.kTableRef.showLoading();
+            console.log('nag bind')
             await DB_USER.bindAllUsers(this);
         },
         watch:
