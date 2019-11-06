@@ -28,5 +28,9 @@ service cloud.firestore
         {
             allow read, write;
         }
+        match /promotions/{promotionID}
+        {
+            allow read, write;
+        }
 	}
 }
