@@ -234,6 +234,7 @@
                 await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
                 .then(data =>
                 {
+                    console.log(data);
                     this.$_hidePageLoading();
                     this.isRegistered = true;
                 })
