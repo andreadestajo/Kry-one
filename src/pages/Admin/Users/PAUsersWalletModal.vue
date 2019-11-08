@@ -1,18 +1,19 @@
 <template>
-    <k-modal ref="kModalRef" card_width="800px" card_section_height="50vh">
-        <div slot="modal-header">
-            <div class="text-h6">Wallet</div>
-        </div>
+    <div>
+        <k-modal ref="kModalRef"
+                 card_width="800px"
+                 card_section_height="50vh"
+                 title="Wallet"
+                 @close="hideWalletModal">
+            <div slot="modal-content">
+                <div class="row">
+                    <div class="col-12 q-ma-xs">
+                        Name: {{user_details.full_name}}
+                    </div>
 
-        <div slot="modal-content">
-            <div class="row">
-                <div class="col-12 q-ma-xs">
-                    Name: {{user_details.name}}
-                </div>
-
-                <!--WALLET-->
-                <k-card class="col q-ma-xs"
-                        v-for="wallet in walletDetails" :key="wallet.key">
+                    <!--WALLET-->
+                    <k-card class="col q-ma-xs"
+                            v-for="wallet in walletDetails" :key="wallet.key">
                     <span slot="section">
                         <div class="q-mb-md text-center">
                             {{wallet.key}}
@@ -32,26 +33,32 @@
                             </k-field>
                         </div>
                     </span>
-                </k-card>
+                    </k-card>
+                </div>
             </div>
-        </div>
-        <div slot="modal-footer">
-            <q-btn flat label="Send BTC" @click="" />
-            <q-btn flat color="grey" label="Close" @click="hideWalletModal"/>
-        </div>
-    </k-modal>
+
+            <div slot="modal-footer">
+                <q-btn flat label="Send BTC" @click="showSendBtcModal" />
+            </div>
+        </k-modal>
+
+        <!--SEND BTC MODAL-->
+        <users-send-btc-modal ref="usersSendBtcModalRef"/>
+    </div>
 </template>
 
 <script>
-    import KCard  from '../../../components/Admin/KCard'
-    import KField from '../../../components/Admin/KField'
-    import KModal from '../../../components/Admin/KModal'
+    import KCard              from '../../../components/Admin/KCard'
+    import KField             from '../../../components/Admin/KField'
+    import KModal             from '../../../components/Admin/KModal'
+    import UsersSendBtcModal  from './PAUsersSendBtcModal'
 
     import DB_USER_WALLET from '../../../models/DB_USER_WALLET'
+    import DB_USER        from '../../../models/DB_USER'
 
     export default {
         name: "PAUsersWalletModal",
-        components: {KModal, KField, KCard},
+        components: {KModal, KField, KCard, UsersSendBtcModal},
         data: () =>
         ({
             user_details:
@@ -69,24 +76,34 @@
         },
         methods:
         {
-            async showUsersWalletModal(user_details)
+            async showUsersWalletModal(user_id)
             {
                 this.$refs.kModalRef.showModal();
                 this.$refs.kModalRef.showLoading();
 
-                // Assign user details
-                this.user_details = Object.assign({}, user_details);
+                // Get user details
+                this.user_details = await DB_USER.get(user_id);
+                console.log(this.user_details);
 
                 // Get user wallet
-                this.user_wallet = await DB_USER_WALLET.getMany(user_details.id);
+                this.user_wallet = await DB_USER_WALLET.getMany(user_id);
 
                 this.$refs.kModalRef.hideLoading();
             },
             hideWalletModal()
             {
-                this.user_wallet = [];
-                this.$refs.kModalRef.hideModal()
+                this.$refs.kModalRef.hideModal();
+                this.$router.push({name: 'admin_users'});
+            },
+            showSendBtcModal()
+            {
+                this.$refs.usersSendBtcModalRef.showSendBtcModal(this.user_details);
             }
+        },
+        mounted()
+        {
+            const user_id = this.$route.params.user_id;
+            this.showUsersWalletModal(user_id);
         }
     }
 </script>

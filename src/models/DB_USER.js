@@ -101,7 +101,7 @@ export default
         // Filter or pagination here
         if(options.hasOwnProperty('search_text'))
         {
-            query = query.where("email", "==", options.search_text)
+            query = query.where("filters", "array-contains", options.search_text)
         }
 
         // Set default name
