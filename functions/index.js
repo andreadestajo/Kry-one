@@ -29,3 +29,4 @@ exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').o
 
 //Test Calls
 exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);
+exports.testIssueBitcoin        = FUNCTIONS_HTTPS.onCall(user_trigger.testIssueBitcoin);

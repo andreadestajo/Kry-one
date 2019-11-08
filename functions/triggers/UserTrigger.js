@@ -10,18 +10,6 @@ module.exports =
         await module.exports.createInitializeParameters(snap.id, snap.data());
         await module.exports.createInitializeWallet(snap.id);
     },
-    async testCreate(data, context)
-    {
-        let snap        = {};
-        let u_info   = await MDB_USER.get(data.uid);
-
-        await module.exports.createInitializeParameters(data.uid, u_info);
-        await module.exports.createInitializeWallet(data.uid).then((res) => 
-        {
-            return "done";
-        });
-        
-    },
     async createInitializeParameters(id, user_info)
     {
         const nobility_list = await MDB_NOBILITY.getMany({ order_by: 'rank' });
@@ -55,5 +43,24 @@ module.exports =
         {
             return "done!";
         });
-    }
+    },
+
+
+    async testCreate(data, context)
+    {
+        let snap        = {};
+        let u_info      = await MDB_USER.get(data.uid);
+
+        await module.exports.createInitializeParameters(data.uid, u_info);
+        await module.exports.createInitializeWallet(data.uid).then((res) => 
+        {
+            return "done";
+        });
+        
+    },
+
+    async testIssueBitcoin()
+    {
+
+    },
 };
