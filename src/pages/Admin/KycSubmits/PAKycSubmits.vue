@@ -3,7 +3,7 @@
         <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">KYC Submits</k-header>
         <!--TODO Jln filters here-->
 
-        <k-table :data="kycSubmitsData" :columns="$options.columns" class="text-center">
+        <k-table ref="kTableRef" :data="kyc_submits_data" :columns="$options.columns" class="text-center">
             <template slot="table_top">
                  <q-input dense
                           placeholder="Search"
@@ -65,26 +65,11 @@
         components: {PaKycDetailsModal, KHeader, KTable},
         data: () =>
         ({
-            kycSubmits  : [],
-
-            search_text: '',
-            filters: ['pending', 'approved', 'rejected']
+            kyc_submits      : [],
+            kyc_submits_data : [],
+            search_text      : '',
+            filters          : ['pending', 'approved', 'rejected']
         }),
-        computed: {
-            kycSubmitsData()
-            {
-                return this.kycSubmits.map(k =>
-                {
-                    return {
-                        name    : formatFullname(k.first_name, k.last_name, k.middle_name),
-                        date    : this.$_formatDate(k.date_time_submitted.toDate(), 'MMMM DD, YYYY'),
-                        time    : this.$_formatDate(k.date_time_submitted.toDate(), 'hh:mm A'),
-                        status  : k.status,
-                        details : k
-                    }
-                })
-            }
-        },
         methods:
         {
             viewKycDetails(kyc_data)
@@ -94,7 +79,34 @@
         },
         async mounted()
         {
-            DB_KYC_VERIFICATION.bindKycVerifications(this, {name: "kycSubmits"})
+            this.$refs.kTableRef.showLoading();
+            await DB_KYC_VERIFICATION.bindKycVerifications(this, {name: "kyc_submits"})
+        },
+        watch:
+        {
+            kyc_submits(kyc_submits)
+            {
+                if(!kyc_submits.length) {return 0}
+
+                this.$refs.kTableRef.showLoading();
+
+                const kyc_submits_data = [];
+
+                kyc_submits.forEach(k =>
+                {
+                    kyc_submits_data.push
+                    ({
+                        name    : formatFullname(k.first_name, k.last_name, k.middle_name),
+                        date    : this.$_formatDate(k.date_time_submitted.toDate(), 'MMMM DD, YYYY'),
+                        time    : this.$_formatDate(k.date_time_submitted.toDate(), 'hh:mm A'),
+                        status  : k.status,
+                        details : k
+                    })
+                });
+
+                this.kyc_submits_data = kyc_submits_data;
+                this.$refs.kTableRef.hideLoading();
+            }
         },
         columns:
         [
