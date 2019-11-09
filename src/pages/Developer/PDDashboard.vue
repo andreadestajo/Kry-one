@@ -91,7 +91,7 @@ import DB_USER                      from "../../models/DB_USER";
 import DB_NOBILITY                  from "../../models/DB_NOBILITY";
 import DB_USER_WALLET               from "../../models/DB_USER_WALLET";
 import DB_USER_WALLET_LOG           from "../../models/DB_USER_WALLET_LOG";
-import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET } from "../../references/refs_functions";
+import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET } from "../../references/refs_functions";
 
 export default
 {
@@ -171,12 +171,12 @@ export default
 
             let send_wallet            = {};
             send_wallet.amount         = Math.floor(Math.random() * 100000000) / 100000000;
-            send_wallet.issue_to       = this.last_id;      
+            send_wallet.send_to        = this.last_id;      
             send_wallet.currency       = coin;
 
             try
             {
-                let res = await fbCall(FN_ISSUE_WALLET, send_wallet);
+                let res = await fbCall(FN_TRANSFER_WALLET, send_wallet);
                 this.$q.notify({ message: res.data.message, color: 'green' });
             }
             catch(err)

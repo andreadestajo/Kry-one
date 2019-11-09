@@ -1,5 +1,7 @@
-const moment   = require('moment-timezone');
-const momentTZ = moment.tz('Asia/Manila');
+const moment            = require('moment-timezone');
+const momentTZ          = moment.tz('Asia/Manila');
+const AUTH              = require('../globals/Auth');
+const WALLET            = require('../globals/Wallet');
 
 const DB_KYC_VERIFICATION = require('../models/MDB_KYC_VERIFICATION');
 
@@ -19,5 +21,11 @@ module.exports =
         kyc_info.status              = 'pending'; //
 
         return DB_KYC_VERIFICATION.doc(context.auth.uid).set(kyc_info);
+    },
+    async transferWallet(data, context)
+    {
+        let promise_list            = [];
+        let logged_in_user          = await AUTH.member_only(context);
+        return { status: "success", message: "Transfer Wallet Module Ready!" };
     }
 };

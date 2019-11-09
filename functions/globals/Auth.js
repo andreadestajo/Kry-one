@@ -22,4 +22,20 @@ module.exports =
 
         return logged_in_user;
     },
+    async member_only(context)
+    {
+        if(!context.auth)
+        {
+            HTTPS_ERROR('failed-precondition', 'No one is logged in');
+        }
+
+        let logged_in_user = await MDB_USER.get(context.auth.uid);
+
+        if(!logged_in_user)
+        {   
+            HTTPS_ERROR('failed-precondition', 'User ID of logged in user not found');
+        }
+        
+        return logged_in_user;
+    }
 };
