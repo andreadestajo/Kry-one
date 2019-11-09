@@ -15,12 +15,12 @@
                 </q-input>
             </template>
 
-            <template slot="table_rows" slot-scope="kyc">
-                <q-td key="name">{{ kyc.data.name }}</q-td>
-                <q-td key="email">{{ kyc.data.email }}</q-td>
-                <q-td key="nobility">{{ kyc.data.nobility_info.title }}</q-td>
-                <q-td key="contact_number">{{ kyc.data.contact_number}}</q-td>
-                <q-td key="kyc_status">{{ kyc.data.kyc_status}}</q-td>
+            <template slot="table_rows" slot-scope="user">
+                <q-td key="name">{{ user.data.name }}</q-td>
+                <q-td key="email">{{ user.data.email }}</q-td>
+                <q-td key="nobility">{{ user.data.nobility_info.title }}</q-td>
+                <q-td key="contact_number">{{ user.data.contact_number}}</q-td>
+                <q-td key="kyc_status">{{ user.data.kyc_status}}</q-td>
                 <q-td key="action">
                     <q-btn-dropdown unelevated
                                     color="primary"
@@ -30,7 +30,7 @@
                                     v-close-popup
                                     v-for="action in $options.actions"
                                     :key="action.key"
-                                    @click="onClickAction({action, data: kyc.data})">
+                                    @click="onClickAction({action, data: user.data})">
                                 <q-item-section avatar  >
                                     <q-icon color="primary"
                                             size="xs"
@@ -56,7 +56,7 @@
 <script>
     import KHeader                 from '../../../components/Admin/KHeader'
     import KTable                  from '../../../components/Admin/KTable'
-    import PaUsersWalletModal      from './PAUsersWalletModal'
+
     import PaUsersAccelerateModal  from './PAUsersAccelerateModal'
 
     import DB_USER   from '../../../models/DB_USER'
@@ -72,18 +72,13 @@
         },
         data: () =>
         ({
-            kycSubmits  : [],
             search_text : '',
             filters     : ['pending', 'approved', 'rejected'],
-            users       : [],
+            users_wew       : [],
             users_data  : []
         }),
         methods:
         {
-            viewKycDetails(kyc_data)
-            {
-                this.$refs.kycDetailsModal.showKycDetailsModal(kyc_data.details)
-            },
             onClickAction(item)
             {
                 // We currently have 5 actions
@@ -132,11 +127,11 @@
         async mounted()
         {
             this.$refs.kTableRef.showLoading();
-            await DB_USER.bindAllUsers(this);
+            await DB_USER.bindAllUsers(this, {name: 'users_wew'});
         },
         watch:
         {
-            users(users)
+            users_wew(users)
             {
                 if(!users.length) {return 0}
 

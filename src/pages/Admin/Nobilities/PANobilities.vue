@@ -1,48 +1,38 @@
 <template>
-    <q-page>
+    <q-page class="q-pa-lg">
         <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Nobilities</k-header>
 
         <!--ADD BUTTON-->
-        <div class="q-pa-lg">
-            <q-btn unelevated
-                   label="Add New Nobility"
-                   type="submit"
-                   color="primary"
-                   class="q-mt-sm"
-                   @click="showAddNobilityModal"/>
-        </div>
+        <q-btn unelevated
+               label="Add New Nobility"
+               type="submit"
+               color="primary"
+               class="q-mt-sm"
+               @click="showAddNobilityModal"/>
 
         <!--TABLE-->
-        <div class="q-pa-lg">
-            <q-table title="Nobilities"
-                     :data="nobilitiesData"
-                     :columns="$options.columns"
-                     row-key="name"
-                     :pagination="{rowsPerPage: 0}">
-                <template v-slot:body="props">
-                    <q-tr :props="props">
-                        <q-td v-for="column in mappedColumns" :key="column">
-                            {{props.row[column]}}
-                        </q-td>
+        <k-table ref="kTableRef" :data="nobilities_data" :columns="$options.columns" class="text-center">
+                <template slot="table_rows" slot-scope="nobilities">
+                    <q-td v-for="column in mappedColumns" :key="column">
+                        {{nobilities.data[column]}}
+                    </q-td>
 
-                        <q-td key="action">
-                            <q-btn unelevated
-                                   class="q-ma-xs"
-                                   label="EDIT"
-                                   type="submit"
-                                   color="primary"
-                                   @click="showEditNobilityModal(props.row)"></q-btn>
-                            <q-btn unelevated
-                                   class="q-ma-xs"
-                                   label="DELETE"
-                                   type="submit"
-                                   color="red"
-                                   @click="confirmDeleteNobility(props.row)"></q-btn>
-                        </q-td>
-                    </q-tr>
+                    <q-td key="action">
+                        <q-btn unelevated
+                               class="q-ma-xs"
+                               label="EDIT"
+                               type="submit"
+                               color="primary"
+                               @click="showEditNobilityModal(nobilities.data)"></q-btn>
+                        <q-btn unelevated
+                               class="q-ma-xs"
+                               label="DELETE"
+                               type="submit"
+                               color="red"
+                               @click="confirmDeleteNobility(nobilities.data)"></q-btn>
+                    </q-td>
                 </template>
-            </q-table>
-        </div>
+            </k-table>
 
         <!--ADD MODAL-->
         <pa-nobilities-add-modal ref="nobilitiesAddModalRef" />
@@ -54,6 +44,7 @@
 
 <script>
     import KHeader               from '../../../components/Admin/KHeader'
+    import KTable                from '../../../components/Admin/KTable'
 
     import Nobility              from "../../../models/DB_NOBILITY"
     import PaNobilitiesAddModal  from './PANobilitiesAddModal'
@@ -63,19 +54,17 @@
         name: "PANobilities",
         components: {
             KHeader,
+            KTable,
             PaNobilitiesAddModal,
             PaNobilitiesEditModal
         },
         data: () =>
         ({
-            nobilities: []
+            nobilities     : [],
+            nobilities_data: []
         }),
         computed:
         {
-            nobilitiesData()
-            {
-                return this.nobilities
-            },
             mappedColumns()
             {
                 const mappedColumns = this.$options.columns.map(c => c.field);
@@ -107,9 +96,19 @@
         async mounted()
         {
             // Bind nobilities here
-            this.$_showPageLoading();
+            this.$refs.kTableRef.showLoading();
             await Nobility.bindNobilities(this);
-            this.$_hidePageLoading();
+        },
+        watch:
+        {
+            nobilities(nobilities)
+            {
+                if(!nobilities.length) {return 0}
+
+                this.$refs.kTableRef.showLoading();
+                this.nobilities_data = nobilities;
+                this.$refs.kTableRef.hideLoading();
+            }
         },
         columns:
         [

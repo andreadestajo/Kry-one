@@ -83,7 +83,6 @@
 
                 // Get user details
                 this.user_details = await DB_USER.get(user_id);
-                console.log(this.user_details);
 
                 // Get user wallet
                 this.user_wallet = await DB_USER_WALLET.getMany(user_id);
