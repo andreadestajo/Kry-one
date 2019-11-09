@@ -17,8 +17,9 @@
         <div class="q-pa-lg">
             <q-btn class="q-mb-sm q-mx-sm" @click="testUserCreate()">User Create Test</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="bindUserInformation()">Bind User Information</q-btn>
-            <q-btn class="q-mb-sm q-mx-sm" @click="issueBitcoin()">Issue Bitcoin</q-btn>
-            <q-btn class="q-mb-sm q-mx-sm" @click="issueBitcoin()">Issue Ethereum</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('btc')">Issue Bitcoin</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('eth')">Issue Ethereum</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('xau')">Issue Uniq</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="clear()">Clear</q-btn>
         </div>
@@ -36,33 +37,46 @@
                         <q-tab name="user_info" label="User" />
                         <q-tab name="wallet_info" label="Wallet" />
                         <q-tab name="wallet_logs" label="Logs" />
+                        <q-tab name="upgrade_nobility" label="Upgrade Nobility" />
                     </q-tabs>
 
                     <q-separator />
 
                     <q-tab-panels v-model="tab" animated>
                         <q-tab-panel name="user_info">
-                            <div class="text-h6">User Information</div>
                             <pre>{{ user_info }}</pre>
                         </q-tab-panel>
 
                         <q-tab-panel name="wallet_info">
-                            <div class="text-h6">Wallet Info</div>
                             <pre>{{ wallet_info }}</pre>
                         </q-tab-panel>
 
                         <q-tab-panel name="wallet_logs">
-                            <div class="text-h6">Wallet Logs</div>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                            <pre>{{ btc_logs }}</pre>
+                        </q-tab-panel>
+
+                        <q-tab-panel name="upgrade_nobility">
+                           
+                            <div v-if="nobilities">
+                                <div v-for="(nobility, key) in nobilities" :key="key"  style="border: 1px solid #eee; padding: 20px; margin: 20px; display: inline-block;">
+                                    <div>
+                                        <div>Title: <b>{{ nobility.title }}</b></div>
+                                        <div>Rank: <b>{{ nobility.rank_order }}</b></div>
+                                        <div>UNIQ Price: <b>{{ $_formatNumber(nobility.price, { decimal: 8 }) }} UNIQ</b></div>
+                                        <div>BTC Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }) }} BTC</b></div>
+                                        <div>ETH Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 2 }) }} ETH</b></div>
+                                        <div class="q-mt-md"><q-btn color="primary">UPGRADE TO THIS RANK</q-btn></div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            
                         </q-tab-panel>
                     </q-tab-panels>
                 </q-card>
             </div>
+
         </div>
-
-
-
-
 	</div>
 </template>
 
@@ -71,8 +85,10 @@
 import { fbCall } 					from "../../utilities/Callables";
 import DB_EMPLOYEES 				from "../../models/DB_EMPLOYEES";
 import DB_USER                      from "../../models/DB_USER";
+import DB_NOBILITY                  from "../../models/DB_NOBILITY";
 import DB_USER_WALLET               from "../../models/DB_USER_WALLET";
-import {FN_REGISTER, FN_LOGIN }     from "../../references/refs_functions";
+import DB_USER_WALLET_LOG           from "../../models/DB_USER_WALLET_LOG";
+import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET } from "../../references/refs_functions";
 
 export default
 {
@@ -80,12 +96,12 @@ export default
 	data:  () => (
 	{ 
         tab: "user_info",
-		last_id: "",
+		last_id: "7lY2iogHKxaU8w2yc8vYcOnS38B2",
 		employee_list: [],
 		employee_info: null,
         registration_form_data:
         {
-            full_name      : '',
+            full_name     : '',
             email         : '',
             password      : '',
             country       : '',
@@ -94,7 +110,24 @@ export default
         },
         user_info: null,
         wallet_info: null,
+        btc_logs: null,
+        nobilities: [],
 	}),
+    async mounted()
+    {
+        this.$_showPageLoading();
+
+        try
+        {
+            await DB_NOBILITY.bindNobilities(this);
+        }
+        catch(err)
+        {
+            this.$q.notify({ message: err.message, color: 'red' });
+        }
+
+        this.$_hidePageLoading();
+    },
 	methods:
 	{
         clear()
@@ -102,9 +135,26 @@ export default
             this.wallet_info    = null;
             this.user_info      = null;
         },
-        async issueBitcoin()
+        async issueWallet(coin)
         {
-            console.log("UNDER DEVELOPMENT")
+            this.$_showPageLoading();
+
+            let issue_wallet            = {};
+            issue_wallet.amount         = Math.floor(Math.random() * 100000000) / 100000000;
+            issue_wallet.issue_to       = this.last_id;      
+            issue_wallet.currency       = coin;
+
+            try
+            {
+                let res = await fbCall(FN_ISSUE_WALLET, issue_wallet);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
         },
         async bindWalletLogs()
         {
@@ -112,6 +162,7 @@ export default
         },
         async testUserCreate()
         {
+            this.$_showPageLoading();
             this.clear();
 
             let random_number                           = Math.floor(Math.random() * 100000); 
@@ -125,11 +176,24 @@ export default
             this.last_id = res.data;
 
             this.bindUserInformation();
+            this.$_hidePageLoading();
         },
         async bindUserInformation()
         {
-            this.$bind('user_info', DB_USER.doc(this.last_id));
-            this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
+            this.$_showPageLoading();
+
+            try
+            {
+                await this.$bind('user_info', DB_USER.doc(this.last_id));
+                await this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
+                await this.$bind('btc_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'BTC'));
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
         },
 
         async triggerUserCreate()

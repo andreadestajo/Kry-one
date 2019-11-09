@@ -8,7 +8,7 @@ export default
     {
         return DB.doc(`${this.table}/${id}`);
     },
-    collection(order_by = null)
+    collection(options = {})
     {
         let collection = DB.collection(this.table);
         return collection;
@@ -25,9 +25,9 @@ export default
         data.id     = res.id;
         return data;
     },
-    async getMany(order_by = null)
+    async getMany(options = {})
     {
-        let res = await this.collection(order_by).get();
+        let res = await this.collection(options).get();
         let data = [];
 
         if(!res.empty)

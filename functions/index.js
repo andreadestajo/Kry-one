@@ -25,6 +25,7 @@ exports.resetPassword           = FUNCTIONS_HTTPS.onCall(account_controller.rese
 
 // Admin
 exports.promoteUser             = FUNCTIONS_HTTPS.onCall(admin_controller.promoteUser);
+exports.issueWallet             = FUNCTIONS_HTTPS.onCall(admin_controller.issueWallet);
 
 // Schedules
 exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onRun(schedule_controller.updateCurrency);

@@ -61,6 +61,5 @@ module.exports =
 
     async testIssueBitcoin()
     {
-
     },
 };

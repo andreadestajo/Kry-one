@@ -2,14 +2,15 @@ const {ADMIN_DB} = require("../plugin/firebase");
 
 module.exports =
 {
-    table: 'users',
+    table: 'issueWallet',
+
     doc(id)
     {
         return ADMIN_DB.doc(`${this.table}/${id}`);
     },
-    collection(options = {})
+    collection(order_by = null)
     {
-        const collection = ADMIN_DB.collection(this.table);
+        let collection = ADMIN_DB.collection(this.table);
         return collection;
     },
     async add(data)
@@ -21,16 +22,8 @@ module.exports =
     {
         let res     = await this.doc(id).get();
         let data    = res.data();
-
-        if(data)
-        {
-            data.id = data ? res.id : null;
-            return data;
-        }
-        else
-        {
-            return null;
-        }
+        data.id     = res.id;
+        return data;
     },
     async getMany(order_by = null)
     {
@@ -57,16 +50,4 @@ module.exports =
         return await this.doc(id).delete();
     },
 
-    getUserByReferralCode(referral_code) {
-        return this.collection()
-            .where("referral_code", "==", referral_code)
-            .limit(1)
-            .get()
-            .then(user => {
-                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user[0].docs.id})
-            })
-            .catch(error => {
-                return {error}
-            })
-    }
-};
+}

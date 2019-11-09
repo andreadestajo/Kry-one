@@ -1,5 +1,5 @@
-const {ADMIN_DB} = require("../plugin/firebase");
-
+const { ADMIN_DB }  = require("../plugin/firebase");
+const FieldValue    = require("firebase-admin").firestore.FieldValue;
 module.exports =
 {
     table: (uid) => `users/${uid}/wallets`,
@@ -12,6 +12,14 @@ module.exports =
     {
         const collection = ADMIN_DB.collection(this.table(uid));
         return collection;
+    },
+    async adjustWallet(uid, id, amount)
+    {
+        let wallet_update           = {};
+        wallet_update.wallet        = FieldValue.increment(amount);
+        wallet_update.log_count     = FieldValue.increment(1);
+        wallet_update.last_update   = new Date();
+        this.update(uid, id, wallet_update);
     },
     async add(uid, data)
     {

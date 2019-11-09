@@ -51,7 +51,7 @@ export default {
         {
             base       = base === "UNIQ" ? "XAU" : base;
             conversion = conversion === "UNIQ" ? "XAU" : conversion;
-            return conversion + " " + this.$_formatNumber(this.currency[base][conversion] * amount, { decimal: 2 });
+            return this.$_formatNumber(this.currency[base][conversion] * amount, options);
         },
 
         $_log(log, title)

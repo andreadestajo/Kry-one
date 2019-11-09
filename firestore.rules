@@ -15,6 +15,10 @@ service cloud.firestore
             {
                 allow read;
             }
+            match /wallets/{walletID}/logs/{logID}
+            {
+                allow read;
+            }
         }
         match /kycVerifications/{userID}
         {

@@ -8,4 +8,8 @@ export const
 FN_SUBMIT_KYC          = `submitKyc`;
 
 export const
-FN_PROMOTE_USER = `promoteUser`;
+FN_PROMOTE_USER        = `promoteUser`;
+
+
+export const
+FN_ISSUE_WALLET        = `issueWallet`;
