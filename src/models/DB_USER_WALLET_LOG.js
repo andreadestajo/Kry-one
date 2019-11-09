@@ -11,11 +11,20 @@ export default
     collection(uid, currency, options = {})
     {
         let collection = DB.collection(this.table(uid, currency));
+
+        if(options.hasOwnProperty('order_by'))
+        {
+            if(options.order_by == 'date')
+            {
+                collection = collection.orderBy('date_created', 'desc');
+            }
+        }
+
         return collection;
     },
-    async getMany(uid, currency, order_by = null)
+    async getMany(uid, currency, options = {})
     {
-        let res = await this.collection(uid, currency, {order_by}).get();
+        let res = await this.collection(uid, currency, options).get();
         let data = [];
 
         if(!res.empty)
