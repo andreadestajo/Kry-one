@@ -106,7 +106,14 @@
                 if(!nobilities.length) {return 0}
 
                 this.$refs.kTableRef.showLoading();
-                this.nobilities_data = nobilities;
+
+                const nobilities_data = nobilities.map(n =>
+                {
+                    n.required_rank = n.hasOwnProperty('required_rank_title') ? n.required_rank_title : '';
+                    return n
+                });
+
+                this.nobilities_data = nobilities_data;
                 this.$refs.kTableRef.hideLoading();
             }
         },
