@@ -17,6 +17,7 @@ const user_trigger              = require('./triggers/UserTrigger');
 
 // Member
 exports.submitKyc               = FUNCTIONS_HTTPS.onCall(member_controller.submitKyc);
+exports.transferWallet          = FUNCTIONS_HTTPS.onCall(member_controller.transferWallet);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);

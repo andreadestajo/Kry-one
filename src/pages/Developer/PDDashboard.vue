@@ -20,6 +20,7 @@
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('btc')">Issue Bitcoin</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('eth')">Issue Ethereum</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('xau')">Issue Uniq</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="transferWallet('btc')">Transfer Bitcoin</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="clear()">Clear</q-btn>
         </div>
@@ -52,7 +53,9 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="wallet_logs">
-                            <pre>{{ btc_logs }}</pre>
+                            <div v-if="btc_logs">
+                                <q-table title="BTC Logs" :data="btc_logs" :columns="wallet_log_columns"></q-table>
+                            </div>
                         </q-tab-panel>
 
                         <q-tab-panel name="upgrade_nobility">
@@ -88,7 +91,7 @@ import DB_USER                      from "../../models/DB_USER";
 import DB_NOBILITY                  from "../../models/DB_NOBILITY";
 import DB_USER_WALLET               from "../../models/DB_USER_WALLET";
 import DB_USER_WALLET_LOG           from "../../models/DB_USER_WALLET_LOG";
-import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET } from "../../references/refs_functions";
+import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET } from "../../references/refs_functions";
 
 export default
 {
@@ -111,6 +114,12 @@ export default
         user_info: null,
         wallet_info: null,
         btc_logs: null,
+        wallet_log_columns: [   { align: 'center', label: 'Description', field: 'description' },
+                                { align: 'center', label: 'Type', field: 'type' },
+                                { align: 'center', label: 'Date', field: 'date_created' },
+                                { align: 'center', label: 'Amount', field: 'amount' },
+                                { align: 'center', label: 'Running Balance', field: 'balance_after' },
+                            ],
         nobilities: [],
 	}),
     async mounted()
@@ -156,6 +165,27 @@ export default
 
             this.$_hidePageLoading();
         },
+        async transferWallet(coin)
+        {
+            this.$_showPageLoading();
+
+            let send_wallet            = {};
+            send_wallet.amount         = Math.floor(Math.random() * 100000000) / 100000000;
+            send_wallet.send_to        = this.last_id;      
+            send_wallet.currency       = coin;
+
+            try
+            {
+                let res = await fbCall(FN_TRANSFER_WALLET, send_wallet);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
+        },
         async bindWalletLogs()
         {
             console.log("UNDER DEVELOPMENT")
@@ -186,7 +216,7 @@ export default
             {
                 await this.$bind('user_info', DB_USER.doc(this.last_id));
                 await this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
-                await this.$bind('btc_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'BTC'));
+                await this.$bind('btc_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'BTC', { order_by: 'date' }));
             }
             catch(err)
             {
