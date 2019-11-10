@@ -1,5 +1,8 @@
 <template>
-    <k-modal ref="kModalRef" card_section_height="80vh">
+    <k-modal ref="kModalRef"
+             card_section_height="80vh"
+             title="Add Nobility Modal"
+             @close="hideAddNobilityModal">
         <div slot="modal-content">
             <k-field label="Title">
                 <q-input dense
@@ -69,7 +72,6 @@
 
         <span slot="modal-footer">
             <q-btn flat label="Save" @click="addNobility()" />
-            <q-btn flat label="Close" @click="$refs.kModalRef.hideModal()"/>
         </span>
     </k-modal>
 </template>
@@ -156,6 +158,10 @@
                     details             : '',
                     badge_color         : ''
                 }
+            },
+            hideAddNobilityModal()
+            {
+                this.$refs.kModalRef.hideModal()
             }
         },
         mounted()

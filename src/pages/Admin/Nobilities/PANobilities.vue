@@ -12,27 +12,27 @@
 
         <!--TABLE-->
         <k-table ref="kTableRef" :data="nobilities_data" :columns="$options.columns" class="text-center">
-                <template slot="table_rows" slot-scope="nobilities">
-                    <q-td v-for="column in mappedColumns" :key="column">
-                        {{nobilities.data[column]}}
-                    </q-td>
+            <template slot="table_rows" slot-scope="nobilities">
+                <q-td v-for="column in mappedColumns" :key="column">
+                    {{nobilities.data[column]}}
+                </q-td>
 
-                    <q-td key="action">
-                        <q-btn unelevated
-                               class="q-ma-xs"
-                               label="EDIT"
-                               type="submit"
-                               color="primary"
-                               @click="showEditNobilityModal(nobilities.data)"></q-btn>
-                        <q-btn unelevated
-                               class="q-ma-xs"
-                               label="DELETE"
-                               type="submit"
-                               color="red"
-                               @click="confirmDeleteNobility(nobilities.data)"></q-btn>
-                    </q-td>
-                </template>
-            </k-table>
+                <q-td key="action">
+                    <q-btn unelevated
+                           class="q-ma-xs"
+                           label="EDIT"
+                           type="submit"
+                           color="primary"
+                           @click="showEditNobilityModal(nobilities.data)"></q-btn>
+                    <q-btn unelevated
+                           class="q-ma-xs"
+                           label="DELETE"
+                           type="submit"
+                           color="red"
+                           @click="confirmDeleteNobility(nobilities.data)"></q-btn>
+                </q-td>
+            </template>
+        </k-table>
 
         <!--ADD MODAL-->
         <pa-nobilities-add-modal ref="nobilitiesAddModalRef" />
@@ -126,7 +126,6 @@
             { name: 'required_rank'    , label: 'Rank'           , field: 'required_rank'   , align: 'center', sortable: true},
             { name: 'override_bonus'   , label: 'Bonus'          , field: 'override_bonus'  , align: 'center', sortable: true},
             { name: 'perks'            , label: 'Perks'          , field: 'perks'           , align: 'center', sortable: true},
-            { name: 'details'          , label: 'Details'        , field: 'details'         , align: 'center', sortable: true},
             { name: 'badge_color'      , label: 'Color'          , field: 'badge_color'     , align: 'center', sortable: true},
             { name: 'action'           , label: 'Action'         , field: 'action'          , align: 'center', sortable: true},
         ],

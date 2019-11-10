@@ -57,6 +57,6 @@ export default
         {
             options.name =  "nobilities"
         }
-        return _this.$bind(options.name, this.collection())
+        return _this.$bind(options.name, this.collection().orderBy('rank_order'))
     }
 }
