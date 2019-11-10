@@ -139,8 +139,8 @@
                     delete nobility_data.required_rank;
 
                     // Prepare required_rank_id and required_rank_title
-                    nobility_data.required_rank_id    = this.nobility.required_rank.value;
-                    nobility_data.required_rank_title = this.nobility.required_rank.label;
+                    nobility_data.required_rank_id    = this.nobility.required_rank ? this.nobility.required_rank.value : null;
+                    nobility_data.required_rank_title = this.nobility.required_rank ? this.nobility.required_rank.label : null;
 
                     DB_NOBILITY.update(this.nobility.id, nobility_data)
                     .then(() =>

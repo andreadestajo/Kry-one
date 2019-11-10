@@ -130,8 +130,8 @@
                 nobility_data.override_bonus  = Number(this.nobility.override_bonus );
 
                 // Prepare required_rank_id and required_rank_title
-                nobility_data.required_rank_id    = this.nobility.required_rank.value;
-                nobility_data.required_rank_title = this.nobility.required_rank.label;
+                nobility_data.required_rank_id    = this.nobility.required_rank ? this.nobility.required_rank.value : null;
+                nobility_data.required_rank_title = this.nobility.required_rank ? this.nobility.required_rank.label : null;
 
                 this.$_showPageLoading();
                 DB_NOBILITY.add(nobility_data)
