@@ -1,80 +1,71 @@
 <template>
-    <k-modal ref="kModalRef">
-        <q-card slot="modal-content" style="width: 50vh">
-            <q-card-section>
-                <k-field label="Title">
-                    <q-input dense
-                             outlined
-                             type="text"
-                             v-model="nobility.title"/>
-                </k-field>
+    <k-modal ref="kModalRef" card_section_height="80vh">
+        <div slot="modal-content">
+            <k-field label="Title">
+                <q-input dense
+                         outlined
+                         type="text"
+                         v-model="nobility.title"/>
+            </k-field>
 
-                <k-field label="Price">
-                    <q-input dense
-                             outlined
-                             type="number"
-                             v-model="nobility.price"/>
-                </k-field>
+            <k-field label="Price">
+                <q-input dense
+                         outlined
+                         type="number"
+                         v-model="nobility.price"/>
+            </k-field>
 
-                <k-field label="Rank Order">
-                    <q-input dense
-                             outlined
-                             type="number"
-                             v-model="nobility.rank_order"/>
-                </k-field>
+            <k-field label="Rank Order">
+                <q-input dense
+                         outlined
+                         type="number"
+                         v-model="nobility.rank_order"/>
+            </k-field>
 
-                <k-field label="Direct">
-                    <q-input dense
-                             outlined
-                             type="number"
-                             v-model="nobility.required_direct"/>
-                </k-field>
+            <k-field label="Direct">
+                <q-input dense
+                         outlined
+                         type="number"
+                         v-model="nobility.required_direct"/>
+            </k-field>
 
-                <k-field label="Rank">
-                    <q-input dense
-                             outlined
-                             type="text"
-                             v-model="nobility.required_rank"/>
+            <k-field label="Rank">
+                <q-select outlined
+                          class="input"
+                          dense
+                          v-model="nobility.required_rank"
+                          :options="nobilityData">
+                </q-select>
+            </k-field>
 
-                    <q-select outlined
-                              class="input"
-                              dense
-                              v-model="nobility.country"
-                              :options="$options.country_options"
-                              option-value="code"
-                              option-label="name">
-                    </q-select>
-                </k-field>
+            <k-field label="Bonus">
+                <q-input dense
+                         outlined
+                         type="number"
+                         v-model="nobility.override_bonus"/>
+            </k-field>
 
-                <k-field label="Bonus">
-                    <q-input dense
-                             outlined
-                             type="number"
-                             v-model="nobility.override_bonus"/>
-                </k-field>
+            <k-field label="Perks">
+                <q-input dense
+                         outlined
+                         type="text"
+                         v-model="nobility.perks"/>
+            </k-field>
 
-                <k-field label="Perks">
-                    <q-input dense
-                             outlined
-                             type="text"
-                             v-model="nobility.perks"/>
-                </k-field>
+            <k-field label="Details">
+                <q-input dense
+                         outlined
+                         type="textarea"
+                         v-model="nobility.details"/>
+            </k-field>
 
-                <k-field label="Details">
-                    <q-input dense
-                             outlined
-                             type="textarea"
-                             v-model="nobility.details"/>
-                </k-field>
-
-                <k-field label="Badge Color">
-                    <q-input dense
-                             outlined
-                             type="text"
-                             v-model="nobility.badge_color"/>
-                </k-field>
-            </q-card-section>
-        </q-card>
+            <k-field label="Badge Color">
+                <q-input dense
+                         outlined
+                         type="text"
+                         v-model="nobility.badge_color"/>
+            </k-field>
+        </div>
 
         <span slot="modal-footer">
             <q-btn flat label="Save" @click="addNobility()" />
@@ -87,7 +78,7 @@
     import KField from "../../../components/Admin/KField"
     import KModal from "../../../components/Admin/KModal"
 
-    import Nobility from "../../../models/DB_NOBILITY"
+    import DB_NOBILITY from "../../../models/DB_NOBILITY"
 
     export default {
         name       : "PANobilitiesAddModal",
@@ -96,17 +87,28 @@
         ({
             nobility:
             {
-                title           : '',
-                price           : 0,
-                rank_order      : 0,
-                required_direct : 0,
-                required_rank   : null,
-                override_bonus  : 0,
-                perks           : '',
-                details         : '',
-                badge_color     : ''
-            }
+                title               : '',
+                price               : 0,
+                rank_order          : 0,
+                required_direct     : 0,
+                required_rank       : null,
+                override_bonus      : 0,
+                perks               : '',
+                details             : '',
+                badge_color         : ''
+            },
+            nobilities: []
         }),
+        computed:
+        {
+            nobilityData()
+            {
+                return this.nobilities.map(n => ({
+                    label: n.title,
+                    value: n.id
+                }))
+            }
+        },
         methods:
         {
             showModal()
@@ -118,6 +120,9 @@
             {
                 const nobility_data = Object.assign({}, this.nobility);
 
+                // remove required rank
+                delete nobility_data.required_rank;
+
                 // Prepare numbers
                 nobility_data.price           = Number(this.nobility.price);
                 nobility_data.rank_order      = Number(this.nobility.rank_order);
@@ -125,11 +130,11 @@
                 nobility_data.override_bonus  = Number(this.nobility.override_bonus );
 
                 // Prepare required_rank_id and required_rank_title
-                nobility_data.required_rank_id   = nobility_data.required_rank;
-                nobility_data.required_rank_name = ''; // STOPPED HERE
+                nobility_data.required_rank_id    = this.nobility.required_rank ? this.nobility.required_rank.value : null;
+                nobility_data.required_rank_title = this.nobility.required_rank ? this.nobility.required_rank.label : null;
 
                 this.$_showPageLoading();
-                Nobility.add(nobility_data)
+                DB_NOBILITY.add(nobility_data)
                 .then(() =>
                 {
                     this.$_notify({message: 'sucessfully added new nobility.'});
@@ -141,17 +146,22 @@
             {
                 this.nobility =
                 {
-                    title           : '',
-                    price           : 0,
-                    rank_order      : 0,
-                    required_direct : 0,
-                    required_rank   : 0,
-                    override_bonus  : 0,
-                    perks           : '',
-                    details         : '',
-                    badge_color     : ''
+                    title               : '',
+                    price               : 0,
+                    rank_order          : 0,
+                    required_direct     : 0,
+                    required_rank       : null,
+                    override_bonus      : 0,
+                    perks               : '',
+                    details             : '',
+                    badge_color         : ''
                 }
             }
+        },
+        mounted()
+        {
+            // Bind nobilities options
+            DB_NOBILITY.bindNobilities(this)
         }
     }
 </script>
