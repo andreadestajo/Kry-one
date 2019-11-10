@@ -25,9 +25,8 @@
             <q-btn class="q-mb-sm q-mx-sm" @click="clear()">Clear</q-btn>
         </div>
 
-
         <div class="q-px-lg">
-		    <q-input @keydown="clear()" outlined dense class="input text-center" v-model="last_id"></q-input>
+		    <q-input outlined dense class="input text-center" v-model="last_id"></q-input>
         </div>
 
         <div class="q-pa-md">
@@ -173,6 +172,7 @@ export default
             send_wallet.amount         = Math.floor(Math.random() * 100000000) / 100000000;
             send_wallet.send_to        = this.last_id;      
             send_wallet.currency       = coin;
+            send_wallet.remarks        = "Sample Payment";
 
             try
             {

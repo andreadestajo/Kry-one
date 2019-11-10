@@ -53,7 +53,8 @@ module.exports =
 
             /* record transaction log for user view history of his/her transactions */
             let description             = `<b>${issue_wallet.amount} ${data.currency}</b> has been issued to your account by <b>${logged_in_user.full_name}</b>.`;
-            promise_list.push(WALLET.add(recipient.id, issue_wallet.currency, issue_wallet.amount, 'issued', description, logged_in_user.id));
+            let type                    = "issued";
+            promise_list.push(WALLET.add(recipient.id, issue_wallet.currency, issue_wallet.amount, type, description, logged_in_user.id));
 
             await Promise.all(promise_list);
 

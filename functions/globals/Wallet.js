@@ -65,7 +65,54 @@ module.exports =
 
         return true;
     },
-    async deduct()
+    async deduct(uid, currency, amount, type, description, triggered_by = "", remark)
     {
+        let allowed_type    = ['sent'];
+        let deduct_promise  = [];
+
+        amount = parseFloat(amount);
+
+        if(!remark)
+        {
+            remark = "No Remarks";
+        }
+
+        if(amount <= 0)
+        {
+            HTTPS_ERROR('failed-precondition', 'Invalid amount has been detected.');
+        }
+        else if(!allowed_type.includes(type))
+        {
+            HTTPS_ERROR('failed-precondition', 'Invalid type');
+        }
+        else if(!this.allowed_currency.includes(currency))
+        {
+            HTTPS_ERROR('failed-precondition', 'Invalid currency');
+        }
+        else if(uid === "" || description === "")
+        {
+            HTTPS_ERROR('failed-precondition', 'Incomplete details');
+        }
+        else
+        {
+            let wallet     = await MDB_USER_WALLET.get(uid, currency.toUpperCase());
+
+            let log_detail = {  amount: amount,
+                                date_created: new Date(),
+                                type: type, description:
+                                description,
+                                remark: remark,
+                                method: "add",
+                                triggered_by: triggered_by,
+                                balance_before: wallet.wallet,
+                                balance_after: wallet.wallet - amount };
+
+            deduct_promise.push(MDB_USER_WALLET_LOG.add(uid, currency.toUpperCase(), log_detail));
+            deduct_promise.push(MDB_USER_WALLET.adjustWallet(uid, currency.toUpperCase(), amount *-1));
+
+            await Promise.all(deduct_promise);
+        }
+
+        return true;
     },
 };

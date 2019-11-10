@@ -2,7 +2,7 @@ const { ADMIN_DB } = require("../plugin/firebase");
 
 module.exports =
 {
-    table: 'issueWallet',
+    table: 'transferWallet',
 
     doc(id)
     {
