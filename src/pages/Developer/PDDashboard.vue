@@ -58,18 +58,24 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="upgrade_nobility">
-                           
+                           <div v-if="user_info" style="text-align: center; border-bottom: 1px dashed #ccc; padding-bottom: 10px;">
+                               <div style="font-size: 20px;"><b>{{ user_info.nobility_info.title }}</b></div>
+                               <div>Current Nobility</div>
+                              
+                           </div>
                             <div v-if="nobilities">
-                                <div v-for="(nobility, key) in nobilities" :key="key"  style="border: 1px solid #eee; padding: 20px; margin: 20px; display: inline-block;">
+                                <div v-for="(nobility, key) in upgradable_nobilities" :key="key"  style="border: 1px solid #eee; padding: 20px; margin: 20px; display: inline-block;">
                                     <div>
                                         <div>Title: <b>{{ nobility.title }}</b></div>
                                         <div>Rank: <b>{{ nobility.rank_order }}</b></div>
                                         <div>UNIQ Price: <b>{{ $_formatNumber(nobility.price, { decimal: 8 }) }} UNIQ</b></div>
                                         <div>BTC Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }) }} BTC</b></div>
                                         <div>ETH Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 2 }) }} ETH</b></div>
-                                        <div class="q-mt-md"><q-btn color="primary">UPGRADE TO THIS RANK</q-btn></div>
+                                        <div v-if="wallet_info">
+                                            <div class="q-mt-md"><q-btn color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
+                                            <div class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
+                                        </div>
                                     </div>
-                                   
                                 </div>
                             </div>
                             
@@ -121,6 +127,20 @@ export default
                             ],
         nobilities: [],
 	}),
+    computed:
+    {
+        upgradable_nobilities()
+        {
+            let res = [];
+
+            this.nobilities.forEach((nobility) =>
+            {
+                parseFloat(nobility.price) !== 0 ? res.push(nobility) : "";
+            });
+
+            return res;
+        }
+    },
     async mounted()
     {
         this.$_showPageLoading();

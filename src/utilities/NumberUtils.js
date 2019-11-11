@@ -9,7 +9,7 @@ const { pad } = format;
  */
 export const formatNumber = (number, options = {}) =>
 {
-    let formatted_number = number;
+    let formatted_number = parseFloat(number);
 
     if(options && options instanceof Object)
     {

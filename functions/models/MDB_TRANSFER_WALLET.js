@@ -49,5 +49,4 @@ module.exports =
     {
         return await this.doc(id).delete();
     },
-
 }
