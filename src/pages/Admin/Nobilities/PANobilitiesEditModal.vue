@@ -137,6 +137,12 @@
 
                     // remove required rank
                     delete nobility_data.required_rank;
+                    
+                    // Prepare numbers
+                    nobility_data.price           = Number(this.nobility.price);
+                    nobility_data.rank_order      = Number(this.nobility.rank_order);
+                    nobility_data.required_direct = Number(this.nobility.required_direct);
+                    nobility_data.override_bonus  = Number(this.nobility.override_bonus);
 
                     // Prepare required_rank_id and required_rank_title
                     nobility_data.required_rank_id    = this.nobility.required_rank ? this.nobility.required_rank.value : null;
