@@ -166,11 +166,11 @@ export default
 
         async upgradeAccount(target_rank, payment_method, amount)
         {
-            let upgrade_account             = {};
+            let upgrade_account                 = {};
 
-            upgrade_account.target_rank     = target_rank;
-            upgrade_account.amount          = parseFloat(amount);
-            upgrade_account.payment_method  = payment_method;
+            upgrade_account.target_nobility     = target_rank;
+            upgrade_account.amount              = parseFloat(amount);
+            upgrade_account.payment_method      = payment_method;
 
             try
             {

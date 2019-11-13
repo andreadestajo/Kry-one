@@ -4,6 +4,9 @@ const AUTH                  = require('../globals/Auth');
 const WALLET                = require('../globals/Wallet');
 const MDB_USER_WALLET       = require('../models/MDB_USER_WALLET');
 const MDB_USER              = require('../models/MDB_USER');
+const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
+const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
+const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const MDB_TRANSFER_WALLET   = require('../models/MDB_TRANSFER_WALLET');
 const DB_KYC_VERIFICATION   = require('../models/MDB_KYC_VERIFICATION');
 const { HTTPS_ERROR }       = require('../plugin/firebase');
@@ -51,7 +54,7 @@ module.exports =
             else
             {
                 /* record transfer wallet transaction for admin recordings for list of issued wallet */
-                transfer_wallet             = {};
+                transfer_wallet                 = {};
                 transfer_wallet.amount          = data.amount;
                 transfer_wallet.issue_by_id     = logged_in_user.id;
                 transfer_wallet.issue_by        = logged_in_user.full_name;
@@ -63,7 +66,7 @@ module.exports =
                 promise_list.push(MDB_TRANSFER_WALLET.add(transfer_wallet));
 
                 /* deduct wallet to sender */
-                description                     = `You have sent <b>${transfer_wallet.amount} ${data.currency}</b> to the account of <b>${logged_in_user.full_name}</b>.`;
+                description                     = `You have sent <b>${transfer_wallet.amount} ${data.currency}</b> to the account of <b>${recipient.full_name}</b>.`;
                 type                            = "sent";
                 promise_list.push(WALLET.deduct(logged_in_user.id, transfer_wallet.currency, transfer_wallet.amount, type, description, recipient.id));
 
@@ -78,8 +81,50 @@ module.exports =
 
         return { status: "success", message: `${logged_in_user.full_name} transferred ${transfer_wallet.amount} ${transfer_wallet.currency.toUpperCase()} to the account of ${recipient.full_name}.` };
     },
-    async upgradeAccount()
+    async upgradeAccount(data, context)
     {
+        data.amount                     = parseFloat(data.amount);
+        let promise_list                = [];
+        let logged_in_user              = await AUTH.member_only(context);
+        let logged_in_user_wallet       = await MDB_USER_WALLET.get(logged_in_user.id, data.payment_method.toUpperCase());
+        let target_nobility             = await MDB_NOBILITY.get(data.target_nobility);
+        let current_nobility            = await MDB_NOBILITY.get(logged_in_user.nobility_id);
+        let conversion_rates            = await MDB_CURRENCY.get('XAU');
+        let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
+
+        if(logged_in_user_wallet.wallet < data.amount)
+        {
+            HTTPS_ERROR('failed-precondition', `You don't have enough ${data.payment_method.toUpperCase()} balance to proceed on this transaction.`);
+        }
+        else if(data.amount < required_price)
+        {
+            HTTPS_ERROR('failed-precondition', `The amount of ${data.payment_method.toUpperCase()} you are trying to use is not enough to reach ${target_nobility.title}.`);
+        }
+        else
+        {
+            let promotions                      = {};
+            promotions.previous_nobility_id     = current_nobility.id;
+            promotions.previous_nobility_title  = current_nobility.title;
+            promotions.nobility_id              = target_nobility.id;
+            promotions.nobility_title           = target_nobility.title;
+            promotions.method                   = "Accelerate";
+            promotions.full_name                = logged_in_user.full_name;
+            promotions.user_id                  = logged_in_user.id;
+            promotions.payment_method           = data.payment_method.toUpperCase();
+            promotions.amount                   = data.amount;
+            promotions.required_price           = required_price;  
+            promotions.created_date             = new Date();
+            promise_list.push(MDB_PROMOTION.add(promotions));
+
+            /* deduct wallet to account of user who is upgrading */
+            description                         = `You have spent <b>${promotions.amount} ${promotions.payment_method}</b> in order to upgrade your account to <b>${target_nobility.title}</b>.`;
+            type                                = "upgrade";
+            promise_list.push(WALLET.deduct(logged_in_user.id, promotions.payment_method.toLowerCase(), promotions.amount, type, description, logged_in_user.id));
+            
+            await Promise.all(promise_list);     
+        }
+
+
         return { status: "success", message: `I can do this!`};
     }
 };
