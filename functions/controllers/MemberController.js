@@ -77,5 +77,9 @@ module.exports =
         });
 
         return { status: "success", message: `${logged_in_user.full_name} transferred ${transfer_wallet.amount} ${transfer_wallet.currency.toUpperCase()} to the account of ${recipient.full_name}.` };
+    },
+    async upgradeAccount()
+    {
+        return { status: "success", message: `I can do this!`};
     }
 };
