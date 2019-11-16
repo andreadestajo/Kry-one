@@ -17,7 +17,7 @@ module.exports =
      */
     async add(uid, currency, amount, type, description, triggered_by = "", remark)
     {
-        let allowed_type = ['received', 'issued', 'earned'];
+        let allowed_type = ['received', 'issued', 'earned', 'purchased'];
         let add_promise  = [];
 
         amount = parseFloat(amount);
@@ -67,7 +67,7 @@ module.exports =
     },
     async deduct(uid, currency, amount, type, description, triggered_by = "", remark)
     {
-        let allowed_type    = ['sent'];
+        let allowed_type    = ['sent', 'upgrade'];
         let deduct_promise  = [];
 
         amount = parseFloat(amount);

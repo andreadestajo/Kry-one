@@ -53,7 +53,8 @@
 
                         <q-tab-panel name="wallet_logs">
                             <div v-if="btc_logs">
-                                <q-table title="BTC Logs" :data="btc_logs" :columns="wallet_log_columns"></q-table>
+                                <q-table class="q-mb-md" title="BTC Logs" :data="btc_logs" :columns="wallet_log_columns"></q-table>
+                                <q-table title="UNIQ Logs" :data="uniq_logs" :columns="wallet_log_columns"></q-table>
                             </div>
                         </q-tab-panel>
 
@@ -72,8 +73,8 @@
                                         <div>BTC Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }) }} BTC</b></div>
                                         <div>ETH Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 2 }) }} ETH</b></div>
                                         <div v-if="wallet_info">
-                                            <div @click="upgradeAccount(nobility.id, $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }), 'BTC')" class="q-mt-md"><q-btn color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
-                                            <div @click="upgradeAccount(nobility.id, $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 8 }), 'ETH')" class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
+                                            <div class="q-mt-md"><q-btn @click="upgradeAccount(nobility.id,'BTC', $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }))" color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
+                                            <div class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,7 +97,7 @@ import DB_USER                      from "../../models/DB_USER";
 import DB_NOBILITY                  from "../../models/DB_NOBILITY";
 import DB_USER_WALLET               from "../../models/DB_USER_WALLET";
 import DB_USER_WALLET_LOG           from "../../models/DB_USER_WALLET_LOG";
-import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET } from "../../references/refs_functions";
+import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET, FN_UPGRADE_ACCOUNT } from "../../references/refs_functions";
 
 export default
 {
@@ -163,14 +164,26 @@ export default
             this.wallet_info    = null;
             this.user_info      = null;
         },
-        upgradeAccount(target_nobility, purchase_amount, payment_method)
+
+        async upgradeAccount(target_rank, payment_method, amount)
         {
             let upgrade_account                 = {};
-            upgrade_account.target_nobility     = target_nobility;
-            upgrade_account.purchase_amount     = purchase_amount;
+
+            upgrade_account.target_nobility     = target_rank;
+            upgrade_account.amount              = parseFloat(amount);
             upgrade_account.payment_method      = payment_method;
 
-            console.log(upgrade_account);
+            try
+            {
+                let res = await fbCall(FN_UPGRADE_ACCOUNT, upgrade_account);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();            
         },
         async issueWallet(coin)
         {
@@ -246,6 +259,7 @@ export default
                 await this.$bind('user_info', DB_USER.doc(this.last_id));
                 await this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
                 await this.$bind('btc_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'BTC', { order_by: 'date' }));
+                await this.$bind('uniq_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'XAU', { order_by: 'date' }));
             }
             catch(err)
             {
