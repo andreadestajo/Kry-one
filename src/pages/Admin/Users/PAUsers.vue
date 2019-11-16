@@ -47,7 +47,8 @@
         </k-table>
 
         <!--MODALS-->
-        <pa-users-accelerate-modal ref="userAccelerateModalRef"/>
+        <pa-users-accelerate-modal   ref="usersAccelerateModalRef"/>
+        <pa-users-issue-wallet-modal ref="usersIssueWalletModal"/>
 
         <router-view></router-view>
     </q-page>
@@ -58,6 +59,7 @@
     import KTable                  from '../../../components/Admin/KTable'
 
     import PaUsersAccelerateModal  from './PAUsersAccelerateModal'
+    import PaUsersIssueWalletModal from './PAUsersIssueWalletModal'
 
     import DB_USER   from '../../../models/DB_USER'
 
@@ -68,7 +70,8 @@
         {
             KHeader,
             KTable,
-            PaUsersAccelerateModal
+            PaUsersAccelerateModal,
+            PaUsersIssueWalletModal
         },
         data: () =>
         ({
@@ -91,10 +94,13 @@
                             params: {user_id: item.data.id}
                         });
                         break;
+                    case 'issue_wallet':
+                        this.$refs.usersIssueWalletModal.showUsersIssueWalletModal(item.data);
+                        break;
                     case 'edit_user':
                         break;
                     case 'accelerate_user':
-                        this.$refs.userAccelerateModalRef.showUsersAccelerateModal(item.data);
+                        this.$refs.usersAccelerateModalRef.showUsersAccelerateModal(item.data);
                         break;
                     case 'referrals':
                         this.$router.push
@@ -167,12 +173,13 @@
         ],
         actions:
         [
-            { label: 'View Wallet'    , icon: 'far fa-eye'   , key: 'view_wallet'},
-            { label: 'Edit'           , icon: 'far fa-edit'  , key: 'edit_user'},
-            { label: 'Accelerate User', icon: 'trending_up'  , key: 'accelerate_user'},
-            { label: 'Referrals'      , icon: 'people'       , key: 'referrals'},
-            { label: 'Monarchy'       , icon: 'fas fa-users' , key: 'monarchy'},
-            { label: 'Block User'     , icon: 'fas fa-ban'   , key: 'block_user'},
+            { label: 'View Wallet'    , icon: 'far fa-eye'              , key: 'view_wallet'},
+            { label: 'Issue Wallet'   , icon: 'account_balance_wallet'  , key: 'issue_wallet'},
+            { label: 'Edit'           , icon: 'far fa-edit'             , key: 'edit_user'},
+            { label: 'Accelerate User', icon: 'trending_up'             , key: 'accelerate_user'},
+            { label: 'Referrals'      , icon: 'people'                  , key: 'referrals'},
+            { label: 'Monarchy'       , icon: 'fas fa-users'            , key: 'monarchy'},
+            { label: 'Block User'     , icon: 'fas fa-ban'              , key: 'block_user'},
         ]
     }
 </script>

@@ -137,7 +137,7 @@
 
                     // remove required rank
                     delete nobility_data.required_rank;
-                    
+
                     // Prepare numbers
                     nobility_data.price           = Number(this.nobility.price);
                     nobility_data.rank_order      = Number(this.nobility.rank_order);
