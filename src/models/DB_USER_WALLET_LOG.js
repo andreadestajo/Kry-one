@@ -51,4 +51,8 @@ export default
     {
         return await this.doc(uid, currency, id).delete();
     },
+    bindUserWalletLogs(_this, uid, name, currency)
+    {
+        return _this.$bind(name, this.collection(uid, currency, { order_by: 'date' }));
+    }
 }

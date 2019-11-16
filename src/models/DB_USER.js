@@ -103,6 +103,26 @@ export default
                 return {error}
             })
     },
+    getUserByFilters(options = {})
+    {
+        let query = this.collection();
+
+        // Filter or pagination here
+        if(options.hasOwnProperty('search_text'))
+        {
+            query = query.where("filters", "array-contains", options.search_text.trim())
+        }
+
+        return query.get()
+            .then(user =>
+            {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error =>
+            {
+                return {error}
+            })
+    },
 
     /**
      *

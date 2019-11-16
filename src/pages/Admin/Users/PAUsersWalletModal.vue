@@ -1,8 +1,8 @@
 <template>
     <div>
         <k-modal ref="kModalRef"
-                 card_width="800px"
-                 card_section_height="55vh"
+                 card_width="900px"
+                 card_section_height="60vh"
                  title="Wallet"
                  @close="hideWalletModal">
             <div slot="modal-content">
@@ -32,10 +32,17 @@
                                          type="text"/>
                             </k-field>
 
-                            <div class="amount-conversion">
+                            <div>
                                 {{ $_convertRate(wallet.wallet, wallet.key, 'PHP', { decimal: 2 }) }} PHP
                                 <q-icon name="fa fa-exchange-alt"></q-icon>
                                 {{ $_convertRate(wallet.wallet, wallet.key, 'USD', { decimal: 2 }) }} USD
+                            </div>
+
+                            <div class="q-pt-lg">
+                                <q-btn unelevated label="VIEW LOGS"
+                                       color="primary"
+                                       class="full-width"
+                                       @click="viewLogs(wallet.key)" />
                             </div>
                         </div>
                     </span>
@@ -103,6 +110,19 @@
             showSendBtcModal()
             {
                 this.$refs.usersSendBtcModalRef.showSendBtcModal(this.user_details);
+            },
+            viewLogs(currency)
+            {
+                const routeData = this.$router.resolve
+                ({
+                    name: 'admin_logs',
+                    query:
+                    {
+                        email   : this.user_details.email,
+                        currency: currency
+                    }
+                });
+                window.open(routeData.href, '_blank');
             }
         },
         mounted()

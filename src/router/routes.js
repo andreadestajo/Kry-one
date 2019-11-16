@@ -44,6 +44,11 @@ const routes = [
 			{ name: 'admin_cashout_requests' , path: 'cashoutrequests' , component: () => import('pages/Admin/CashoutRequests/PACashoutRequests.vue') },
 			{ name: 'admin_commissions'      , path: 'commissions'     , component: () => import('pages/Admin/Commissions/PACommissions.vue') },
 			{ name: 'admin_nobilities'       , path: 'nobilities'      , component: () => import('pages/Admin/Nobilities/PANobilities.vue') },
+            {
+                name     : 'admin_logs',
+                path     : 'logs',
+                component: () => import('pages/Admin/Logs/PALogs.vue')
+            },
 			{ name: 'admin_monarchy'         , path: 'monarchy'        , component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') },
             {
                 name: 'admin_users',
