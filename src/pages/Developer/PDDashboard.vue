@@ -32,12 +32,13 @@
         <div class="q-pa-md">
             <div v-if="user_info" class="q-gutter-y-md">
                 <q-card>
-                    <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary"
-                        align="justify" narrow-indicator>
+                    <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                         <q-tab name="user_info" label="User" />
                         <q-tab name="wallet_info" label="Wallet" />
                         <q-tab name="wallet_logs" label="Logs" />
                         <q-tab name="upgrade_nobility" label="Upgrade Nobility" />
+                        <q-tab name="unilevel_tree" label="Unilevel Tree" />
+                        <q-tab name="binary_tree" label="Binary Tree" />
                     </q-tabs>
 
                     <q-separator />
@@ -48,12 +49,15 @@
                         </q-tab-panel>
 
                         <q-tab-panel name="wallet_info">
-                            <pre>{{ wallet_info }}</pre>
+                            <pre v-if="wallet_info">{{ wallet_info }}</pre>
                         </q-tab-panel>
 
                         <q-tab-panel name="wallet_logs">
                             <div v-if="btc_logs">
                                 <q-table class="q-mb-md" title="BTC Logs" :data="btc_logs" :columns="wallet_log_columns"></q-table>
+                            </div>
+
+                            <div v-if="uniq_logs">
                                 <q-table title="UNIQ Logs" :data="uniq_logs" :columns="wallet_log_columns"></q-table>
                             </div>
                         </q-tab-panel>
@@ -72,7 +76,7 @@
                                         <div>UNIQ Price: <b>{{ $_formatNumber(nobility.price, { decimal: 8 }) }} UNIQ</b></div>
                                         <div>BTC Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }) }} BTC</b></div>
                                         <div>ETH Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 2 }) }} ETH</b></div>
-                                        <div v-if="wallet_info">
+                                        <div v-if="wallet_info.length > 0">
                                             <div class="q-mt-md"><q-btn @click="upgradeAccount(nobility.id,'BTC', $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }))" color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
                                             <div class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
                                         </div>
@@ -80,6 +84,14 @@
                                 </div>
                             </div>
                             
+                        </q-tab-panel>
+
+                        <q-tab-panel name="unilevel_tree">
+                            <pre v-if="downline_list">{{ downline_list }}</pre>
+                        </q-tab-panel>
+
+                        <q-tab-panel name="binary_tree">
+                            <pre  v-if="wallet_info">{{ wallet_info }}</pre>
                         </q-tab-panel>
                     </q-tab-panels>
                 </q-card>
@@ -108,6 +120,7 @@ export default
 		last_id: "7lY2iogHKxaU8w2yc8vYcOnS38B2",
 		employee_list: [],
 		employee_info: null,
+        downline_list: [],
         registration_form_data:
         {
             full_name     : '',
@@ -118,14 +131,23 @@ export default
             is_agree      : ''
         },
         user_info: null,
-        wallet_info: null,
+        wallet_info: [],
         btc_logs: null,
+        uniq_logs: null,
         wallet_log_columns: [   { align: 'center', label: 'Description', field: 'description' },
                                 { align: 'center', label: 'Type', field: 'type' },
                                 { align: 'center', label: 'Date', field: 'date_created' },
                                 { align: 'center', label: 'Amount', field: 'amount' },
                                 { align: 'center', label: 'Running Balance', field: 'balance_after' },
                             ],
+
+        network_columns:    [   { align: 'center', label: 'Full Name', field: 'full_name' },
+                                { align: 'center', label: 'Rank', field: 'full_name' },
+                                { align: 'center', label: 'Personal Count', field: 'full_name' },
+                                { align: 'center', label: 'Group Count', field: 'full_name' },
+                                { align: 'center', label: 'Date Joined', field: 'full_name' },
+                                { align: 'center', label: 'Date Paid', field: 'full_name' },
+                            ],          
         nobilities: [],
 	}),
     computed:
@@ -168,7 +190,7 @@ export default
         async upgradeAccount(target_rank, payment_method, amount)
         {
             this.$_showPageLoading();
-            
+
             let upgrade_account                 = {};
 
             upgrade_account.target_nobility     = target_rank;
@@ -262,6 +284,7 @@ export default
                 await this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
                 await this.$bind('btc_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'BTC', { order_by: 'date' }));
                 await this.$bind('uniq_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'XAU', { order_by: 'date' }));
+                await this.getDownlineList(this.last_id);
             }
             catch(err)
             {
@@ -269,6 +292,10 @@ export default
             }
 
             this.$_hidePageLoading();
+        },
+        async getDownlineList(upline_id)
+        {
+            //await this.$bind('downline_list', DB_USER.getDownline(upline_id));
         },
 
         async triggerUserCreate()

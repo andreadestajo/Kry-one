@@ -8,7 +8,7 @@ export default
     {
         return DB.doc(`${this.table}/${id}`);
     },
-    collection(order_by = null)
+    collection(options = null)
     {
         let collection = DB.collection(this.table);
         return collection;
@@ -28,6 +28,22 @@ export default
     async getMany(order_by = null)
     {
         let res = await this.collection(order_by).get();
+        let data = [];
+
+        if(!res.empty)
+        {
+            res.docs.forEach((d, i) =>
+            {
+                data[i] = d.data();
+                data[i].id = d.id;
+            })
+        }
+
+        return data;
+    },
+    async getDownline(upline_id, options = null)
+    {
+        let res = await this.collection(options).where('upline_id', '==', upline_id).get();
         let data = [];
 
         if(!res.empty)

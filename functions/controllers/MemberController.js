@@ -87,11 +87,21 @@ module.exports =
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
-        let logged_in_user_wallet       = await MDB_USER_WALLET.get(logged_in_user.id, data.payment_method.toUpperCase());
-        let target_nobility             = await MDB_NOBILITY.get(data.target_nobility);
-        let current_nobility            = await MDB_NOBILITY.get(logged_in_user.nobility_id);
-        let conversion_rates            = await MDB_CURRENCY.get('XAU');
-        let payment_conversions         = await MDB_CURRENCY.get(data.payment_method.toUpperCase());
+        let logged_in_user_wallet       = MDB_USER_WALLET.get(logged_in_user.id, data.payment_method.toUpperCase());
+        let target_nobility             = MDB_NOBILITY.get(data.target_nobility);
+        let current_nobility            = MDB_NOBILITY.get(logged_in_user.nobility_id);
+        let conversion_rates            = MDB_CURRENCY.get('XAU');
+        let payment_conversions         = MDB_CURRENCY.get(data.payment_method.toUpperCase());
+
+        await Promise.all([logged_in_user_wallet, target_nobility, current_nobility, conversion_rates, payment_conversions]).then(async (res) =>
+        {
+            logged_in_user_wallet       = res[0];
+            target_nobility             = res[1];
+            current_nobility            = res[2];
+            conversion_rates            = res[3];
+            payment_conversions         = res[4];
+        })
+
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
 
@@ -143,6 +153,7 @@ module.exports =
             /* give user corresponding UNIQ equivalent of purchase */
             description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}<b> by purchasing using <b>${FORMAT.numberFormat(data.amount, { decimal: 8, currency: data.payment_method.toUpperCase() })}</b>.`;
             type                                = "purchased";
+            
             promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));
 
             await Promise.all(promise_list);     

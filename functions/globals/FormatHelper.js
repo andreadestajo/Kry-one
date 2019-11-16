@@ -6,7 +6,6 @@ module.exports =
 
         if(options && options instanceof Object)
         {
-
             // Format with decimal
             if(options.hasOwnProperty('decimal'))
             {
