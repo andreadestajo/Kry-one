@@ -72,8 +72,8 @@
                                         <div>BTC Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }) }} BTC</b></div>
                                         <div>ETH Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 2 }) }} ETH</b></div>
                                         <div v-if="wallet_info">
-                                            <div class="q-mt-md"><q-btn color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
-                                            <div class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
+                                            <div @click="upgradeAccount(nobility.id, $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }), 'BTC')" class="q-mt-md"><q-btn color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
+                                            <div @click="upgradeAccount(nobility.id, $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 8 }), 'ETH')" class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
                                         </div>
                                     </div>
                                 </div>
@@ -162,6 +162,15 @@ export default
         {
             this.wallet_info    = null;
             this.user_info      = null;
+        },
+        upgradeAccount(target_nobility, purchase_amount, payment_method)
+        {
+            let upgrade_account                 = {};
+            upgrade_account.target_nobility     = target_nobility;
+            upgrade_account.purchase_amount     = purchase_amount;
+            upgrade_account.payment_method      = payment_method;
+
+            console.log(upgrade_account);
         },
         async issueWallet(coin)
         {
