@@ -63,7 +63,6 @@
 
     import DB_USER   from '../../../models/DB_USER'
 
-
     export default {
         name: "PAUsers",
         components:
@@ -77,14 +76,14 @@
         ({
             search_text : '',
             filters     : ['pending', 'approved', 'rejected'],
-            users_wew       : [],
+            users_wew   : [],
             users_data  : []
         }),
         methods:
         {
             onClickAction(item)
             {
-                // We currently have 5 actions
+                // We currently have 7 actions
                 switch (item.action.key)
                 {
                     case 'view_wallet':
