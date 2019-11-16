@@ -40,6 +40,15 @@ export const formatNumber = (number, options = {}) =>
             formatted_number = pad(formatted_number , options.pad);
         }
 
+        // Format Digit
+        const formatDigit = (num) => {
+            const num_str  = String(num).split(".");
+            const real_num = num_str[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+            const dec_num  = num_str[1] ? num_str[1] : '';
+            return [real_num, dec_num].join('.')
+        };
+        formatted_number = formatDigit(formatted_number);
+
         // Format with padding
         if(options.hasOwnProperty('currency'))
         {
@@ -50,3 +59,4 @@ export const formatNumber = (number, options = {}) =>
 
     return formatted_number;
 };
+
