@@ -259,20 +259,23 @@ export default
         async testUserCreate()
         {
             this.$_showPageLoading();
-            this.clear();
-
+            
             let random_number                           = Math.floor(Math.random() * 100000); 
             this.registration_form_data.email           = `sample_${random_number}@gmail.com`;
             this.registration_form_data.full_name       = random_number;
             this.registration_form_data.password        = "PW" +  random_number;
             this.registration_form_data.country         = {name: 'Afghanistan', code: 'AF'};
-            this.registration_form_data.referral_code   = "3E1jmPok";
+            this.registration_form_data.referral_code   = this.user_info ? this.user_info.referral_code : "3E1jmPok";
+
+            this.clear();
 
             let res = await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data});
             this.last_id = res.data;
+            
 
             this.bindUserInformation();
             this.$_hidePageLoading();
+            
         },
         async bindUserInformation()
         {

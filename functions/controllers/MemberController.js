@@ -2,6 +2,7 @@ const moment                = require('moment-timezone');
 const momentTZ              = moment.tz('Asia/Manila');
 const AUTH                  = require('../globals/Auth');
 const WALLET                = require('../globals/Wallet');
+const EARNING               = require('../globals/Earning');
 const FORMAT                = require('../globals/FormatHelper');
 const MDB_USER_WALLET       = require('../models/MDB_USER_WALLET');
 const MDB_USER              = require('../models/MDB_USER');
@@ -84,6 +85,7 @@ module.exports =
     },
     async upgradeAccount(data, context)
     {
+        context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
@@ -104,6 +106,8 @@ module.exports =
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
+
+        console.log(`${logged_in_user_wallet.wallet} < ${data.amount}`);
 
         if(logged_in_user_wallet.wallet < data.amount)
         {
@@ -155,6 +159,9 @@ module.exports =
             type                                = "purchased";
             
             promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));
+
+            /* UNILEVEL EARNING UPON UNIQ PURCHASE */
+            await EARNING.unilevel(logged_in_user, data.amount);
 
             await Promise.all(promise_list);     
         }
