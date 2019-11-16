@@ -53,7 +53,8 @@
 
                         <q-tab-panel name="wallet_logs">
                             <div v-if="btc_logs">
-                                <q-table title="BTC Logs" :data="btc_logs" :columns="wallet_log_columns"></q-table>
+                                <q-table class="q-mb-md" title="BTC Logs" :data="btc_logs" :columns="wallet_log_columns"></q-table>
+                                <q-table title="UNIQ Logs" :data="uniq_logs" :columns="wallet_log_columns"></q-table>
                             </div>
                         </q-tab-panel>
 
@@ -258,6 +259,7 @@ export default
                 await this.$bind('user_info', DB_USER.doc(this.last_id));
                 await this.$bind('wallet_info', DB_USER_WALLET.collection(this.last_id));
                 await this.$bind('btc_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'BTC', { order_by: 'date' }));
+                await this.$bind('uniq_logs', DB_USER_WALLET_LOG.collection(this.last_id, 'XAU', { order_by: 'date' }));
             }
             catch(err)
             {

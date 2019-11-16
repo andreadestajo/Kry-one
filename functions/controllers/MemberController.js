@@ -90,6 +90,7 @@ module.exports =
         let target_nobility             = await MDB_NOBILITY.get(data.target_nobility);
         let current_nobility            = await MDB_NOBILITY.get(logged_in_user.nobility_id);
         let conversion_rates            = await MDB_CURRENCY.get('XAU');
+        let payment_conversions         = await MDB_CURRENCY.get(data.payment_method.toUpperCase());
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
 
         if(logged_in_user_wallet.wallet < data.amount)
@@ -102,6 +103,7 @@ module.exports =
         }
         else
         {
+            /* ready record rank up promotions */
             let promotions                      = {};
             promotions.previous_nobility_id     = current_nobility.id;
             promotions.previous_nobility_title  = current_nobility.title;
@@ -114,13 +116,35 @@ module.exports =
             promotions.amount                   = data.amount;
             promotions.required_price           = required_price;  
             promotions.created_date             = new Date();
-            promise_list.push(MDB_PROMOTION.add(promotions));
 
             /* deduct wallet to account of user who is upgrading */
-            description                         = `You have spent <b>${promotions.amount} ${promotions.payment_method}</b> in order to upgrade your account to <b>${target_nobility.title}</b>.`;
+            description                         = `You have spent <b>${data.amount} ${data.payment_method.toUpperCase()}</b> in order to upgrade your account to <b>${target_nobility.title}</b>.`;
             type                                = "upgrade";
-            promise_list.push(WALLET.deduct(logged_in_user.id, promotions.payment_method.toLowerCase(), promotions.amount, type, description, logged_in_user.id));
+            promise_list.push(WALLET.deduct(logged_in_user.id, data.payment_method.toLowerCase(), data.amount, type, description, logged_in_user.id));
             
+            if(current_nobility.rank_order < target_nobility.rank_order) //only update rank if rank will be higher
+            {
+                promise_list.push(MDB_PROMOTION.add(promotions));
+
+                /* update rank of user */
+                let update_user                     =   {   nobility_id: target_nobility.id,
+                                                            nobility_info:  {   badge_color: target_nobility.badge_color,
+                                                                                id: target_nobility.id,
+                                                                                rank_order: target_nobility.rank_order,
+                                                                                title: target_nobility.title }
+                                                        };
+
+                MDB_USER.update(logged_in_user.id, update_user);
+            }
+
+            /* give user corresponding UNIQ equivalent of purchase */
+            let xau_equivalent                  = payment_conversions['XAU'] * data.amount;
+            description                         = `You earned <b>${xau_equivalent} UNIQ<b> by purchasing using <b>${promotions.amount} ${promotions.payment_method.toUpperCase()}</b>.`;
+            type                                = "purchased";
+            promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));
+            
+            /* earnings distribution ?? */
+
             await Promise.all(promise_list);     
         }
 
