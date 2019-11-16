@@ -8,7 +8,9 @@ const {sendMail}                  = require('../globals/EmailHelper');
 const {generateHashedId}          = require('../globals/HashHelper');
 
 const {
-    emailVerificationTemplate, passwordResetTemplate} = require('../references/ref_email_templates');
+    emailVerificationTemplate,
+    passwordResetTemplate
+} = require('../references/ref_email_templates');
 
 const sendEmailVerificationLink = async (email, fullname) =>
 {
@@ -42,8 +44,8 @@ const sendEmailVerificationLink = async (email, fullname) =>
 const generateReferralCode = (email) =>
 {
     // Convert email address to unicode char
-    const converted_email = email.split('').map((e,i) => email.charCodeAt(i));
-    return generateHashedId(...converted_email)
+    // const converted_email = email.split('').map((e,i) => email.charCodeAt(i));
+    return generateHashedId(email)
 };
 
 module.exports =
