@@ -15,9 +15,21 @@ export const formatNumber = (number, options = {}) =>
     {
 
         // Format with decimal
-        if(options.hasOwnProperty('decimal'))
+        if(options.hasOwnProperty('decimal') || options.hasOwnProperty('currency'))
         {
-            formatted_number = formatted_number.toFixed(options.decimal);
+            const currency     = options.hasOwnProperty('currency') ? options.currency : null;
+
+            const to_fixed_num = options.hasOwnProperty('decimal')
+                ? options.decimal
+                    : !currency
+                ? null
+                    : ['BTC','XAU'].includes(currency)
+                ? 8
+                    : ['PHP', 'USD', 'ETH'].includes(currency)
+                ? 2
+                    : null;
+
+            formatted_number = to_fixed_num ? formatted_number.toFixed(to_fixed_num) : formatted_number
         }
 
         formatted_number = formatted_number.toString().replace(/[^\d.,]/g, '');
@@ -31,7 +43,8 @@ export const formatNumber = (number, options = {}) =>
         // Format with padding
         if(options.hasOwnProperty('currency'))
         {
-            formatted_number = formatted_number + " " + options.currency;
+            const currency   = options.currency === 'XAU' ? 'UNIQ' : options.currency;
+            formatted_number = formatted_number + " " + currency;
         }
     }
 
