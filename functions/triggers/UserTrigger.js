@@ -12,6 +12,7 @@ module.exports =
     },
     async createInitializeParameters(id, user_info)
     {
+        /* initial nobility */
         const nobility_list = await MDB_NOBILITY.getMany({ order_by: 'rank' });
 
         user_info.nobility_id       =   nobility_list[0].id;
@@ -22,8 +23,21 @@ module.exports =
                                             badge_color:    nobility_list[0].badge_color,
                                         };
 
+        
 
-        MDB_USER.update(id, user_info);
+        /* record user upline */
+        let upline_info             = await MDB_USER.getUserByReferralCode(user_info.referred_by);
+
+
+
+        user_info.upline_id         = upline_info.id;
+        user_info.upline_info       =   {
+                                            full_name: upline_info.full_name,
+                                            id: upline_info.id,
+                                            country: upline_info.country,
+                                        }
+
+        await MDB_USER.update(id, user_info);
     },
     async createInitializeWallet(uid)
     {

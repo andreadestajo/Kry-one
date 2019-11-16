@@ -300,8 +300,19 @@ export default
 
         async triggerUserCreate()
         {
-			let res = await fbCall('testInitializeWallet', { uid: this.last_id });
-			console.log(res.data);
+            this.$_showPageLoading();
+
+            try
+            {
+                let res =await fbCall('testInitializeWallet', { uid: this.last_id });
+                this.$q.notify({ message: res.data.message, color: 'green' });
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
         },
 		async callLogin()
 		{

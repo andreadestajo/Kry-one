@@ -63,7 +63,7 @@ module.exports =
             .limit(1)
             .get()
             .then(user => {
-                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user[0].docs.id})
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
             })
             .catch(error => {
                 return {error}
