@@ -111,10 +111,10 @@
                     this.hideUsersIssueWalletModal();
                 };
 
-                // Confirm
+                // Confirm dialog for issuing wallet
                 this.$_showConfirmDialog
                 (
-                    `Are you sure you want to issue ${issue_wallet.amount} ${issue_wallet.currency} to the account of ${this.user_details.name}.` ,
+                    `Are you sure you want to issue ${issue_wallet.amount} ${this.issue_wallet_form.currency.label} to the account of ${this.user_details.name}.` ,
                      issue_wallet_func
                 );
 

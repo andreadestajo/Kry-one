@@ -2,7 +2,7 @@
     <div>
         <k-modal ref="kModalRef"
                  card_width="800px"
-                 card_section_height="50vh"
+                 card_section_height="55vh"
                  title="Wallet"
                  @close="hideWalletModal">
             <div slot="modal-content">
@@ -26,11 +26,17 @@
                                          type="text"/>
                             </k-field>
 
-                            <k-field label="Balance">
+                            <k-field :label="`${wallet.key} Balance`">
                                 <q-input dense outlined readonly
                                          :value="wallet.wallet"
                                          type="text"/>
                             </k-field>
+
+                            <div class="amount-conversion">
+                                {{ $_convertRate(wallet.wallet, wallet.key, 'PHP', { decimal: 2 }) }} PHP
+                                <q-icon name="fa fa-exchange-alt"></q-icon>
+                                {{ $_convertRate(wallet.wallet, wallet.key, 'USD', { decimal: 2 }) }} USD
+                            </div>
                         </div>
                     </span>
                     </k-card>
