@@ -2,6 +2,7 @@ const moment                = require('moment-timezone');
 const momentTZ              = moment.tz('Asia/Manila');
 const AUTH                  = require('../globals/Auth');
 const WALLET                = require('../globals/Wallet');
+const FORMAT                = require('../globals/FormatHelper');
 const MDB_USER_WALLET       = require('../models/MDB_USER_WALLET');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
@@ -91,6 +92,7 @@ module.exports =
         let current_nobility            = await MDB_NOBILITY.get(logged_in_user.nobility_id);
         let conversion_rates            = await MDB_CURRENCY.get('XAU');
         let payment_conversions         = await MDB_CURRENCY.get(data.payment_method.toUpperCase());
+        let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
 
         if(logged_in_user_wallet.wallet < data.amount)
@@ -118,12 +120,13 @@ module.exports =
             promotions.created_date             = new Date();
 
             /* deduct wallet to account of user who is upgrading */
-            description                         = `You have spent <b>${data.amount} ${data.payment_method.toUpperCase()}</b> in order to upgrade your account to <b>${target_nobility.title}</b>.`;
-            type                                = "upgrade";
+            description                         = `You have spent <b>${FORMAT.numberFormat(data.amount, { decimal: 8, currency: data.payment_method.toUpperCase() })}</b> in order to purchase <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}</b>.`;
+            type                                = "purchased";
             promise_list.push(WALLET.deduct(logged_in_user.id, data.payment_method.toLowerCase(), data.amount, type, description, logged_in_user.id));
             
             if(current_nobility.rank_order < target_nobility.rank_order) //only update rank if rank will be higher
             {
+                /* record promotions */
                 promise_list.push(MDB_PROMOTION.add(promotions));
 
                 /* update rank of user */
@@ -138,12 +141,9 @@ module.exports =
             }
 
             /* give user corresponding UNIQ equivalent of purchase */
-            let xau_equivalent                  = payment_conversions['XAU'] * data.amount;
-            description                         = `You earned <b>${xau_equivalent} UNIQ<b> by purchasing using <b>${promotions.amount} ${promotions.payment_method.toUpperCase()}</b>.`;
+            description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}<b> by purchasing using <b>${FORMAT.numberFormat(data.amount, { decimal: 8, currency: data.payment_method.toUpperCase() })}</b>.`;
             type                                = "purchased";
             promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));
-            
-            /* earnings distribution ?? */
 
             await Promise.all(promise_list);     
         }

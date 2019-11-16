@@ -167,6 +167,8 @@ export default
 
         async upgradeAccount(target_rank, payment_method, amount)
         {
+            this.$_showPageLoading();
+            
             let upgrade_account                 = {};
 
             upgrade_account.target_nobility     = target_rank;
