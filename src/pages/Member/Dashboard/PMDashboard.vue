@@ -29,9 +29,12 @@
 
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">0.00000028 BTC</div>
-            <div class="conversion">PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30 </div>
-            <div class="label">Bitcoin Wallet</div>
+            <div class="value">{{$_formatNumber(btcWallet.BTC.wallet, {currency: 'BTC'})}}</div>
+            <div class="conversion">
+                PHP {{ $_convertRate(btcWallet.BTC.wallet, 'BTC', 'PHP', { decimal: 2 })}}
+                <q-icon name="fa fa-exchange-alt"></q-icon>
+                USD {{ $_convertRate(btcWallet.BTC.wallet, 'BTC', 'USD', { decimal: 2 })}}
+            </div>            <div class="label">Bitcoin Wallet</div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_send', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
                 <q-btn @click="$router.push({ name: 'member_receive', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="fa fa-qrcode"></q-icon> &nbsp; Receive</q-btn>
@@ -40,8 +43,12 @@
 
         <!-- UNIQ -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">0.00000028 UNIQ</div>
-            <div class="conversion">PHP 1,500.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 24.30 </div>
+            <div class="value">{{$_formatNumber(btcWallet.XAU.wallet, {currency: 'XAU'})}}</div>
+            <div class="conversion">
+                PHP {{ $_convertRate(btcWallet.XAU.wallet, 'XAU', 'PHP', { decimal: 2 })}}
+                <q-icon name="fa fa-exchange-alt"></q-icon>
+                USD {{ $_convertRate(btcWallet.XAU.wallet, 'XAU', 'USD', { decimal: 2 })}}
+            </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_send', params: { currency: 'uniq' }})" flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
@@ -70,13 +77,23 @@
 import styles   from './PMDashboard.scss';
 import KCard    from '../../../components/Member/KCard';
 
-import DB_NOBILITY from "../../../models/DB_NOBILITY"
-
+import DB_NOBILITY     from "../../../models/DB_NOBILITY"
+import DB_USER_WALLET  from '../../../models/DB_USER_WALLET'
+import {arrayToObject} from "../../../utilities/ObjectUtils";
 
 export default
 {
     name: "PMDashboard",
     components: { KCard },
+    computed:
+    {
+        btcWallet()
+        {
+            return !!this.user_wallet.length
+                ? arrayToObject(this.user_wallet, 'key')
+                : {BTC: {wallet: 0}, XAU: {wallet: 0}}
+        }
+    },
     data: () =>
     ({
         earning_breakdown:
@@ -85,13 +102,24 @@ export default
             { label: 'Knight Match', icon: 'fa fa-hands-helping', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
             { label: 'Team Override', icon: 'fa fa-layer-group', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
         ],
-        target_nobility: ''
+        target_nobility : '',
+        user_wallet     : []
     }),
-    async mounted()
+    methods:
     {
-        // Get next target nobility
-        const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
-        this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
+        async initializeData()
+        {
+            // Get next target nobility
+            const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
+            this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
+
+            // Get user wallet
+            this.user_wallet = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
+        }
+    },
+    mounted()
+    {
+        this.initializeData();
     }
 }
 </script>

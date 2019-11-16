@@ -20,7 +20,9 @@
                                         <div class="currency">{{ currency.abb }}</div>
                                     </div>
                                     <div class="amount-conversion">
-                                        {{ $_convertRate(currency.amount, currency.abb, 'PHP') }} <q-icon name="fa fa-exchange-alt"></q-icon>  {{ $_convertRate(currency.amount, currency.abb, 'USD') }}
+                                        {{ $_convertRate(currency.amount, currency.abb, 'PHP', {decimal: '2'}) }}
+                                        <q-icon name="fa fa-exchange-alt"></q-icon>
+                                        {{ $_convertRate(currency.amount, currency.abb, 'USD', {decimal: '2'}) }}
                                     </div>
                                 </div>
                             </div>
@@ -43,10 +45,16 @@
 </template>
 
 <script>
+import './PMWallet.scss';
+
 import KHeader from '../../../components/Member/KHeader';
-import KCard from '../../../components/Member/KCard';
-import styles from './PMWallet.scss';
-import ref_currencies from '../../../references/refs_currencies';
+import KCard   from '../../../components/Member/KCard';
+
+import ref_currencies  from '../../../references/refs_currencies';
+import DB_USER_WALLET  from '../../../models/DB_USER_WALLET'
+import {arrayToObject} from "../../../utilities/ObjectUtils";
+
+
 
 export default
 {
@@ -57,16 +65,20 @@ export default
 		tab: 'uniq',
         ready: false,
     }),
-    mounted()
+    async mounted()
     {
+        // Get user wallet
+        const user_wallet_arr = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
+        const user_wallet_obj = !!user_wallet_arr.length ? arrayToObject(user_wallet_arr, 'key') : null;
+
         //add random value for now (temporary)
         this.$options.currency_options.forEach((currency) =>
-        {  
-            currency.amount = Math.floor(Math.random() * 10000000000) / 10000000000;
+        {
+            const key = currency.abb === 'UNIQ' ? 'XAU' : currency.abb;
+            currency.amount = user_wallet_obj[key].wallet
         });
 
         this.ready = true;
-
     },
     methods: 
     {
@@ -80,7 +92,7 @@ export default
                 {
                     res.push(action);
                 }
-            })
+            });
 
             return res;
         }
