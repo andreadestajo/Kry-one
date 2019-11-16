@@ -58,5 +58,20 @@ export default
             options.name =  "nobilities"
         }
         return _this.$bind(options.name, this.collection().orderBy('rank_order'))
+    },
+
+    getNextTargetNobilityByRankOrder(rank_order)
+    {
+        return this.collection()
+            .where("rank_order", ">", rank_order)
+            .orderBy('rank_order', 'asc')
+            .limit(1)
+            .get()
+            .then(user => {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error => {
+                return {error}
+            })
     }
 }

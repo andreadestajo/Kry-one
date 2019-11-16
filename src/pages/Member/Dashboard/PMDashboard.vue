@@ -6,11 +6,11 @@
         <k-card class="dashboard__nobility q-mt-md">
             <div class="group">
                 <div class="group-label">Your current nobility</div>
-                <div class="group-value current">PLEDGER</div>
+                <div class="group-value current">{{$_current_user_data.nobility_info.title.toUpperCase()}}</div>
             </div>
             <div class="group">
                 <div class="group-label">Your next target</div>
-                <div class="group-value next">KNIGHT</div>
+                <div class="group-value next">{{target_nobility}}</div>
             </div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
@@ -67,8 +67,11 @@
 </template>
 
 <script>
-import styles from './PMDashboard.scss';
-import KCard from '../../../components/Member/KCard';
+import styles   from './PMDashboard.scss';
+import KCard    from '../../../components/Member/KCard';
+
+import DB_NOBILITY from "../../../models/DB_NOBILITY"
+
 
 export default
 {
@@ -82,7 +85,14 @@ export default
             { label: 'Knight Match', icon: 'fa fa-hands-helping', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
             { label: 'Team Override', icon: 'fa fa-layer-group', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
         ],
+        target_nobility: ''
     }),
+    async mounted()
+    {
+        // Get next target nobility
+        const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
+        this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
+    }
 }
 </script>
 

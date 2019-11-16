@@ -42,7 +42,7 @@
                                 <q-btn unelevated label="VIEW LOGS"
                                        color="primary"
                                        class="full-width"
-                                       @click="viewLogs(wallet.key)"/>
+                                       @click="viewLogs(wallet.key)" />
                             </div>
                         </div>
                     </span>
