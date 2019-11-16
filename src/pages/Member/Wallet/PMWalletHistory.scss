@@ -1,0 +1,57 @@
+.wallethistory {
+    &__list {
+        .list {
+            &-subtitle {
+                background-color: #eee;
+                border-bottom: 1px solid #eeee;
+                padding: 10px;
+                font-weight: bold;
+            }
+            &-logs {
+                display: grid;
+                grid-template-columns: auto 2fr auto;
+                grid-gap: 15px;
+                align-self: flex-start;
+                padding: 10px;
+                color: $text-three;
+
+                &-icon {
+                    text-align: center;
+                    padding: 5px;
+                }
+                &-description {
+                    .detail {
+                        color: $text-two;
+                    }
+                    .remark {
+                        color: $text-light;
+                        font-size: 12px;
+                    }
+                }
+                &-value {
+                    text-align: right;
+                    color: $text-two;
+
+                    .amount {
+                        font-weight: bold;
+
+                        &.add {
+                            color: green;
+                        }
+                        &.deduct {
+                            color: red;
+                        }
+                    }
+                    .balance {
+                        font-size: 12px;
+                    }
+                    .time {
+                        font-size: 12px;
+                        color: #ccc;
+                    }
+                }
+
+            }
+        }
+    }
+}

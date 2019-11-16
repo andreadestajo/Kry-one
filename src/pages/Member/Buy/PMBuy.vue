@@ -38,6 +38,13 @@
                                 </template>
                             </q-input>
                         </k-field>
+                        <k-field label="You will get" class="q-mt-md">
+                            <q-input v-model="form.email" dense placeholder="0.0" class="input" outlined stack-label>
+                                <template v-slot:append>
+                                    <div class="currency-append">UNIQ</div>
+                                </template>
+                            </q-input>
+                        </k-field>
                     </q-form>
                     <q-btn @click="step = 3" class="step-button next full-width q-mt-md" unelevated color="primary">Next <q-icon class="icon" name="fa fa-arrow-right"></q-icon></q-btn>
                     <q-btn class="step-button back full-width q-mt-sm" outline color="primary"> View Pricing</q-btn>
