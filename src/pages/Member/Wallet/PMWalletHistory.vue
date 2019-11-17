@@ -39,7 +39,8 @@ export default
     filters: { },
     data:() =>(
     {
-        wallet_history: [
+        wallet_history:
+        [
             { mode: 'subtitle', label: '09/11/2019' },
             { mode: 'logs', type: 'purchased', description: 'You have converted <b>PHP 30.00 ANT to 0.000000300 BTC</b>', remark: 'No Remarks', amount: 0.5427345, balance_after: 0.8427343, time: '06:50 PM', method: 'add' },
             { mode: 'logs', type: 'sent', description: '<b>0.00272576 btc</b> has been issued to your account by <b>Admin Account</b>.', remark: 'No Remarks', amount: 0.2427345, balance_after: 0.1427343, time: '06:50 PM', method: 'add' },

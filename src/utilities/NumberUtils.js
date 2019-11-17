@@ -23,7 +23,7 @@ export const formatNumber = (number, options = {}) =>
                 ? options.decimal
                     : !currency
                 ? null
-                    : ['BTC','XAU'].includes(currency)
+                    : ['BTC','XAU', 'UNIQ'].includes(currency)
                 ? 8
                     : ['PHP', 'USD', 'ETH'].includes(currency)
                 ? 2

@@ -54,8 +54,6 @@ import ref_currencies  from '../../../references/refs_currencies';
 import DB_USER_WALLET  from '../../../models/DB_USER_WALLET'
 import {arrayToObject} from "../../../utilities/ObjectUtils";
 
-
-
 export default
 {
     components: { KHeader, KCard },
