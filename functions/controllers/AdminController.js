@@ -1,11 +1,12 @@
-const moment            = require('moment-timezone');
-const momentTZ          = moment.tz('Asia/Manila');
-const MDB_PROMOTION     = require('../models/MDB_PROMOTION');
-const MDB_USER          = require('../models/MDB_USER');
-const MDB_ISSUE_WALLET  = require('../models/MDB_ISSUE_WALLET');
-const { HTTPS_ERROR }   = require('../plugin/firebase');
-const AUTH              = require('../globals/Auth');
-const WALLET            = require('../globals/Wallet');
+const moment                    = require('moment-timezone');
+const momentTZ                  = moment.tz('Asia/Manila');
+const MDB_PROMOTION             = require('../models/MDB_PROMOTION');
+const MDB_USER                  = require('../models/MDB_USER');
+const MDB_ISSUE_WALLET          = require('../models/MDB_ISSUE_WALLET');
+const MDB_USER_NOTIFICATION     = require('../models/MDB_USER_NOTIFICATION');
+const { HTTPS_ERROR }           = require('../plugin/firebase');
+const AUTH                      = require('../globals/Auth');
+const WALLET                    = require('../globals/Wallet');
 
 module.exports =
 {
@@ -55,6 +56,7 @@ module.exports =
             let description             = `<b>${issue_wallet.amount} ${data.currency}</b> has been issued to your account by <b>${logged_in_user.full_name}</b>.`;
             let type                    = "issued";
             promise_list.push(WALLET.add(recipient.id, issue_wallet.currency, issue_wallet.amount, type, description, logged_in_user.id));
+            promise_list.push(MDB_USER_NOTIFICATION.addNew(recipient.id, description, logged_in_user.photo_url));
 
             await Promise.all(promise_list);
 
