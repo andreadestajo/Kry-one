@@ -1,5 +1,5 @@
-const {ADMIN_DB} = require("../plugin/firebase");
-
+const {ADMIN_DB}    = require("../plugin/firebase");
+const FieldValue    = require("firebase-admin").firestore.FieldValue;
 module.exports =
 {
     table: 'users',
@@ -11,6 +11,10 @@ module.exports =
     {
         const collection = ADMIN_DB.collection(this.table);
         return collection;
+    },
+    async newNotification(uid)
+    {
+        this.doc(uid).update({ notification_count: FieldValue.increment(1) });
     },
     async add(data)
     {

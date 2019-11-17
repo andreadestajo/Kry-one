@@ -30,13 +30,19 @@ module.exports =
 
         /* record user upline */
         let upline_info                 = await MDB_USER.getUserByReferralCode(user_info.referred_by);
-        user_info.upline_id             = upline_info.id;
+
+        if(upline_info)
+        {
+            user_info.upline_id             = upline_info.id;
+            user_info.upline_info           = { full_name: upline_info.full_name, id: upline_info.id, country: upline_info.country, }
+        }
+        else
+        {
+            user_info.upline_id             = "noupline";
+            user_info.upline_info           = { full_name: "No Upline", id: "noupline", }
+        }
+        
         user_info.notification_count    = 0;
-        user_info.upline_info           =   {
-                                                full_name: upline_info.full_name,
-                                                id: upline_info.id,
-                                                country: upline_info.country,
-                                            }
 
         await MDB_USER.update(id, user_info);
     },
