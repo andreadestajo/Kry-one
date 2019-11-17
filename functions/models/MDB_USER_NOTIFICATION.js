@@ -1,8 +1,8 @@
 const { ADMIN_DB }  = require("../plugin/firebase");
-const FieldValue    = require("firebase-admin").firestore.FieldValue;
+
 module.exports =
 {
-    table: (uid) => `users/${uid}/earnings`,
+    table: (uid) => `users/${uid}/notifications`,
 
     doc(uid, id)
     {
@@ -13,14 +13,7 @@ module.exports =
         const collection = ADMIN_DB.collection(this.table(uid));
         return collection;
     },
-    async addEarning(uid, earning_id, amount)
-    {
-        let earning_update             = {};
-        earning_update.last_update     = new Date();
-        earning_update.count           = FieldValue.increment(1);
-        earning_update.total           = FieldValue.increment(amount);
-        this.update(uid, earning_id, earning_update);
-    },
+
     async add(uid, data)
     {
         let res = await ADMIN_DB.collection(this.table(uid)).add(data);

@@ -1,5 +1,6 @@
 const MDB_USER          = require('../models/MDB_USER');
 const MDB_USER_WALLET   = require('../models/MDB_USER_WALLET');
+const MDB_USER_EARNING  = require('../models/MDB_USER_EARNING');
 const MDB_CURRENCY      = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY      = require('../models/MDB_NOBILITY');
 
@@ -24,18 +25,18 @@ module.exports =
                                         };
 
         
+        /* initialize earning */
+
 
         /* record user upline */
-        let upline_info             = await MDB_USER.getUserByReferralCode(user_info.referred_by);
-
-
-
-        user_info.upline_id         = upline_info.id;
-        user_info.upline_info       =   {
-                                            full_name: upline_info.full_name,
-                                            id: upline_info.id,
-                                            country: upline_info.country,
-                                        }
+        let upline_info                 = await MDB_USER.getUserByReferralCode(user_info.referred_by);
+        user_info.upline_id             = upline_info.id;
+        user_info.notification_count    = 0;
+        user_info.upline_info           =   {
+                                                full_name: upline_info.full_name,
+                                                id: upline_info.id,
+                                                country: upline_info.country,
+                                            }
 
         await MDB_USER.update(id, user_info);
     },
