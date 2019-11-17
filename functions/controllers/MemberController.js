@@ -106,9 +106,7 @@ module.exports =
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
-
-        console.log(`${logged_in_user_wallet.wallet} < ${data.amount}`);
-
+        
         if(logged_in_user_wallet.wallet < data.amount)
         {
             HTTPS_ERROR('failed-precondition', `You don't have enough ${data.payment_method.toUpperCase()} balance to proceed on this transaction.`);
@@ -155,7 +153,7 @@ module.exports =
             }
 
             /* give user corresponding UNIQ equivalent of purchase */
-            description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}<b> by purchasing using <b>${FORMAT.numberFormat(data.amount, { decimal: 8, currency: data.payment_method.toUpperCase() })}</b>.`;
+            description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}</b> by purchasing using <b>${FORMAT.numberFormat(data.amount, { decimal: 8, currency: data.payment_method.toUpperCase() })}</b>.`;
             type                                = "purchased";
             
             promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));

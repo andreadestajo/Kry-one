@@ -214,7 +214,7 @@ export default
             this.$_showPageLoading();
 
             let issue_wallet            = {};
-            issue_wallet.amount         = Math.floor(Math.random() * 100000000) / 100000000;
+            issue_wallet.amount         = (Math.floor(Math.random() * 100000000) / 100000000) + 100;
             issue_wallet.issue_to       = this.last_id;      
             issue_wallet.currency       = coin;
 
