@@ -35,7 +35,6 @@ module.exports =
         data.amount                     = parseFloat(data.amount);
         data.currency                   = data.currency.toLowerCase();
         data.currency                   = data.currency === 'uniq' ? 'xau' : data.currency;
-
         let description, type           = "";
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
@@ -88,7 +87,7 @@ module.exports =
     },
     async upgradeAccount(data, context)
     {
-        context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
+        //context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);

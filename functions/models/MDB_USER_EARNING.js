@@ -13,6 +13,23 @@ module.exports =
         const collection = ADMIN_DB.collection(this.table(uid));
         return collection;
     },
+    async initializeEarning(uid)
+    {
+        let earning_list = ['direct', 'stairstep', 'binary'];
+        let earning_promise = [];
+
+        earning_list.forEach((earning_id) =>
+        {
+            let earning_update             = {};
+            earning_update.last_update     = new Date();
+            earning_update.count           = 0;
+            earning_update.total           = 0;
+            earning_promise.push(this.update(uid, earning_id, earning_update));
+        });
+
+        await Promise.all(earning_promise);
+        return "initialize done";
+    },
     async addEarning(uid, earning_id, amount)
     {
         let earning_update             = {};

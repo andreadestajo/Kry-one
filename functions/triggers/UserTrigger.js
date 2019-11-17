@@ -26,7 +26,7 @@ module.exports =
 
         
         /* initialize earning */
-
+        await MDB_USER_EARNING.initializeEarning(user_info.id);
 
         /* record user upline */
         let upline_info                 = await MDB_USER.getUserByReferralCode(user_info.referred_by);
@@ -76,6 +76,5 @@ module.exports =
 
     async testIssueBitcoin()
     {
-        
     },
 };
