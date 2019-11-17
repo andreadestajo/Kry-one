@@ -1,6 +1,7 @@
 const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
+const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
 
@@ -31,12 +32,11 @@ module.exports =
         /* DIRECT REFERRAL */
         if(level === 1)
         {
-            
             let direct_referral_amount  = bitcoin_equivalent * 0.01;
             description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_info.full_name}</b> purchased UNIQ.</b>.`;
             type                        = "earned";
-            console.log(description);
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
+            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount));
         }
 
         /* STAIRSTEP OVERRIDE */
@@ -48,7 +48,7 @@ module.exports =
             type                        = "earned";
             console.log(description);
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, stairstep_amount, type, description, user_cause.id));
-
+            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'stairstep', stairstep_amount));
             stairstep.current_percentage = nobility_info.override_bonus;
         }
 
