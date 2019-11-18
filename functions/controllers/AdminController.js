@@ -7,7 +7,7 @@ const MDB_USER_NOTIFICATION     = require('../models/MDB_USER_NOTIFICATION');
 const { HTTPS_ERROR }           = require('../plugin/firebase');
 const AUTH                      = require('../globals/Auth');
 const WALLET                    = require('../globals/Wallet');
-
+ 
 module.exports =
 {
     async promoteUser(data, context)
