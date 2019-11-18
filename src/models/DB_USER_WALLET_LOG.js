@@ -51,8 +51,42 @@ export default
     {
         return await this.doc(uid, currency, id).delete();
     },
-    bindUserWalletLogs(_this, uid, name, currency)
+    getUserWalletLogs(_this, uid, name, currency, options = {})
     {
-        return _this.$bind(name, this.collection(uid, currency, { order_by: 'date' }));
+        // Process currency
+        currency = currency.toUpperCase();
+        currency = currency === "UNIQ" ? "XAU" : currency;
+
+        let query = this.collection(uid, currency);
+
+        // Order
+        query = query.orderBy('date_created', 'desc');
+
+        // Limit
+        if(options.hasOwnProperty('limit'))
+        {
+            query = query.limit(options.limit)
+        }
+
+        return query.get().then(doc => doc.docs)
+    },
+    bindUserWalletLogs(_this, uid, name, currency, options = {})
+    {
+        // Process currency
+        currency = currency.toUpperCase();
+        currency = currency === "UNIQ" ? "XAU" : currency;
+
+        let query = this.collection(uid, currency);
+
+        // Order
+        query = query.orderBy('date_created', 'desc');
+
+        // Limit
+        if(options.hasOwnProperty('limit'))
+        {
+            query = query.limit(options.limit)
+        }
+
+        return _this.$bind(name, query);
     }
 }

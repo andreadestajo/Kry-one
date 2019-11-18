@@ -88,7 +88,7 @@ module.exports =
     },
     async upgradeAccount(data, context)
     {
-        context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
+        //context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
@@ -105,7 +105,7 @@ module.exports =
             current_nobility            = res[2];
             conversion_rates            = res[3];
             payment_conversions         = res[4];
-        })
+        });
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
