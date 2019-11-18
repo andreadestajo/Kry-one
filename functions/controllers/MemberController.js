@@ -35,7 +35,6 @@ module.exports =
         data.amount                     = parseFloat(data.amount);
         data.currency                   = data.currency.toLowerCase();
         data.currency                   = data.currency === 'uniq' ? 'xau' : data.currency;
-
         let description, type           = "";
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);

@@ -1,4 +1,5 @@
 const { ADMIN_DB }  = require("../plugin/firebase");
+const MDB_USER      = require("../models/MDB_USER");
 
 module.exports =
 {
@@ -12,6 +13,22 @@ module.exports =
     {
         const collection = ADMIN_DB.collection(this.table(uid));
         return collection;
+    },
+
+    async addNew(uid, description, image)
+    {
+        let add =   {
+                        image: image ? image : '../statics/boy.jpg',
+                        new: true,
+                        created_date: new Date(),
+                        read_date: new Date(),
+                        detail: description, 
+                    };
+
+        await this.add(uid, add);
+        await MDB_USER.newNotification(uid);
+
+        return "new user added";
     },
 
     async add(uid, data)

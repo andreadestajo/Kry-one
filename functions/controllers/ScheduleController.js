@@ -19,7 +19,7 @@ module.exports =
 	},
     async getConversion(currency)
     {
-        let conversion_currency     = ['USD', 'PHP', 'BTC', 'ETH', 'XAU'];
+        let conversion_currency     = ['USD', 'PHP', 'BTC', 'ETH', 'XAU', 'JPY', 'GBP'];
         let res;
 
         let conversion_api_key = process.env.CONVERSION_KEY;

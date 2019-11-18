@@ -2,6 +2,7 @@ const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
+const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
 
@@ -33,10 +34,11 @@ module.exports =
         if(level === 1)
         {
             let direct_referral_amount  = bitcoin_equivalent * 0.01;
-            description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_info.full_name}</b> purchased UNIQ.</b>.`;
+            description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_info.full_name}</b> purchased UNIQ.`;
             type                        = "earned";
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
-            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount));
+            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
+            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
         }
 
         /* STAIRSTEP OVERRIDE */
@@ -44,11 +46,12 @@ module.exports =
         {
             let override_bonus          = nobility_info.override_bonus - stairstep.current_percentage;
             let stairstep_amount        = bitcoin_equivalent * (override_bonus / 100);
-            description                 = `You earned <b>${override_bonus}% override bonus (${FORMAT.numberFormat(stairstep_amount, { decimal: 8, currency: this.earning_currency })})</b> because <b>${user_info.full_name}</b> purchased UNIQ.</b>.`;
+            description                 = `You earned <b>${override_bonus}% override bonus (${FORMAT.numberFormat(stairstep_amount, { decimal: 8, currency: this.earning_currency })})</b> because <b>${user_info.full_name}</b> purchased UNIQ.`;
             type                        = "earned";
-            console.log(description);
+ 
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, stairstep_amount, type, description, user_cause.id));
             promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'stairstep', stairstep_amount));
+            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
             stairstep.current_percentage = nobility_info.override_bonus;
         }
 
