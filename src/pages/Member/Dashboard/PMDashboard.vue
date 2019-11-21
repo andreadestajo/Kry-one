@@ -31,10 +31,9 @@
         <k-card class="dashboard__wallet member__card q-mt-md">
             <div class="value">{{$_formatNumber(btcWallet.BTC.wallet, {currency: 'BTC'})}}</div>
             <div class="conversion">
-                PHP {{ $_convertRate(btcWallet.BTC.wallet, 'BTC', 'PHP', { decimal: 2 })}}
-                <q-icon name="fa fa-exchange-alt"></q-icon>
-                USD {{ $_convertRate(btcWallet.BTC.wallet, 'BTC', 'USD', { decimal: 2 })}}
-            </div>            <div class="label">Bitcoin Wallet</div>
+                <k-amount-conversion :amount="btcWallet.BTC.wallet" coin="BTC"/>
+            </div>
+            <div class="label">Bitcoin Wallet</div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_send', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
                 <q-btn @click="$router.push({ name: 'member_receive', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="fa fa-qrcode"></q-icon> &nbsp; Receive</q-btn>
@@ -45,9 +44,7 @@
         <k-card class="dashboard__wallet member__card q-mt-md">
             <div class="value">{{$_formatNumber(btcWallet.XAU.wallet, {currency: 'XAU'})}}</div>
             <div class="conversion">
-                PHP {{ $_convertRate(btcWallet.XAU.wallet, 'XAU', 'PHP', { decimal: 2 })}}
-                <q-icon name="fa fa-exchange-alt"></q-icon>
-                USD {{ $_convertRate(btcWallet.XAU.wallet, 'XAU', 'USD', { decimal: 2 })}}
+                <k-amount-conversion :amount="btcWallet.XAU.wallet" coin="XAU"/>
             </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
@@ -74,7 +71,8 @@
 </template>
 
 <script>
-import styles   from './PMDashboard.scss';
+import './PMDashboard.scss';
+
 import KCard    from '../../../components/Member/KCard';
 
 import DB_NOBILITY     from "../../../models/DB_NOBILITY"
@@ -85,15 +83,6 @@ export default
 {
     name: "PMDashboard",
     components: { KCard },
-    computed:
-    {
-        btcWallet()
-        {
-            return !!this.user_wallet.length
-                ? arrayToObject(this.user_wallet, 'key')
-                : {BTC: {wallet: 0}, XAU: {wallet: 0}}
-        }
-    },
     data: () =>
     ({
         earning_breakdown:
@@ -105,6 +94,15 @@ export default
         target_nobility : '',
         user_wallet     : []
     }),
+    computed:
+    {
+        btcWallet()
+        {
+            return !!this.user_wallet.length
+                ? arrayToObject(this.user_wallet, 'key')
+                : {BTC: {wallet: 0}, XAU: {wallet: 0}}
+        }
+    },
     methods:
     {
         async initializeData()
