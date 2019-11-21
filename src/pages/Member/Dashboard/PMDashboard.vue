@@ -29,9 +29,9 @@
 
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber(btcWallet.BTC.wallet, {currency: 'BTC'})}}</div>
+            <div class="value">{{$_formatNumber(userWallet.BTC.wallet, {currency: 'BTC'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="btcWallet.BTC.wallet" coin="BTC"/>
+                <k-amount-conversion :amount="userWallet.BTC.wallet" coin="BTC"/>
             </div>
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
@@ -42,9 +42,9 @@
 
         <!-- UNIQ -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber(btcWallet.XAU.wallet, {currency: 'XAU'})}}</div>
+            <div class="value">{{$_formatNumber(userWallet.XAU.wallet, {currency: 'XAU'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="btcWallet.XAU.wallet" coin="XAU"/>
+                <k-amount-conversion :amount="userWallet.XAU.wallet" coin="XAU"/>
             </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
@@ -57,12 +57,14 @@
         <k-card class="dashboard__breakdown member__card q-mt-md">
             <div class="subtitle">Earning Breakdown</div>
             <div class="breakdown">
-                <div v-for="earning in earning_breakdown" :key="earning.label" class="breakdown-list">
+                <div v-for="earning in $options.earning_breakdown" :key="earning.label" class="breakdown-list">
                     <div class="breakdown-icon"><q-icon :name="earning.icon"></q-icon></div>
                     <div class="breakdown-label">{{ earning.label }} </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ earning.amount }}</div>
-                        <div class="conversion">{{ earning.conversion }}</div>
+                        <div class="amount">{{ $_formatNumber(userEarning[earning.key].total, {currency: 'BTC'}) }}</div>
+                        <div class="conversion">
+                            <k-amount-conversion :amount="userEarning[earning.key].total" coin="BTC"/>
+                        </div>
                     </div>
                 </div>  
             </div>
@@ -75,8 +77,10 @@ import './PMDashboard.scss';
 
 import KCard    from '../../../components/Member/KCard';
 
-import DB_NOBILITY     from "../../../models/DB_NOBILITY"
-import DB_USER_WALLET  from '../../../models/DB_USER_WALLET'
+import DB_NOBILITY      from "../../../models/DB_NOBILITY"
+import DB_USER_WALLET   from '../../../models/DB_USER_WALLET'
+import DB_USER_EARNING  from '../../../models/DB_USER_EARNING'
+
 import {arrayToObject} from "../../../utilities/ObjectUtils";
 
 export default
@@ -85,22 +89,23 @@ export default
     components: { KCard },
     data: () =>
     ({
-        earning_breakdown:
-        [
-            { label: 'Direct Referral', icon: 'fa fa-users', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
-            { label: 'Knight Match', icon: 'fa fa-hands-helping', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
-            { label: 'Team Override', icon: 'fa fa-layer-group', amount: '0.0000003 BTC', conversion: 'USD 24.85' },
-        ],
         target_nobility : '',
-        user_wallet     : []
+        user_wallet     : [],
+        user_earning    : []
     }),
     computed:
     {
-        btcWallet()
+        userWallet()
         {
             return !!this.user_wallet.length
                 ? arrayToObject(this.user_wallet, 'key')
                 : {BTC: {wallet: 0}, XAU: {wallet: 0}}
+        },
+        userEarning()
+        {
+            return !!this.user_earning.length
+                ? arrayToObject(this.user_earning, 'id')
+                : {binary: {amount: 0}, direct: {amount: 0}, stairstep: {amount: 0}}
         }
     },
     methods:
@@ -113,8 +118,19 @@ export default
 
             // Get user wallet
             this.user_wallet = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
+
+            // Get earnings breakdown TODO should I bind this one ?
+            this.user_earning = await DB_USER_EARNING.getMany(this.$_current_user_data.id);
+
+            console.log(this.userEarning);
         }
     },
+    earning_breakdown:
+    [
+        { label: 'Direct Referral' , key: 'binary'    , icon: 'fa fa-users'         },
+        { label: 'Knight Match'    , key: 'direct'    , icon: 'fa fa-hands-helping' },
+        { label: 'Team Override'   , key: 'stairstep' , icon: 'fa fa-layer-group'   },
+    ],
     mounted()
     {
         this.initializeData();
