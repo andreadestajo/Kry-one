@@ -25,8 +25,8 @@ let FUNCTIONS;
 
 if(env('MODE') == 'development')
 {
-	Firebase.functions().useFunctionsEmulator(`http://192.168.43.6:5000`);
-	//Firebase.functions().useFunctionsEmulator(`http://${window.location.hostname}:5000`);
+	//Firebase.functions().useFunctionsEmulator(`http://192.168.43.6:5000`);
+	Firebase.functions().useFunctionsEmulator(`http://${window.location.hostname}:5000`);
 	FUNCTIONS = Firebase.functions();
 }
 else

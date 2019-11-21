@@ -1,9 +1,9 @@
 <template>
-    <div class="wallethistory" ref="scrollTargetRef" >
+    <div class="wallethistory" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
         <k-header detail="Bitcoin wallet transaction history">Transaction History</k-header>
 
         <k-card class="q-mt-md q-mb-md">
-            <q-infinite-scroll class="wallethistory__list" @load="fetchWalletHistory" :offset="250" :scroll-target="$refs.scrollTargetRef">
+            <q-infinite-scroll class="wallethistory__list" @load="fetchWalletHistory" :scroll-target="$refs.scrollTargetRef">
                 <div v-for="(history, key) in wallet_history_data_po" :key="key" class="list">
                     <div v-if="history.mode === 'subtitle'" class="list-subtitle">
                         {{ history.label }}
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+
 import './PMWalletHistory.scss';
 
 import KHeader  from '../../../components/Member/KHeader';
@@ -41,25 +42,17 @@ import KCard    from '../../../components/Member/KCard';
 
 import DB_USER_WALLET_LOG from "../../../models/DB_USER_WALLET_LOG";
 
+import moment from 'moment'
+
 export default
 {
     components: { KHeader, KCard },
     data:() =>
     ({
-        wallet_history_data_po:
-        [
-            { mode: 'subtitle', label: '09/11/2019' },
-            { mode: 'logs', type: 'purchased', description: 'You have converted <b>PHP 30.00 ANT to 0.000000300 BTC</b>', remark: 'No Remarks', amount: 0.5427345, balance_after: 0.8427343, time: '06:50 PM', method: 'add' },
-            { mode: 'logs', type: 'sent', description: '<b>0.00272576 btc</b> has been issued to your account by <b>Admin Account</b>.', remark: 'No Remarks', amount: 0.2427345, balance_after: 0.1427343, time: '06:50 PM', method: 'add' },
-            { mode: 'subtitle', label: '09/10/2019' },
-            { mode: 'logs', type: 'purchased', description: 'You have converted <b>PHP 30.00 ANT to 0.000000300 BTC</b>', remark: 'No Remarks', amount: 0.5427345, balance_after: 0.8427343, time: '06:50 PM', method: 'add' },
-            { mode: 'logs', type: 'purchased', description: '<b>0.00272576 btc</b> has been issued to your account by <b>Admin Account</b>.', remark: 'No Remarks', amount: 0.2427345, balance_after: 0.1427343, time: '06:50 PM', method: 'add' },
-            { mode: 'logs', type: 'issued', description: 'You have converted <b>PHP 30.00 ANT to 0.000000300 BTC</b>', remark: 'No Remarks', amount: 0.5427345, balance_after: 0.8427343, time: '06:50 PM', method: 'deduct' },
-            { mode: 'logs', type: 'purchased', description: '<b>0.00272576 btc</b> has been issued to your account by <b>Admin Account</b>.', remark: 'No Remarks', amount: 0.2427345, balance_after: 0.1427343, time: '06:50 PM', method: 'add' },
-        ],
-        itemsRef            : [{}, {}, {}, {}, {}],
-        wallet_history      : [],
-        wallet_history_data : []
+        wallet_history_data_po : [],
+        itemsRef               : [{}, {}, {}, {}, {}],
+        wallet_history         : [],
+        last_history           : null
     }),
     methods:
     {
@@ -82,42 +75,70 @@ export default
         },
         async fetchWalletHistory(index, done)
         {
-            // Fetch data here
-            const currency = this.$route.params.currency === "uniq" ? "xau" : this.$route.params.currency;
+            setTimeout(async () => {
+                // Fetch data here
+                const currency = this.$route.params.currency === "uniq" ? "xau" : this.$route.params.currency;
+                const options = {limit: 10}; // default limit is 10 you can modify this one
 
-            const wallet_history = await DB_USER_WALLET_LOG.getUserWalletLogs(this,
-                this.$_current_user_data.id,
-                'wallet_history',
-                currency,
-                {limit: 10}
-            );
+                // Set start after
+                if(this.last_history)
+                {
+                    options.start_after = this.last_history
+                }
 
-            // Push to wallet_history
-            wallet_history.forEach(history =>
-            {
-                this.wallet_history.push(history)
-            });
+                const wallet_history = await DB_USER_WALLET_LOG.getUserWalletLogs(this,
+                    this.$_current_user_data.id,
+                    'wallet_history',
+                    currency,
+                    options
+                );
 
-            console.log(this.wallet_history);
+                // Get last document and assign to start_after
+                if(wallet_history.length)
+                {
+                    this.last_history = wallet_history[wallet_history.length - 1];
+                }
 
+
+                // Push to wallet_history
+                wallet_history.forEach(history =>
+                {
+                    const data = history.data();
+
+                    // Append subtitle
+                    const last_date = this.wallet_history_data_po.length ? this.wallet_history_data_po[this.wallet_history_data_po.length - 1].date : null;
+                    const is_append = !last_date
+                        ? true
+                        : this.$_formatDate(last_date) !== this.$_formatDate(data.date_created.toDate());
+
+                    if(is_append)
+                    {
+                        this.wallet_history_data_po.push({ mode: 'subtitle', label: this.$_formatDate(data.date_created.toDate())})
+                    }
+
+                    // Structure data
+                    const history_data =
+                    {
+                        mode          : 'logs',
+                        type          : data.type,
+                        description   : data.description,
+                        remark        : data.remark === "No Remarks" ? '' : data.remark,
+                        amount        : data.amount,
+                        balance_after : data.balance_after,
+                        time          : moment(data.date_created.toDate()).startOf('hour').fromNow(),
+                        date          : data.date_created.toDate(),
+                        method        : 'add'
+                    };
+
+                    this.wallet_history_data_po.push(history_data)
+                });
+
+                done()
+            }, 2000)
         }
     },
     async mounted()
     {
-        this.fetchWalletHistory()
-    },
-    watch:
-    {
-        wallet_history(wallet_history)
-        {
-            const wallet_history_data = [];
-
-            wallet_history.forEach(history => {
-                wallet_history_data.push(history)
-            });
-
-            this.wallet_history_data = wallet_history_data;
-        }
     }
 }
 </script>

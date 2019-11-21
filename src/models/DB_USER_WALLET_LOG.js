@@ -51,6 +51,16 @@ export default
     {
         return await this.doc(uid, currency, id).delete();
     },
+
+    /**
+     * Used to paginating wallet logs
+     * @param _this
+     * @param uid
+     * @param name
+     * @param currency
+     * @param options {limit (int), start_after (doc)}
+     * @returns {Promise<firebase.firestore.QueryDocumentSnapshot[] | never>}
+     */
     getUserWalletLogs(_this, uid, name, currency, options = {})
     {
         // Process currency
@@ -61,6 +71,12 @@ export default
 
         // Order
         query = query.orderBy('date_created', 'desc');
+
+        // Start after
+        if(options.hasOwnProperty('start_after'))
+        {
+            query = query.startAfter(options.start_after)
+        }
 
         // Limit
         if(options.hasOwnProperty('limit'))
