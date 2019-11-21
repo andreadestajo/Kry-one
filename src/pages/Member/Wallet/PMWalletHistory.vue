@@ -3,10 +3,13 @@
         <k-header detail="Bitcoin wallet transaction history">Transaction History</k-header>
 
         <k-card class="q-mt-md q-mb-md">
-            <div v-if="is_history_empty" class="wallethistory__list">
-                <span class="list">No transaction history</span>
+            <div v-if="is_history_empty" class="wallethistory__label">
+                <span class="list">No transaction history.</span>
             </div>
-            <q-infinite-scroll v-if="!is_history_empty" class="wallethistory__list" @load="fetchWalletHistory" :scroll-target="$refs.scrollTargetRef">
+            <q-infinite-scroll class="wallethistory__list"
+                               @load="fetchWalletHistory"
+                               ref="historyRef"
+                               :scroll-target="$refs.scrollTargetRef">
                 <div v-for="(history, key) in wallet_history_data_po" :key="key" class="list">
                     <div v-if="history.mode === 'subtitle'" class="list-subtitle">
                         {{ history.label }}
@@ -20,7 +23,7 @@
                             <div class="remark">{{ history.remark }}</div>
                         </div>
                         <div class="list-logs-value">
-                            <div  :class="`amount ${history.method}`">{{ history.amount }} BTC</div>
+                            <div  :class="`amount ${history.method}`">{{ history.amount }}</div>
                             <div class="balance">{{ history.balance_after }}</div>
                             <div class="time">{{ history.time }}</div>
                         </div>
@@ -31,7 +34,6 @@
                     </div>
                 </template>
             </q-infinite-scroll>
-
         </k-card>
     </div>
 </template>
@@ -80,7 +82,7 @@ export default
         async fetchWalletHistory(index, done)
         {
             setTimeout(async () => {
-                if(this.is_history_empty) {done()}
+                if(this.is_history_empty) {this.$refs.historyRef.stop()}
 
                 // Fetch data here
                 const currency = this.$route.params.currency === "uniq" ? "xau" : this.$route.params.currency;
@@ -104,6 +106,8 @@ export default
                 if(wallet_history.length)
                 {
                     this.last_history = wallet_history[wallet_history.length - 1];
+                } else {
+                    this.$refs.historyRef.stop()
                 }
 
                 // Push to wallet_history
@@ -129,7 +133,7 @@ export default
                         type          : data.type,
                         description   : data.description,
                         remark        : data.remark === "No Remarks" ? '' : data.remark,
-                        amount        : data.amount,
+                        amount        : this.$_formatNumber(data.amount, {currency: currency.toUpperCase()}),
                         balance_after : data.balance_after,
                         time          : moment(data.date_created.toDate()).startOf('hour').fromNow(),
                         date          : data.date_created.toDate(),
