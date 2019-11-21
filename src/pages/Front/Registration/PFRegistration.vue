@@ -246,6 +246,13 @@
                 })
             }
         },
+        mounted()
+        {
+            if(this.$route.query.refcode)
+            {
+                this.registration_form_data.referral_code = this.$route.query.refcode
+            }
+        },
         validations:
         {
             registration_form_data:
