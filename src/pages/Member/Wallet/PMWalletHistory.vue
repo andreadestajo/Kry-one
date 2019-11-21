@@ -3,7 +3,10 @@
         <k-header detail="Bitcoin wallet transaction history">Transaction History</k-header>
 
         <k-card class="q-mt-md q-mb-md">
-            <q-infinite-scroll class="wallethistory__list" @load="fetchWalletHistory" :scroll-target="$refs.scrollTargetRef">
+            <div v-if="is_history_empty" class="wallethistory__list">
+                <span class="list">No transaction history</span>
+            </div>
+            <q-infinite-scroll v-if="!is_history_empty" class="wallethistory__list" @load="fetchWalletHistory" :scroll-target="$refs.scrollTargetRef">
                 <div v-for="(history, key) in wallet_history_data_po" :key="key" class="list">
                     <div v-if="history.mode === 'subtitle'" class="list-subtitle">
                         {{ history.label }}
@@ -52,7 +55,8 @@ export default
         wallet_history_data_po : [],
         itemsRef               : [{}, {}, {}, {}, {}],
         wallet_history         : [],
-        last_history           : null
+        last_history           : null,
+        is_history_empty       : false
     }),
     methods:
     {
@@ -76,6 +80,8 @@ export default
         async fetchWalletHistory(index, done)
         {
             setTimeout(async () => {
+                if(this.is_history_empty) {done()}
+
                 // Fetch data here
                 const currency = this.$route.params.currency === "uniq" ? "xau" : this.$route.params.currency;
                 const options = {limit: 10}; // default limit is 10 you can modify this one
@@ -93,12 +99,12 @@ export default
                     options
                 );
 
+
                 // Get last document and assign to start_after
                 if(wallet_history.length)
                 {
                     this.last_history = wallet_history[wallet_history.length - 1];
                 }
-
 
                 // Push to wallet_history
                 wallet_history.forEach(history =>
@@ -133,8 +139,13 @@ export default
                     this.wallet_history_data_po.push(history_data)
                 });
 
+                if(!this.wallet_history_data_po.length)
+                {
+                    this.is_history_empty = true;
+                }
+
                 done()
-            }, 2000)
+            }, 1000)
         }
     },
     async mounted()

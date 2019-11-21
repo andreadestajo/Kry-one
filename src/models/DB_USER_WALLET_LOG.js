@@ -64,7 +64,7 @@ export default
     getUserWalletLogs(_this, uid, name, currency, options = {})
     {
         // Process currency
-        currency = currency.toUpperCase();
+        currency = currency ? currency.toUpperCase() : currency;
         currency = currency === "UNIQ" ? "XAU" : currency;
 
         let query = this.collection(uid, currency);
