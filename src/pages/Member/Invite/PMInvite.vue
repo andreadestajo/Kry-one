@@ -48,14 +48,13 @@ export default
     methods:
     {
         copyLink () {
-            // TODO Shareable link
             const resolved_route = (this.$router.resolve({
                 name  : 'front_register',
                 query : {refcode: this.$_current_user_data.referral_code}
             }));
 
             const el = document.createElement('textarea');
-            el.value = resolved_route.href;
+            el.value = `${env('APP_DOMAIN')}/${resolved_route.href}`;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');

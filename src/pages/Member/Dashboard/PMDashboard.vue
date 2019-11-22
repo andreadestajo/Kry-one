@@ -18,7 +18,7 @@
             </div>
         </k-card>
 
-        <!-- WARNNING -->
+        <!-- WARNING -->
         <div @click="$router.push({ name: 'member_verification' })" class="dashboard__warning q-mt-md">
             <div class="icon"><q-icon name="warning"></q-icon></div>
             <div class="message">

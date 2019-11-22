@@ -8,8 +8,8 @@
                     <div class="question">How would you like to pay?</div>
                     <div class="choices">
                         <div v-for="payment in $options.payment_options" :key="payment.key" class="choices-choice">
-                            <div  @click="step = 2" class="image"><q-img class="img" :src="payment.image"></q-img></div>
-                            <div  @click="step = 2" class="label">{{ payment.label }}</div>
+                            <div @click="choosePayment(payment.abb)" class="image"><q-img class="img" :src="payment.image"></q-img></div>
+                            <div @click="choosePayment(payment.abb)" class="label">{{ payment.label }}</div>
                         </div>
                     </div>
                 </q-step>
@@ -19,8 +19,8 @@
                     <q-form class="form">
                         <div class="form-info">
                             <div class="group">
-                                <div class="group-label">Your BTC Wallet</div>
-                                <div class="group-value">0.00001256 BTC</div>
+                                <div class="group-label">Your {{this.form.payment_currency}} Wallet</div>
+                                <div class="group-value">{{$_formatNumber(wallet_amount || 0, {currency: this.form.payment_currency})}}</div>
                             </div>
                         </div>
 
@@ -92,28 +92,48 @@ import KHeader from '../../../components/Member/KHeader';
 import KCard from '../../../components/Member/KCard';
 import KField from '../../../components/Member/KField';
 import styles from './PMBuy.scss';
+import DB_USER_WALLET from "../../../models/DB_USER_WALLET";
 
 export default
 {
     components: { KHeader, KCard, KField },
     filters: { },
-    data:() =>(
-    {
+    data:() =>
+    ({
         step: 1,
-        success_dialog: false,
         form:
         {
-            nobility: '',
-        }
+            payment_currency: ''
+        },
+        success_dialog: false,
+        wallet_amount: null
     }),
+    methods:
+    {
+        async choosePayment(currency)
+        {
+            this.$_showPageLoading();
+            this.form.payment_currency = currency;
+
+            // Get wallet based on selected current
+            const wallet = await DB_USER_WALLET.doc(this.$_current_user_data.id, currency).get()
+                .then(doc => doc.exists ? doc.data().wallet : null);
+
+            if(wallet === null) {return 0}
+
+            // assign wallet amount
+            this.wallet_amount = wallet;
+
+            this.step = 2;
+            this.$_hidePageLoading();
+        }
+    },
     mounted() { },
-    methods: { },
-    computed: { },
     payment_options:
     [
-        { key: 'btc', label: 'Bitcoin', image: '../../statics/bitcoin.png' },
-        { key: 'eth', label: 'Ethereum', image: '../../statics/ethereum.png' },
-    ],
+        { key: 'btc', abb: 'BTC', label: 'Bitcoin', image: '../../statics/bitcoin.png' },
+        { key: 'eth', abb: 'ETH', label: 'Ethereum', image: '../../statics/ethereum.png' },
+    ]
 
 }
 </script>
