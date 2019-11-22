@@ -121,8 +121,6 @@ export default
 
             // Get earnings breakdown TODO should I bind this one ?
             this.user_earning = await DB_USER_EARNING.getMany(this.$_current_user_data.id);
-
-            console.log(this.userEarning);
         }
     },
     earning_breakdown:

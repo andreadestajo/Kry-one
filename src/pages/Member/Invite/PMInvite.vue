@@ -33,9 +33,9 @@
 </template>
 
 <script>
-import styles from './PMInvite.scss';
+import styles  from './PMInvite.scss';
 import KHeader from '../../../components/Member/KHeader';
-import KCard from '../../../components/Member/KCard';
+import KCard   from '../../../components/Member/KCard';
 
 export default
 {

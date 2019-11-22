@@ -10,7 +10,7 @@
                                @load="fetchWalletHistory"
                                ref="historyRef"
                                :scroll-target="$refs.scrollTargetRef">
-                <div v-for="(history, key) in wallet_history_data_po" :key="key" class="list">
+                <div v-for="(history, key) in wallet_history_data" :key="key" class="list">
                     <div v-if="history.mode === 'subtitle'" class="list-subtitle">
                         {{ history.label }}
                     </div>
@@ -54,9 +54,7 @@ export default
     components: { KHeader, KCard },
     data:() =>
     ({
-        wallet_history_data_po : [],
-        itemsRef               : [{}, {}, {}, {}, {}],
-        wallet_history         : [],
+        wallet_history_data : [],
         last_history           : null,
         is_history_empty       : false
     }),
@@ -94,7 +92,7 @@ export default
                     options.start_after = this.last_history
                 }
 
-                const wallet_history = await DB_USER_WALLET_LOG.getUserWalletLogs(this,
+                const wallet_history = await DB_USER_WALLET_LOG.getUserWalletLogs(
                     this.$_current_user_data.id,
                     'wallet_history',
                     currency,
@@ -116,14 +114,14 @@ export default
                     const data = history.data();
 
                     // Append subtitle
-                    const last_date = this.wallet_history_data_po.length ? this.wallet_history_data_po[this.wallet_history_data_po.length - 1].date : null;
+                    const last_date = this.wallet_history_data.length ? this.wallet_history_data[this.wallet_history_data.length - 1].date : null;
                     const is_append = !last_date
                         ? true
                         : this.$_formatDate(last_date) !== this.$_formatDate(data.date_created.toDate());
 
                     if(is_append)
                     {
-                        this.wallet_history_data_po.push({ mode: 'subtitle', label: this.$_formatDate(data.date_created.toDate())})
+                        this.wallet_history_data.push({ mode: 'subtitle', label: this.$_formatDate(data.date_created.toDate())})
                     }
 
                     // Structure data
@@ -140,10 +138,10 @@ export default
                         method        : 'add'
                     };
 
-                    this.wallet_history_data_po.push(history_data)
+                    this.wallet_history_data.push(history_data)
                 });
 
-                if(!this.wallet_history_data_po.length)
+                if(!this.wallet_history_data.length)
                 {
                     this.is_history_empty = true;
                 }

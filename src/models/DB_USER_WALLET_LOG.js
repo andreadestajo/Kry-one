@@ -61,7 +61,7 @@ export default
      * @param options {limit (int), start_after (doc)}
      * @returns {Promise<firebase.firestore.QueryDocumentSnapshot[] | never>}
      */
-    getUserWalletLogs(_this, uid, name, currency, options = {})
+    getUserWalletLogs(uid, name, currency, options = {})
     {
         // Process currency
         currency = currency ? currency.toUpperCase() : currency;
