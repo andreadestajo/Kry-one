@@ -162,7 +162,6 @@ export default
                             id              : notification.id
                         };
 
-                    console.log(notification_data);
                     this.notification_data.unshift(notification_data)
                 });
 
