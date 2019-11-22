@@ -55,6 +55,12 @@ export default
             query = query.startAfter(options.start_after)
         }
 
+        // End Before
+        if(options.hasOwnProperty('end_before'))
+        {
+            query = query.endBefore(options.end_before)
+        }
+
         // Limit
         if(options.hasOwnProperty('limit'))
         {

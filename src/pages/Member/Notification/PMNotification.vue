@@ -1,35 +1,36 @@
 <template>
-    <div class="notification" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
-        <k-header detail="Get live information about events">Notifications</k-header>
-        <k-card class="q-mt-md">
-            <div v-if="is_notification_empty">
-                <span class="list">No transaction history.</span>
-            </div>
-            <q-infinite-scroll class="notification__list"
-                               @load="fetchNotifications"
-                               ref="notificationRef"
-                               :scroll-target="$refs.scrollTargetRef">
-                <div v-for="notif in notification_data"
-                     :class="`list ${notif.is_new ? 'new' : ''}`">
-                    <div class="list-image">
-                        <q-avatar>
-                            <q-img spinner-size="0" :src="notif.image"></q-img>
-                        </q-avatar>
-                    </div>
-                    <div class="list-detail">
-                        <div class="detail" v-html="notif.detail"></div>
-                        <div class="time">{{notif.relative_time}}</div>
-                    </div>
+    <q-pull-to-refresh @refresh="refreshNotifications">
+        <div class="notification" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
+            <k-header detail="Get live information about events">Notifications</k-header>
+            <k-card class="q-mt-md">
+                <div v-if="is_notification_empty">
+                    <span class="list">No transaction history.</span>
                 </div>
-                <template v-slot:loading>
-                    <div class="row justify-center q-py-sm" style="background-color: #f3f3f3">
-                        <q-spinner color="primary" size="20px" />
+                <q-infinite-scroll class="notification__list"
+                                   @load="fetchNotifications"
+                                   ref="notificationRef"
+                                   :scroll-target="$refs.scrollTargetRef">
+                    <div v-for="notif in notification_data"
+                         :class="`list ${notif.is_new ? 'new' : ''}`">
+                        <div class="list-image">
+                            <q-avatar>
+                                <q-img spinner-size="0" :src="notif.image"></q-img>
+                            </q-avatar>
+                        </div>
+                        <div class="list-detail">
+                            <div class="detail" v-html="notif.detail"></div>
+                            <div class="time">{{notif.relative_time}}</div>
+                        </div>
                     </div>
-                </template>
-            </q-infinite-scroll>
-
-        </k-card>
-    </div>
+                    <template v-slot:loading>
+                        <div class="row justify-center q-py-sm" style="background-color: #f3f3f3">
+                            <q-spinner color="primary" size="20px" />
+                        </div>
+                    </template>
+                </q-infinite-scroll>
+            </k-card>
+        </div>
+    </q-pull-to-refresh>
 </template>
 
 <script>
@@ -52,6 +53,7 @@ export default
     ({
         notification_data     : [],
         last_history          : null,
+        first_history         : null,
         is_notification_empty : false
     }),
     methods: 
@@ -81,10 +83,15 @@ export default
                     options
                 );
 
-
-                // Get last document and assign to start_after
                 if(notifications.length)
                 {
+                    // If there's no last history yet means that this is the first time you fetch data
+                    if(!this.last_history)
+                    {
+                        this.first_history = notifications[0]; // get doc
+                    }
+
+                    // Get last document and assign to start_after
                     this.last_history = notifications[notifications.length - 1];
                 } else {
                     this.$refs.notificationRef.stop()
@@ -116,11 +123,61 @@ export default
                 done()
             }, 1000)
         },
+        refreshNotifications(done)
+        {
+            setTimeout(async () => {
+                console.log('fetching new notifications');
+                this.resetNotificationCount();
+
+                if(!this.first_history)
+                {
+                    this.fetchNotifications();
+                    done();
+                    return 0;
+                }
+
+                const new_notifications = await DB_NOTIFICATION.getUserNotifications(
+                    this.$_current_user_data.id,
+                    {end_before: this.first_history}
+                );
+
+                if(!new_notifications.length) {done(); return 0}
+
+                // Set new first history
+                this.first_history = new_notifications[0];
+
+                // Push to notifications
+                new_notifications.reverse();
+                new_notifications.forEach(notification =>
+                {
+                    const data = notification.data();
+
+                    // Structure data
+                    const notification_data =
+                        {
+                            detail          : data.detail,
+                            is_new          : data.new,
+                            relative_time   : getRelativeTime(new Date(data.created_date.toDate())),
+                            image           : data.image,
+                            id              : notification.id
+                        };
+
+                    console.log(notification_data);
+                    this.notification_data.unshift(notification_data)
+                });
+
+                done()
+            }, 500)
+        },
+        resetNotificationCount()
+        {
+            DB_USER.update(this.$_current_user_data.id, {notification_count: 0})
+        }
     },
     mounted()
     {
         // Set notification count to 0
-        DB_USER.update(this.$_current_user_data.id, {notification_count: 0})
+        this.resetNotificationCount()
     },
     beforeDestroy()
     {
