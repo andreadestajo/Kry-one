@@ -4,13 +4,16 @@ const AUTH                  = require('../globals/Auth');
 const WALLET                = require('../globals/Wallet');
 const EARNING               = require('../globals/Earning');
 const FORMAT                = require('../globals/FormatHelper');
+
 const MDB_USER_WALLET       = require('../models/MDB_USER_WALLET');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const MDB_TRANSFER_WALLET   = require('../models/MDB_TRANSFER_WALLET');
-const DB_KYC_VERIFICATION   = require('../models/MDB_KYC_VERIFICATION');
+const MDB_KYC_VERIFICATION  = require('../models/MDB_KYC_VERIFICATION');
+const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
+
 const { HTTPS_ERROR }       = require('../plugin/firebase');
 
 module.exports =
@@ -28,7 +31,7 @@ module.exports =
         kyc_info.date_time_submitted = momentTZ.toDate();
         kyc_info.status              = 'pending'; //
 
-        return DB_KYC_VERIFICATION.doc(context.auth.uid).set(kyc_info);
+        return MDB_KYC_VERIFICATION.doc(context.auth.uid).set(kyc_info);
     },
     async transferWallet(data, context)
     {
@@ -168,5 +171,17 @@ module.exports =
 
 
         return { status: "success", message: `I can do this!`};
+    },
+    async readNewNotifications(data, context)
+    {
+        const uid       = context.auth.uid;
+        const notif_ids = JSON.parse(data.notif_ids);
+
+        // start updating notifications here
+        notif_ids.forEach(notif_id => {
+            MDB_USER_NOTIFICATION.update(uid, notif_id, {new: false})
+        });
+
+        return Promise.resolve(1)
     }
 };

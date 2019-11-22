@@ -10,7 +10,7 @@
                                ref="notificationRef"
                                :scroll-target="$refs.scrollTargetRef">
                 <div v-for="notif in notification_data"
-                     class="list new">
+                     :class="`list ${notif.is_new ? 'new' : ''}`">
                     <div class="list-image">
                         <q-avatar>
                             <q-img spinner-size="0" :src="notif.image"></q-img>
@@ -39,8 +39,11 @@ import KHeader     from '../../../components/Member/KHeader';
 import KCard       from '../../../components/Member/KCard';
 
 import DB_NOTIFICATION from '../../../models/DB_NOTIFICATION'
+import DB_USER         from '../../../models/DB_USER'
 
 import {getRelativeTime} from "../../../utilities/DateUtils";
+import {fbCall}          from "../../../utilities/Callables";
+import {FN_READ_NEW_NOTIFICATION} from "../../../references/refs_functions";
 
 export default
 {
@@ -88,11 +91,9 @@ export default
                 }
 
                 // Push to notifications
-                notifications.forEach(history =>
+                notifications.forEach(notification =>
                 {
-                    const data = history.data();
-                    console.log(data)
-
+                    const data = notification.data();
 
                     // Structure data
                     const notification_data =
@@ -100,7 +101,8 @@ export default
                         detail          : data.detail,
                         is_new          : data.new,
                         relative_time   : getRelativeTime(new Date(data.created_date.toDate())),
-                        image           : data.image
+                        image           : data.image,
+                        id              : notification.id
                     };
 
                     this.notification_data.push(notification_data)
@@ -113,8 +115,23 @@ export default
 
                 done()
             }, 1000)
+        },
+    },
+    mounted()
+    {
+        // Set notification count to 0
+        DB_USER.update(this.$_current_user_data.id, {notification_count: 0})
+    },
+    beforeDestroy()
+    {
+        // get all new notifs that has been fetched
+        const fetched_new_notifs = this.notification_data.filter(n => n.is_new).map(n => n.id);
 
-        }
+        // No need to call function if there's no new notif
+        if(!fetched_new_notifs.length) {return 0}
+
+        const data = {notif_ids: JSON.stringify(fetched_new_notifs)};
+        fbCall(FN_READ_NEW_NOTIFICATION, data).then()
     }
 }
 </script>
