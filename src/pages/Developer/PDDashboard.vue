@@ -197,6 +197,9 @@ export default
             upgrade_account.amount              = parseFloat(amount);
             upgrade_account.payment_method      = payment_method;
 
+
+            console.log(upgrade_account);
+            return 0;
             try
             {
                 let res = await fbCall(FN_UPGRADE_ACCOUNT, upgrade_account);

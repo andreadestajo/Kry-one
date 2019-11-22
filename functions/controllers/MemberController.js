@@ -175,7 +175,7 @@ module.exports =
     async readNewNotifications(data, context)
     {
         const uid       = context.auth.uid;
-        const notif_ids = data.notif_ids;
+        const notif_ids = JSON.parse(data.notif_ids);
 
         // start updating notifications here
         notif_ids.forEach(notif_id => {
