@@ -1,9 +1,10 @@
 <template>
     <span>
         <span v-if="coin !== 'USD'">
-            PHP {{ $_convertRate(amount, coin, 'PHP', { decimal: 2 })}}
+            {{$_current_user_data.currency}} {{ $_convertRate(amount, coin, $_current_user_data.currency, { decimal: 2 })}}
             <q-icon name="fa fa-exchange-alt"></q-icon>
         </span>
+
         USD {{ $_convertRate(amount, coin, 'USD', { decimal: 2 })}}
     </span>
 </template>
