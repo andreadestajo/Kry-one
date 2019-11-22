@@ -29,13 +29,22 @@
                                        v-model="form.nobility"
                                        :options="nobility_options"
                                        @input="computeTotalAmount"
+                                       :error="$v.form.nobility.value.$error"
+                                       error-message="Please choose a nobility."
+                                       @blur="$v.form.nobility.value.$touch()"
                                        option-value="value"
                                        option-label="label">
                             </q-select>
                         </k-field>
 
                         <k-field label="Amount to Pay" class="q-mt-md">
-                            <q-input debounce="500" @input="computeNobility" v-model.lazy="form.amount" dense placeholder="0.0" class="input" outlined stack-label>
+                            <q-input debounce="500"
+                                     @input="computeNobility"
+                                     v-model.lazy="form.amount"
+                                     :error="$v.form.amount.$error"
+                                     :error-message="amountError"
+                                     @blur="$v.form.amount.$touch()"
+                                     dense placeholder="0.0" class="input" outlined stack-label>
                                 <template v-slot:append>
                                     <div class="currency-append">{{form.payment_currency}}</div>
                                 </template>
@@ -49,7 +58,7 @@
                             </q-input>
                         </k-field>
                     </q-form>
-                    <q-btn @click="step = 3" class="step-button next full-width q-mt-md" unelevated color="primary">Next <q-icon class="icon" name="fa fa-arrow-right"></q-icon></q-btn>
+                    <q-btn @click="confirmTransaction" class="step-button next full-width q-mt-md" unelevated color="primary">Next <q-icon class="icon" name="fa fa-arrow-right"></q-icon></q-btn>
                     <q-btn class="step-button back full-width q-mt-sm" outline color="primary"> View Pricing</q-btn>
                     <q-btn @click="step = 1" class="step-button back full-width q-mt-sm" outline color="gray"> Back</q-btn>
                 </q-step>
@@ -102,9 +111,10 @@ import KField  from '../../../components/Member/KField';
 import DB_USER_WALLET from "../../../models/DB_USER_WALLET";
 import DB_NOBILITY    from "../../../models/DB_NOBILITY";
 
-import {required} from "vuelidate/src/validators";
-import {fbCall} from "../../../utilities/Callables";
+import {fbCall}             from "../../../utilities/Callables";
 import {FN_UPGRADE_ACCOUNT} from "../../../references/refs_functions";
+
+import {required, maxValue, minValue} from "vuelidate/src/validators";
 
 export default
 {
@@ -142,7 +152,16 @@ export default
         uniqAmount()
         {
             return this.form.payment_currency ? this.$_convertRate(this.form.amount || 0, this.form.payment_currency , 'UNIQ', {decimal: 8}) : 0
-        }
+        },
+        amountError()
+        {
+            return !this.$v.form.amount.required
+                    ? 'Amount is required'
+                        : !this.$v.form.amount.maxValue
+                    ? 'Insufficient balance'
+                        : !this.$v.form.amount.minValue
+                    ? 'Amount must be greater than 0' : ''
+        },
     },
     methods:
     {
@@ -171,7 +190,7 @@ export default
 
             // Set amount
             this.form.amount = this.$_convertRate(nobility.price, 'XAU', this.form.payment_currency);
-            console.log(this.$_formatNumber(this.form.amount, {currency: this.form.payment_currency}))
+            this.$v.form.amount.$touch();
         },
         computeNobility()
         {
@@ -189,6 +208,17 @@ export default
                 label: matched_nobilities[matched_nobilities.length - 1].title,
                 value: matched_nobilities[matched_nobilities.length - 1].id
             }
+        },
+        confirmTransaction()
+        {
+            this.$v.form.$touch();
+            console.log(this.$v.form);
+
+            console.log(this.$v.form.$error);
+            if(this.$v.form.$error) {return 0}
+
+
+            this.step = 3;
         },
         async processPurchase()
         {
@@ -227,9 +257,13 @@ export default
             form:
             {
                 payment_currency : {required},
-                nobility         : {required},
-                amount           : {required},
-                uniq             : {required}
+                nobility         : {value: {required}},
+                amount           :
+                {
+                    required,
+                    maxValue: maxValue(this.walletAmount),
+                    minValue: minValue(0.00000000000001)
+                }
             }
         }
     },
