@@ -49,7 +49,7 @@
                 </div>
                 <q-input debounce="500"
                          dense
-                         placeholder="yournam@gmail.com"
+                         placeholder="yourname@gmail.com"
                          class="input"
                          outlined
                          type="email"
@@ -91,6 +91,21 @@
                           :error="$v.registration_form_data.country.$error"
                           :error-message="'Please select a country.'"
                           @blur="$v.registration_form_data.country.$touch()">
+                </q-select>
+
+                <div class="label">
+                    Currency
+                </div>
+                <q-select outlined
+                          class="input"
+                          dense
+                          v-model="registration_form_data.currency"
+                          :options="$options.currency_options"
+                          option-value="value"
+                          option-label="label"
+                          :error="$v.registration_form_data.currency.$error"
+                          :error-message="'Please select a currency.'"
+                          @blur="$v.registration_form_data.currency.$touch()">
                 </q-select>
 
                 <div class="label">
@@ -145,14 +160,16 @@
 </template>
 
 <script>
+    import './PFRegistration.scss';
     import PFRegistrationConfirmation from "./PFRegistrationConfirmation"
-    import styles           from './PFRegistration.scss';
 
-    import refs_countries from "../../../references/refs_countries";
     import DB_USER        from "../../../models/DB_USER"
 
     import {fbCall} 	  from "../../../utilities/Callables";
     import {FN_REGISTER}  from "../../../references/refs_functions";
+
+    import refs_countries     from "../../../references/refs_countries";
+    import {currencies_list}  from "../../../references/refs_currencies";
 
     import {
         required,
@@ -174,6 +191,7 @@
                 email          : '',
                 password       : '',
                 country        : '',
+                currency       : '',
                 referral_code  : '',
                 is_agree       : ''
             },
@@ -228,8 +246,11 @@
                 this.$v.registration_form_data.$touch();
                 if(this.$v.registration_form_data.$error || this.$v.registration_form_data.$pending) {return 0}
 
+                const registration_form_data    = Object.assign({}, this.registration_form_data);
+                registration_form_data.currency = this.registration_form_data.currency.value;
+
                 this.$_showPageLoading({message: 'Creating an account.'});
-                await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
+                await fbCall(FN_REGISTER, {registration_form_data})
                 .then(data =>
                 {
                     console.log(data);
@@ -259,13 +280,13 @@
                 contact_number : {required},
                 password       : {required, minLength: minLength(6)},
                 country        : {required},
+                currency       : {required},
                 email          :
                 {
                     required,
                     email,
                     async isUnique(email)
                     {
-                        console.log(email);
                         // Returns true if no user found, meaning the email is available.
                         return await DB_USER.getUserByEmailAddress(email)
                             .then(user => !user)
@@ -286,7 +307,14 @@
                 }
             }
         },
-        country_options: refs_countries
+        country_options  : refs_countries,
+        currency_options : (() =>
+        {
+            return currencies_list.map(c => ({
+                value: c.key,
+                label: `${c.label} (${c.key})`
+            }));
+        })()
     }
 </script>
 
