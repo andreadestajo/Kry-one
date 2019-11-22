@@ -37,6 +37,7 @@
                             </q-select>
                         </k-field>
 
+                        <!--AMOUNT-->
                         <k-field label="Amount to Pay" class="q-mt-md">
                             <q-input debounce="500"
                                      @input="computeNobility"
@@ -50,6 +51,8 @@
                                 </template>
                             </q-input>
                         </k-field>
+
+                        <!--UNIQ-->
                         <k-field label="You will get" class="q-mt-md">
                             <q-input :value="uniqAmount" dense placeholder="0.0" class="input" outlined stack-label readonly>
                                 <template v-slot:append>
@@ -57,6 +60,9 @@
                                 </template>
                             </q-input>
                         </k-field>
+                        <div class="conversion">
+                            <k-amount-conversion :amount="parseFloat(uniqAmount)" coin="XAU"/>
+                        </div>
                     </q-form>
                     <q-btn @click="confirmTransaction" class="step-button next full-width q-mt-md" unelevated color="primary">Next <q-icon class="icon" name="fa fa-arrow-right"></q-icon></q-btn>
                     <q-btn class="step-button back full-width q-mt-sm" outline color="primary"> View Pricing</q-btn>
@@ -127,7 +133,7 @@ export default
         {
             payment_currency : '',
             nobility         : {label: '', value: null},
-            amount           : ''
+            amount           : 0
         },
         success_dialog: false,
         wallet_amount: 0,
@@ -140,10 +146,9 @@ export default
     {
         nobility_options()
         {
-            return this.nobilities.filter(n => parseFloat(n.price) !== 0).map(n => ({
-                label: n.title,
-                value: n.id
-            }))
+            return this.nobilities
+                .filter(n => parseFloat(n.price) !== 0 && this.$_current_user_data.nobility_id !== n.id)
+                .map(n => ({label: n.title, value: n.id}))
         },
         walletAmount()
         {
@@ -151,7 +156,7 @@ export default
         },
         uniqAmount()
         {
-            return this.form.payment_currency ? this.$_convertRate(this.form.amount || 0, this.form.payment_currency , 'UNIQ', {decimal: 8}) : 0
+            return this.form.payment_currency ? this.$_convertRate(this.form.amount || 0, this.form.payment_currency , 'UNIQ', {format_number: false}) : 0
         },
         amountError()
         {

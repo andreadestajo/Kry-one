@@ -49,7 +49,7 @@ export const formatNumber = (number, options = {}) =>
         };
         formatted_number = formatDigit(formatted_number);
 
-        // Format with padding TODO Hi, just temporarily comment this condition
+        // Format with padding
         if(options.hasOwnProperty('currency'))
         {
             const currency   = options.currency === 'XAU' ? 'UNIQ' : options.currency;
