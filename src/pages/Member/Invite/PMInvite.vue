@@ -6,10 +6,10 @@
         <div class="invite__info">
             <div class="label">SHARE YOUR REFERRAL CODE</div>
             <div class="code">
-                <div class="code-value">EFZPWM</div>
+                <div class="code-value">{{$_current_user_data.referral_code}}</div>
             </div>
             <div class="share">
-                <q-btn color="primary">Copy Share Link</q-btn>
+                <q-btn @click="copyLink" color="primary">Copy Share Link</q-btn>
             </div>
             <div class="how">
                 <div class="main">HOW IT WORKS</div>
@@ -33,20 +33,35 @@
 </template>
 
 <script>
-import styles from './PMInvite.scss';
+import styles  from './PMInvite.scss';
 import KHeader from '../../../components/Member/KHeader';
-import KCard from '../../../components/Member/KCard';
+import KCard   from '../../../components/Member/KCard';
 
 export default
 {
     components: {KHeader, KCard},
     filters: { },
-    data:() =>(
-    {
+    data:() =>
+    ({
     }),
-    mounted() { },
-    methods: { },
     computed: { },
+    methods:
+    {
+        copyLink () {
+            const resolved_route = (this.$router.resolve({
+                name  : 'front_register',
+                query : {refcode: this.$_current_user_data.referral_code}
+            }));
+
+            const el = document.createElement('textarea');
+            el.value = `${env('APP_DOMAIN')}/${resolved_route.href}`;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        },
+    },
+    mounted() { },
     step_options:
     [
         { step: 1, title: 'Share your referral code', detail: 'Share your referral link or sign up code to friends.' },

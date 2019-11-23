@@ -47,11 +47,32 @@ export default {
          * @param options
          * @returns {string} conversionRate
          */
-        $_convertRate(amount, base, conversion, options)
+        $_convertRate(amount, base, conversion, options = {})
         {
             base       = base === "UNIQ" ? "XAU" : base;
             conversion = conversion === "UNIQ" ? "XAU" : conversion;
-            return this.$_formatNumber(this.currency[base][conversion] * amount, options);
+
+            let converted_rate = this.currency[base][conversion] * amount;
+
+            // Default format number is true
+            if(options.hasOwnProperty('format_number') && !options.format_number)
+            {
+                // autoset decimal point
+                const to_fixed_num = options.hasOwnProperty('decimal')
+                    ? options.decimal
+                        : ['BTC','XAU', 'UNIQ'].includes(conversion)
+                    ? 8
+                        : ['PHP', 'USD', 'ETH'].includes(conversion)
+                    ? 2
+                        : null;
+
+                converted_rate = to_fixed_num ? converted_rate.toFixed(to_fixed_num) : converted_rate;
+
+                return converted_rate;
+            }
+
+
+            return this.$_formatNumber(converted_rate, options);
         },
 
         $_log(log, title)

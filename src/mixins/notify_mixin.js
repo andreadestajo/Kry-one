@@ -1,7 +1,8 @@
 
 // Default loading configuration
 const defaultOptions = {
-    message : '...'
+    message : '...',
+    mode    : ''
 };
 
 export default {
@@ -10,8 +11,16 @@ export default {
         {
             const opts = Object.assign(defaultOptions, options);
 
+            const color = opts.hasOwnProperty('color')
+                ? opts.color
+                    : opts.mode === 'positive'
+                ? 'green'
+                    : opts.message === 'negative'
+                ? 'red' : 'primary';
+
             this.$q.notify({
-                message: opts.message
+                message : opts.message,
+                color
             })
         }
     }

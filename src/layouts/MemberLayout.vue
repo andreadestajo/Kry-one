@@ -8,8 +8,10 @@
                     Krypto.One™
                 </q-toolbar-title>
 
-                <q-btn @click="$router.push({ name: 'member_notification' })" flat round dense icon="notifications">
-                    <!-- <q-badge floating color="red">2</q-badge> -->
+                <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
+                    <q-badge floating color="red" v-if="$_current_user_data.notification_count">
+                        {{$_current_user_data.notification_count}}
+                    </q-badge>
                 </q-btn>
             </q-toolbar>
         </q-header>

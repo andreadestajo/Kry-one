@@ -1,160 +1,175 @@
 <template>
-    <div>
-        <q-page-container>
-            <q-page class="q-pa-lg registration">
+    <q-page-container>
+        <q-page class="q-pa-lg registration">
 
-                <!-- LOGO -->
-                <div class="text-center">
-                    <div class="login__logo">
-                        <q-img spinner-size="0" src="../statics/logo3.png"></q-img>
-                    </div>
+            <!-- LOGO -->
+            <div class="text-center">
+                <div class="login__logo">
+                    <q-img spinner-size="0" src="../statics/logo3.png"></q-img>
+                </div>
+            </div>
+
+            <div class="registration__title">
+                <div class="sub">Create An Account</div>
+            </div>
+
+            <q-form class="q-pa-lg registration__form" v-if="!isRegistered">
+                <q-banner v-if="!!registrationError" inline-actions class="q-mb-md text-white bg-red">
+                    {{registrationError}}
+                </q-banner>
+
+                <div class="q-pa-none label">
+                    Full Name
+                </div>
+                <q-input dense
+                         placeholder="John Doe"
+                         class="input"
+                         outlined
+                         stack-label
+                         v-model="registration_form_data.full_name"
+                         :error="$v.registration_form_data.full_name.$error"
+                         :error-message="'full name is required'"
+                         @blur="$v.registration_form_data.full_name.$touch()"/>
+
+                <div class="q-pa-none label">
+                    Contact Number
+                </div>
+                <q-input dense
+                         placeholder=""
+                         class="input"
+                         outlined
+                         stack-label
+                         v-model="registration_form_data.contact_number"
+                         :error="$v.registration_form_data.contact_number.$error"
+                         :error-message="'Contact Number is required'"
+                         @blur="$v.registration_form_data.contact_number.$touch()"/>
+
+                <div class="label">
+                    E-mail
+                </div>
+                <q-input debounce="500"
+                         dense
+                         placeholder="yourname@gmail.com"
+                         class="input"
+                         outlined
+                         type="email"
+                         v-model.lazy="registration_form_data.email"
+                         :error="$v.registration_form_data.email.$error"
+                         :error-message="emailError"
+                         @blur="$v.registration_form_data.email.$touch()"/>
+
+                <div class="label">
+                    Password
+                </div>
+                <q-input dense
+                         class="input"
+                         placeholder="•••••••••••••••"
+                         outlined
+                         autocomplete="password"
+                         :type="isPassword ? 'password' : 'text'"
+                         v-model="registration_form_data.password"
+                         :error="$v.registration_form_data.password.$error"
+                         :error-message="passwordError"
+                         @blur="$v.registration_form_data.password.$touch()">
+                    <template v-slot:append>
+                        <q-icon :name="isPassword ? 'visibility_off' : 'visibility'"
+                                class="cursor-pointer"
+                                @click="isPassword = !isPassword"/>
+                    </template>
+                </q-input>
+
+                <div class="label">
+                    Country
+                </div>
+                <q-select outlined
+                          class="input"
+                          dense
+                          v-model="registration_form_data.country"
+                          :options="$options.country_options"
+                          option-value="code"
+                          option-label="name"
+                          :error="$v.registration_form_data.country.$error"
+                          :error-message="'Please select a country.'"
+                          @blur="$v.registration_form_data.country.$touch()">
+                </q-select>
+
+                <div class="label">
+                    Currency
+                </div>
+                <q-select outlined
+                          class="input"
+                          dense
+                          v-model="registration_form_data.currency"
+                          :options="$options.currency_options"
+                          option-value="value"
+                          option-label="label"
+                          :error="$v.registration_form_data.currency.$error"
+                          :error-message="'Please select a currency.'"
+                          @blur="$v.registration_form_data.currency.$touch()">
+                </q-select>
+
+                <div class="label">
+                    Referral Code
+                </div>
+                <q-input debounce="500"
+                         dense
+                         placeholder="KRPT01"
+                         class="input"
+                         outlined
+                         stack-label
+                         v-model="registration_form_data.referral_code"
+                         :error="$v.registration_form_data.referral_code.$error"
+                         :error-message="referralCodeError"
+                         :hint="referralCodeError"
+                         @blur="$v.registration_form_data.referral_code.$touch()"/>
+
+
+                <q-checkbox class="q-py-sm"
+                            right-label
+                            v-model="registration_form_data.is_agree">
+                    I agree to the Kryptoknight's <br />
+                    <a href="">terms of service</a> and <a href="">privacy policy.</a>
+                </q-checkbox>
+                <div v-if="!registration_form_data.is_agree && $v.registration_form_data.$dirty"
+                     class="text-center"
+                     :style="{color: 'red'}">
+                    You must agree with our terms of service and privacy policy in order to proceed.
                 </div>
 
-                <div class="registration__title">
-                    <div class="sub">Create An Account</div>
+
+                <div class="q-pt-md">
+                    <q-btn unelevated
+                           label="Create Account"
+                           type="submit"
+                           color="primary"
+                           class="full-width"
+                           @click="register()"></q-btn>
+
+                    <q-btn unelevated
+                           label="Back"
+                           type="reset"
+                           color="grey"
+                           class="q-mt-sm full-width"
+                           @click="$router.push('/')"/>
                 </div>
+            </q-form>
 
-                <q-form class="q-pa-lg registration__form" v-if="!isRegistered">
-                    <q-banner v-if="!!registrationError" inline-actions class="q-mb-md text-white bg-red">
-                        {{registrationError}}
-                    </q-banner>
-
-                    <div class="q-pa-none label">
-                        Full Name
-                    </div>
-                    <q-input dense
-                             placeholder="John Doe"
-                             class="input"
-                             outlined
-                             stack-label
-                             v-model="registration_form_data.full_name"
-                             :error="$v.registration_form_data.full_name.$error"
-                             :error-message="'full name is required'"
-                             @blur="$v.registration_form_data.full_name.$touch()"/>
-
-                    <div class="q-pa-none label">
-                        Contact Number
-                    </div>
-                    <q-input dense
-                             placeholder=""
-                             class="input"
-                             outlined
-                             stack-label
-                             v-model="registration_form_data.contact_number"
-                             :error="$v.registration_form_data.contact_number.$error"
-                             :error-message="'Contact Number is required'"
-                             @blur="$v.registration_form_data.contact_number.$touch()"/>
-
-                    <div class="label">
-                        E-mail
-                    </div>
-                    <q-input debounce="500"
-                             dense
-                             placeholder="yournam@gmail.com"
-                             class="input"
-                             outlined
-                             type="email"
-                             v-model.lazy="registration_form_data.email"
-                             :error="$v.registration_form_data.email.$error"
-                             :error-message="emailError"
-                             @blur="$v.registration_form_data.email.$touch()"/>
-
-                    <div class="label">
-                        Password
-                    </div>
-                    <q-input dense
-                             class="input"
-                             placeholder="•••••••••••••••"
-                             outlined
-                             autocomplete="password"
-                             :type="isPassword ? 'password' : 'text'"
-                             v-model="registration_form_data.password"
-                             :error="$v.registration_form_data.password.$error"
-                             :error-message="passwordError"
-                             @blur="$v.registration_form_data.password.$touch()">
-                        <template v-slot:append>
-                            <q-icon :name="isPassword ? 'visibility_off' : 'visibility'"
-                                    class="cursor-pointer"
-                                    @click="isPassword = !isPassword"/>
-                        </template>
-                    </q-input>
-
-                    <div class="label">
-                        Country
-                    </div>
-                    <q-select outlined
-                              class="input"
-                              dense
-                              v-model="registration_form_data.country"
-                              :options="$options.country_options"
-                              option-value="code"
-                              option-label="name"
-                              :error="$v.registration_form_data.country.$error"
-                              :error-message="'Please select a country.'"
-                              @blur="$v.registration_form_data.country.$touch()">
-                    </q-select>
-
-                    <div class="label">
-                        Referral Code
-                    </div>
-                    <q-input debounce="500"
-                             dense
-                             placeholder="KRPT01"
-                             class="input"
-                             outlined
-                             stack-label
-                             v-model="registration_form_data.referral_code"
-                             :error="$v.registration_form_data.referral_code.$error"
-                             :error-message="referralCodeError"
-                             :hint="referralCodeError"
-                             @blur="$v.registration_form_data.referral_code.$touch()"/>
-
-
-                    <q-checkbox class="q-py-sm"
-                                right-label
-                                v-model="registration_form_data.is_agree">
-                        I agree to the Kryptoknight's <br />
-                        <a href="">terms of service</a> and <a href="">privacy policy.</a>
-                    </q-checkbox>
-                    <div v-if="!registration_form_data.is_agree && $v.registration_form_data.$dirty"
-                         class="text-center"
-                         :style="{color: 'red'}">
-                        You must agree with our terms of service and privacy policy in order to proceed.
-                    </div>
-
-
-                    <div class="q-pt-md">
-                        <q-btn unelevated
-                               label="Create Account"
-                               type="submit"
-                               color="primary"
-                               class="full-width"
-                               @click="register()"></q-btn>
-
-                        <q-btn unelevated
-                               label="Back"
-                               type="reset"
-                               color="grey"
-                               class="q-mt-sm full-width"
-                               @click="$router.push('/')"/>
-                    </div>
-                </q-form>
-
-                <p-f-registration-confirmation v-if="isRegistered" :email="registration_form_data.email"/>
-            </q-page>
-        </q-page-container>
-    </div>
+            <p-f-registration-confirmation v-if="isRegistered" :email="registration_form_data.email"/>
+        </q-page>
+    </q-page-container>
 </template>
 
 <script>
+    import './PFRegistration.scss';
     import PFRegistrationConfirmation from "./PFRegistrationConfirmation"
-    import styles           from './PFRegistration.scss';
 
-    import refs_countries from "../../../references/refs_countries";
     import DB_USER        from "../../../models/DB_USER"
 
     import {fbCall} 	  from "../../../utilities/Callables";
     import {FN_REGISTER}  from "../../../references/refs_functions";
+
+    import refs_countries     from "../../../references/refs_countries";
+    import {currencies_list}  from "../../../references/refs_currencies";
 
     import {
         required,
@@ -176,6 +191,7 @@
                 email          : '',
                 password       : '',
                 country        : '',
+                currency       : '',
                 referral_code  : '',
                 is_agree       : ''
             },
@@ -230,8 +246,11 @@
                 this.$v.registration_form_data.$touch();
                 if(this.$v.registration_form_data.$error || this.$v.registration_form_data.$pending) {return 0}
 
+                const registration_form_data    = Object.assign({}, this.registration_form_data);
+                registration_form_data.currency = this.registration_form_data.currency.value;
+
                 this.$_showPageLoading({message: 'Creating an account.'});
-                await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data})
+                await fbCall(FN_REGISTER, {registration_form_data})
                 .then(data =>
                 {
                     console.log(data);
@@ -246,6 +265,13 @@
                 })
             }
         },
+        mounted()
+        {
+            if(this.$route.query.refcode)
+            {
+                this.registration_form_data.referral_code = this.$route.query.refcode
+            }
+        },
         validations:
         {
             registration_form_data:
@@ -254,13 +280,13 @@
                 contact_number : {required},
                 password       : {required, minLength: minLength(6)},
                 country        : {required},
+                currency       : {required},
                 email          :
                 {
                     required,
                     email,
                     async isUnique(email)
                     {
-                        console.log(email);
                         // Returns true if no user found, meaning the email is available.
                         return await DB_USER.getUserByEmailAddress(email)
                             .then(user => !user)
@@ -281,7 +307,14 @@
                 }
             }
         },
-        country_options: refs_countries
+        country_options  : refs_countries,
+        currency_options : (() =>
+        {
+            return currencies_list.map(c => ({
+                value: c.key,
+                label: `${c.label} (${c.key})`
+            }));
+        })()
     }
 </script>
 

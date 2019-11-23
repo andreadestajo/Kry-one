@@ -51,7 +51,7 @@
                     </template>
                 </q-input>
 
-                <div class="q-pt-lg">
+                <div class="q-pt-md">
                     <q-btn unelevated
                            label="Sign In"
                            type="submit"
@@ -65,6 +65,14 @@
                             color="primary"
                             class="q-mt-sm full-width"
                            @click="$router.push('/')"/>
+                </div>
+
+                <div class="q-pt-md text-center">
+                    <q-btn flat
+                           label="Forgot Password"
+                           color="primary"
+                           class="q-mt-sm full-width"
+                           @click="$router.push({name: 'front_forgot_password'})"/>
                 </div>
             </q-form>
         </q-page>

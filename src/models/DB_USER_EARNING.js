@@ -2,7 +2,7 @@ import { DB } from "../boot/firebase";
 
 export default
 {
-    table: (uid) => `users/${uid}/wallets`,
+    table: (uid) => `users/${uid}/earnings`,
 
     doc(uid, id)
     {
@@ -42,9 +42,4 @@ export default
     {
         return await this.doc(uid, id).delete();
     },
-
-    bindWalletById(_this, uid, id, name = 'wallet')
-    {
-        return _this.$bind(name, this.doc(uid, id))
-    }
 }

@@ -2,7 +2,7 @@ import { DB } from "../boot/firebase";
 
 export default
 {
-    table: (uid) => `users/${uid}/wallets`,
+    table: (uid) => `users/${uid}/notifications`,
 
     doc(uid, id)
     {
@@ -42,9 +42,31 @@ export default
     {
         return await this.doc(uid, id).delete();
     },
-
-    bindWalletById(_this, uid, id, name = 'wallet')
+    getUserNotifications(uid, options = {})
     {
-        return _this.$bind(name, this.doc(uid, id))
-    }
+        let query = this.collection(uid);
+
+        // Order
+        query = query.orderBy('created_date', 'desc');
+
+        // Start after
+        if(options.hasOwnProperty('start_after'))
+        {
+            query = query.startAfter(options.start_after)
+        }
+
+        // End Before
+        if(options.hasOwnProperty('end_before'))
+        {
+            query = query.endBefore(options.end_before)
+        }
+
+        // Limit
+        if(options.hasOwnProperty('limit'))
+        {
+            query = query.limit(options.limit)
+        }
+
+        return query.get().then(doc => doc.docs)
+    },
 }

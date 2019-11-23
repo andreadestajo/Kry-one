@@ -15,6 +15,14 @@ service cloud.firestore
             {
                 allow read;
             }
+            match /earnings/{earningID}
+            {
+                allow read;
+            }
+            match /notifications/{notificationID}
+            {
+                allow read, write;
+            }
             match /wallets/{walletID}/logs/{logID}
             {
                 allow read;

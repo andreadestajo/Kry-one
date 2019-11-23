@@ -11,9 +11,13 @@
             </div>
 
             <q-form class="q-pa-lg">
-                <div class="q-p-lg">
+                <div class="q-py-md">
                     Forgot Password ?
                 </div>
+
+                <q-banner v-if="is_email_sent" inline-actions class="q-pa-md text-white bg-green">
+                    An email for resetting your password has been successfully sent.
+                </q-banner>
 
                 <div class="q-pt-md">
                     E-mail
@@ -23,7 +27,10 @@
                          type="email"
                          class="q-pb-lg"
                          placeholder= "Enter your email"
-                         v-model="email"/>
+                         v-model="email"
+                         :error="$v.email.$error"
+                         :error-message="emailError"
+                         @blur="$v.email.$touch()"/>
 
                 <div class="q-pt-lg">
                     <q-btn unelevated
@@ -37,7 +44,8 @@
                            label="Back"
                            type="reset"
                            color="grey"
-                           class="q-mt-sm full-width" />
+                           class="q-mt-sm full-width"
+                           @click="$router.go(-1)"/>
                 </div>
             </q-form>
         </q-page>
@@ -45,35 +53,51 @@
 </template>
 
 <script>
-    import {required} from "vuelidate/lib/validators";
-    import {fbCall}   from "../../utilities/Callables";
-
+    import {fbCall}            from "../../utilities/Callables";
     import {FN_RESET_PASSWORD} from "../../references/refs_functions";
+
+    import {required, email} from "vuelidate/lib/validators";
 
     export default {
         name: "PFForgotPassword",
         data: () =>
         ({
-            email: ''
+            email         : '',
+            is_email_sent : false
         }),
+        computed:
+        {
+            emailError()
+            {
+                return !this.$v.email.required
+                    ? 'Email is required'
+                        : !this.$v.email.email
+                    ? 'Invalid E-mail Address' : ''
+            },
+        },
         methods:
         {
             async forgotPassword()
             {
+                this.$v.email.$touch();
+                if(this.$v.email.$error) {return 0}
+
+                this.$_showPageLoading();
                 await fbCall(FN_RESET_PASSWORD, {email: this.email})
                 .then(data =>
                 {
-                    console.log(data)
+                    this.is_email_sent = true;
                 })
+                .catch(error => {
+                    console.log(error);
+                });
+
+                this.$_hidePageLoading();
             }
         },
         validations:
         {
-            login_form_data:
-            {
-                email : {required},
-            }
-
+            email : {required, email},
         }
     }
 </script>
