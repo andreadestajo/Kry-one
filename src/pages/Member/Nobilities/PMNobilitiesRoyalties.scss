@@ -1,0 +1,34 @@
+.royalties {
+    &__list {
+        .list {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 10px;
+
+            &-badge {
+                .circle {
+                    background-color: #aaa;
+                    height: 50px;
+                    width: 50px;
+                    border-radius: 100%;
+                }
+            }
+            &-info {
+                .name {
+                    font-size: 20px;
+                }
+                .detail {
+                    .label {
+                        color: #aaa;
+                    }
+                    .value {
+
+                    }
+                }
+                .description {
+                    
+                }
+            }
+        }
+    }
+}
