@@ -1,13 +1,14 @@
 <template>
     <k-modal ref="kModalRef"
-             card_width="620px"
-             card_section_height="40vh"
+             card_width="500px"
+             card_section_height="60vh"
              title="Issue Wallet"
              @close="hideUsersIssueWalletModal">
 
         <div slot="modal-content">
             <span slot="section">
                 <div class="col">
+                    <!-- AMOUNT -->
                     <k-field label="Amount">
                         <q-input dense outlined
                                  v-model="issue_wallet_form.amount"
@@ -17,6 +18,7 @@
                                  @blur="$v.issue_wallet_form.amount.$touch()"/>
                     </k-field>
 
+                    <!-- CURRENCY -->
                     <k-field label="Currency">
                         <q-select outlined
                                   dense
@@ -26,15 +28,33 @@
                                   option-label="label"
                                   :error="$v.issue_wallet_form.currency.$error"
                                   :error-message="'Currency is required.'"
-                                  @blur="$v.issue_wallet_form.currency.$touch()">
+                                  @blur="$v.issue_wallet_form.currency.$touch()"
+                                  options-selected-class="text-deep-grey" stack-label>
+                           <template v-slot:option="scope">
+                               <q-item v-bind="scope.itemProps"
+                                       v-on="scope.itemEvents">
+                                   <q-item-section>{{scope.opt.label}}</q-item-section>
+
+                                   <q-item-section side>
+                                       <q-item-label class="text-primary"></q-item-label>
+                                       <q-item-label></q-item-label>
+                                   </q-item-section>
+                               </q-item>
+                           </template>
                         </q-select>
+                    </k-field>
+
+                    <!-- TO -->
+                    <k-field label="To">
+                        <q-input v-model="issue_wallet_form.issue_to"
+                                dense outlined stack-label readonly></q-input>
                     </k-field>
                 </div>
             </span>
         </div>
 
         <div slot="modal-footer">
-            <q-btn flat label="Issue Wallet" @click="issueWallet" />
+            <q-btn flat label="CONTINUE" @click="issueWallet" />
         </div>
     </k-modal>
 </template>
@@ -58,7 +78,8 @@
             issue_wallet_form:
             {
                 amount   : 0,
-                currency : ''
+                currency : '',
+                issue_to : ''
             },
             user_details: {}
         }),
@@ -68,7 +89,7 @@
             {
                 return !this.$v.issue_wallet_form.amount.required
                     ? 'Amount is required.'
-                        : !this.$v.issue_wallet_form.amount.numeric
+                        : !this.$v.issue_wallet_form.amount.decimal
                     ? 'Invalid amount.'
                         : ''
             },
@@ -77,6 +98,14 @@
         {
             showUsersIssueWalletModal(user_details)
             {
+                // Initialize issue wallet form
+                this.issue_wallet_form =
+                {
+                    amount   : 0,
+                    currency : '',
+                    issue_to : user_details.name
+                };
+
                 this.user_details = Object.assign({}, user_details);
                 this.$refs.kModalRef.showModal();
             },
@@ -92,7 +121,7 @@
                 const issue_wallet          = {};
                 issue_wallet.amount         = this.issue_wallet_form.amount;
                 issue_wallet.issue_to       = this.user_details.id;
-                issue_wallet.currency       = this.issue_wallet_form.currency.value;
+                issue_wallet.currency       = this.issue_wallet_form.currency.value === "uniq" ? "xau" : this.issue_wallet_form.currency.value;
 
                 const issue_wallet_func = async () => {
                     this.$_showPageLoading();

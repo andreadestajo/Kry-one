@@ -51,7 +51,6 @@
             </div>
 
             <div slot="modal-footer">
-                <q-btn flat label="Send BTC" @click="showSendBtcModal" />
             </div>
         </k-modal>
 
