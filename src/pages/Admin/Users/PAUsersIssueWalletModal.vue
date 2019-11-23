@@ -47,7 +47,7 @@
     import currency_refs       from '../../../references/refs_currencies'
     import {fbCall}            from "../../../utilities/Callables";
     import {FN_ISSUE_WALLET}   from "../../../references/refs_functions";
-    import {required, numeric} from "vuelidate/src/validators";
+    import {required, decimal} from "vuelidate/src/validators";
 
     export default
     {
@@ -125,7 +125,7 @@
         {
             issue_wallet_form:
             {
-                amount  : {required, numeric},
+                amount  : {required, decimal},
                 currency: {required}
             }
         }
