@@ -3,8 +3,8 @@
         <div class="notification" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
             <k-header detail="Get live information about events">Notifications</k-header>
             <k-card class="q-my-md">
-                <div v-if="is_notification_empty">
-                    <span class="list">No transaction history.</span>
+                <div v-if="is_notification_empty" class="notification__label">
+                    <span class="list">No notifications yet.</span>
                 </div>
                 <q-infinite-scroll class="notification__list"
                                    @load="fetchNotifications"

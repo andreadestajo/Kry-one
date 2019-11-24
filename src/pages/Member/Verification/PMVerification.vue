@@ -11,7 +11,7 @@
                 Thank you.
             </k-card>
 
-            <q-form v-if="$_current_user_data.kyc_status === null">
+            <q-form v-if="!$_current_user_data.kyc_status">
                 <k-card class="q-my-md q-pa-md q-px-lg">
                     <!-- FIRST NAME -->
                     <k-field label="First Name">
@@ -156,6 +156,8 @@
 </template>
 
 <script>
+import './PMVerification.scss';
+
 import KHeader      from '../../../components/Member/KHeader';
 import KField       from '../../../components/Member/KField';
 import KUploader    from '../../../components/Member/KUploader';
@@ -171,9 +173,7 @@ import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
 import refs_countries from "../../../references/refs_countries";
 import refs_id_types  from "../../../references/refs_id_types";
 
-import styles     from './PMVerification.scss';
-import { Quasar } from 'quasar';
-import { date }   from 'quasar'
+import DB_USER from "../../../models/DB_USER";
 
 export default
 {  
@@ -203,23 +203,33 @@ export default
             console.log(`${type}_${(new Date).getTime()}`);
             return STORE_MEMBER_IDS(`${type}_${(new Date).getTime()}`)
         },
-        async submitForm()
+        submitForm()
         {
             this.$v.form.$touch();
             if(this.$v.form.$error || this.$v.form.$pending) {return 0}
 
-            this.$_showPageLoading();
-            await fbCall(FN_SUBMIT_KYC, {kyc_form_data: JSON.stringify(this.form)})
-            .then(data =>
-            {
-                this.$refs.kAlertDialogRef.showAlert();
-            })
-            .catch(error =>
-            {
-                this.$_notify({message: error, mode: 'negative'})
-            });
+            this.$_showConfirmDialog(
+                'Are you sure you want to submit your details?',
+                async () => {
+                    this.$_showPageLoading();
 
-            this.$_hidePageLoading();
+                    // Set date time submitted based on the timezone of the user
+                    this.form.date_time_submitted = new Date();
+
+                    await fbCall(FN_SUBMIT_KYC, {kyc_form_data: JSON.stringify(this.form)})
+                    .then(data =>
+                    {
+                        console.log(data);
+                        this.$refs.kAlertDialogRef.showAlert();
+                    })
+                    .catch(error =>
+                    {
+                        this.$_notify({message: error, mode: 'negative'})
+                    });
+
+                    this.$_hidePageLoading();
+                }
+            );
         },
         confirmDialog()
         {
