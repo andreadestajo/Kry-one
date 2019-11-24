@@ -1,0 +1,13 @@
+.kalert_dialog {
+    text-align: center;
+
+    .title {
+        font-size: 20px;
+        font-weight: bold;
+        color: $primary;
+    }
+    .detail {
+        font-size: 16px;
+        color: $text-three;
+    }
+}

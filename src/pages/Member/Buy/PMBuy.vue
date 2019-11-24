@@ -217,11 +217,7 @@ export default
         confirmTransaction()
         {
             this.$v.form.$touch();
-            console.log(this.$v.form);
-
-            console.log(this.$v.form.$error);
             if(this.$v.form.$error) {return 0}
-
 
             this.step = 3;
         },

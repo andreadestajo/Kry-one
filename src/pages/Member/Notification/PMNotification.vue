@@ -2,7 +2,7 @@
     <q-pull-to-refresh @refresh="refreshNotifications">
         <div class="notification" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
             <k-header detail="Get live information about events">Notifications</k-header>
-            <k-card class="q-mt-md">
+            <k-card class="q-my-md">
                 <div v-if="is_notification_empty">
                     <span class="list">No transaction history.</span>
                 </div>
