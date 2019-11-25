@@ -198,5 +198,6 @@ module.exports =
     async enlistKnight(data, context)
     {
         console.log("enlist knight");
+        
     }
 };
