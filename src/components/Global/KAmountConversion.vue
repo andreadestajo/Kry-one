@@ -2,11 +2,11 @@
     <span>
         <span v-if="coin !== 'USD'">
             {{$_current_user_data.currency}}
-            {{$_convertRate(parseFloat(amount) | 0, coin, $_current_user_data.currency, { decimal: 2 })}}
+            {{$_convertRate(parseFloat(amount), coin, $_current_user_data.currency, { decimal: 2 })}}
             <q-icon name="fa fa-exchange-alt"></q-icon>
         </span>
 
-        USD {{ $_convertRate(parseFloat(amount) | 0, coin, 'USD', { decimal: 2 })}}
+        USD {{ $_convertRate(parseFloat(amount), coin, 'USD', { decimal: 2 })}}
     </span>
 </template>
 
