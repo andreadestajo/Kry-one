@@ -3,7 +3,10 @@
         .list {
             display: grid;
             grid-template-columns: auto 1fr;
-            grid-gap: 10px;
+            grid-gap: 20px;
+            border-bottom: 1px dashed #ccc;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
 
             &-badge {
                 .circle {
@@ -22,11 +25,14 @@
                         color: #aaa;
                     }
                     .value {
-
+                        color: $text-one;
+                    }
+                    .conversion {
+                        color: rgb(14, 99, 14);
                     }
                 }
                 .description {
-                    
+                    white-space: pre-wrap;
                 }
             }
         }

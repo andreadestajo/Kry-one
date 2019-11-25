@@ -11,6 +11,16 @@ export default
     collection(options = {})
     {
         let collection = DB.collection(this.table);
+        
+        if(options.hasOwnProperty('order_by'))
+        {
+                   
+            if(options.order_by == 'rank_order')
+            {
+                collection = collection.orderBy('rank_order', 'asc');
+            }
+        }
+
         return collection;
     },
     async add(data)
