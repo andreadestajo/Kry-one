@@ -1,15 +1,17 @@
 <template>
     <div class="page-name monarchy">
-        <div v-dragscroll style="overflow: hidden; width: 100%; height: calc(100vh - 50px);">
-            <div class="tree" ref="tree">
-                <ul>
-                    <li>
-                        <a href="#">{{ this.$_current_user_data.full_name }}</a>
-                        <ul>
-                            <Children :data="children" :key="key" v-for="(children, key) of childrens" />
-                        </ul>
-                    </li>
-                </ul>
+        <div ref="tree" v-dragscroll style="overflow: hidden; width: 100%; height: calc(100vh - 50px);">
+            <div style="width: 999999px; height: 999999px;">
+                <div class="tree" style="margin-top: 1000px;">
+                    <ul>
+                        <li>
+                            <a href="#">{{ this.$_current_user_data.full_name }}</a>
+                            <ul>
+                                <Children :data="children" :key="key" v-for="(children, key) of childrens" />
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -144,14 +146,17 @@ export default
     {
         childrens: null
     }),
-    async created()
+    created()
     {
         this.$q.loading.show();
-        await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id));
-        console.log(this.childrens);
-        this.$q.loading.hide();
     },
-    mounted() { },
+    async mounted() 
+    { 
+        await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id));
+        this.$q.loading.hide();
+        this.$refs.tree.scrollLeft = (this.$refs.tree.scrollWidth - this.$refs.tree.clientWidth) / 2;
+        this.$refs.tree.scrollTop = 1000;
+    },
     methods: { },
     computed: { }
 }
