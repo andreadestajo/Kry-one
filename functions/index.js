@@ -20,6 +20,7 @@ exports.submitKyc               = FUNCTIONS_HTTPS.onCall(member_controller.submi
 exports.transferWallet          = FUNCTIONS_HTTPS.onCall(member_controller.transferWallet);
 exports.upgradeAccount          = FUNCTIONS_HTTPS.onCall(member_controller.upgradeAccount);
 exports.readNewNotifications    = FUNCTIONS_HTTPS.onCall(member_controller.readNewNotifications);
+exports.enlistKnight            = FUNCTIONS_HTTPS.onCall(member_controller.enlistKnight);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);

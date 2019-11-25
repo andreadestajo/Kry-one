@@ -194,5 +194,9 @@ module.exports =
         });
 
         return Promise.resolve(1)
+    },
+    async enlistKnight(data, context)
+    {
+        console.log("enlist knight");
     }
 };

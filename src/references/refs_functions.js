@@ -9,7 +9,8 @@ export const
 FN_SUBMIT_KYC            = `submitKyc`,
 FN_TRANSFER_WALLET       = `transferWallet`,
 FN_UPGRADE_ACCOUNT       = `upgradeAccount`,
-FN_READ_NEW_NOTIFICATION = `readNewNotifications`;
+FN_READ_NEW_NOTIFICATION = `readNewNotifications`,
+FN_ENLIST_KNIGHT         = `enlistKnight`;
 
 // Admin
 export const
