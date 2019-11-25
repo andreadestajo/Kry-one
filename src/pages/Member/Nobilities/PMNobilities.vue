@@ -1,6 +1,7 @@
 <template>
     <div class="nobility">
         <k-header icon="fa fa-crown" detail="Explore different kinds of royalties.">Nobilities</k-header>
+        
         <div>
             <k-card class="q-mt-md">
                 <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>

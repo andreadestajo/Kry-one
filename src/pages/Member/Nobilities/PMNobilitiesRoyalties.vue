@@ -15,7 +15,7 @@
                     <div class="detail" v-if="nobility.price != 0">
                         <span class="label q-mr-sm">Accelerate Price</span>  
                         <div class="value"><b>{{ $_formatNumber(nobility.price, { decimal: 8 }) }} UNIQ</b></div>
-                        <div class="conversion"><b>(USD {{ $_convertRate(nobility.price, 'XAU', 'USD', { decimal: 2 }) }})</b></div>
+                        <div class="conversion"><b><k-amount-conversion :amount="nobility.price" coin="XAU"/></b></div>
                     </div>
                     <div class="detail">
                         <div class="label">Royalties:</div>
