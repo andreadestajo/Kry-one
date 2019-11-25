@@ -8473,6 +8473,11 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
   integrity sha512-iq+S7vZJE60yejDYM0ek6zg308+UZsdtPExWP9VZoCFCz1zkJoXFnAX7aZfd/ZwrkidzdUZL0C/ryW+JwAiIGw==
 
+vue-dragscroll@^1.10.2:
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/vue-dragscroll/-/vue-dragscroll-1.10.2.tgz#34ace3c6aa7a39edc157cac5e9ea1d5b31b1119c"
+  integrity sha512-fGVw8KP3ggbp49csa1Tbj2my0YuNmZ1zxYYge4QWIypGNHVwd9hResy/v6QF5HxY0a+qd2EBteeBpxtJxFMp5A==
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"

@@ -18,20 +18,31 @@ const { HTTPS_ERROR }       = require('../plugin/firebase');
 
 module.exports =
 {
-    submitKyc(data, context)
+    async submitKyc(data, context)
     {
+        // Variable declations
+        const PENDING = 'pending';
+        const USER_ID = context.auth.uid;
+
         // Fetch data
         const kyc_info = JSON.parse(data.kyc_form_data);
 
         // Set dates
-        kyc_info.id_expiration_date = new Date(kyc_info.id_expiration_date);
-        kyc_info.birthdate          = new Date(kyc_info.birthdate);
+        kyc_info.id_expiration_date  = new Date(kyc_info.id_expiration_date);
+        kyc_info.birthdate           = new Date(kyc_info.birthdate);
+        kyc_info.date_time_submitted = new Date(kyc_info.date_time_submitted);
 
         // Other Info
-        kyc_info.date_time_submitted = momentTZ.toDate();
-        kyc_info.status              = 'pending'; //
+        kyc_info.status              = PENDING;
 
-        return MDB_KYC_VERIFICATION.doc(context.auth.uid).set(kyc_info);
+        await MDB_KYC_VERIFICATION.doc(USER_ID).set(kyc_info)
+        .catch(error =>
+        {
+            HTTPS_ERROR('failed-precondition', error.errorInfo.message);
+        });
+
+        console.log('okay naman ba ?' + USER_ID + {kyc_status: PENDING} )
+        return MDB_USER.update(USER_ID, {kyc_status: PENDING})
     },
     async transferWallet(data, context)
     {

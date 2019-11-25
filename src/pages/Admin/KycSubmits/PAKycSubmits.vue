@@ -12,7 +12,9 @@
                         <q-btn flat round color="primary" icon="search" />
                     </template>
                 </q-input>
+
                 <q-space />
+
                 <q-select dense
                           placeholder="Status"
                           v-model="filters"
@@ -86,9 +88,14 @@
         {
             kyc_submits(kyc_submits)
             {
-                if(!kyc_submits.length) {return 0}
-
                 this.$refs.kTableRef.showLoading();
+
+                if(!kyc_submits.length) {
+                    if(this.filters.length)
+                    {
+                        return 0
+                    }
+                }
 
                 const kyc_submits_data = [];
 
@@ -106,6 +113,13 @@
 
                 this.kyc_submits_data = kyc_submits_data;
                 this.$refs.kTableRef.hideLoading();
+            },
+            async filters(filters)
+            {
+                this.$refs.kTableRef.showLoading();
+
+                const options = {name: "kyc_submits", status_filter: filters};
+                await DB_KYC_VERIFICATION.bindKycVerifications(this, options);
             }
         },
         columns:

@@ -58,12 +58,23 @@ export default
      */
     bindKycVerifications(_this, options = {})
     {
+        let query = this.collection();
+
+        // Apply filter
+        if(options.hasOwnProperty('status_filter'))
+        {
+            const filter = options.status_filter.length ? options.status_filter : ["not_in_filters"];
+            query = query.where("status", "in", filter)
+        }
+
+        query = query.orderBy("date_time_submitted", "desc");
+
         // Set default name
         if(!options.hasOwnProperty('name'))
         {
             options.name =  "kycVerifications"
         }
-        return _this.$bind(options.name, this.collection()
-            .orderBy("status"))
+
+        return _this.$bind(options.name, query)
     }
 }

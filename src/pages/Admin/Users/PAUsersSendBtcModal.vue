@@ -32,8 +32,8 @@
                                 placeholder="0.0000000"
                                 dense outlined stack-label></q-input>
                    </k-field>
-                   <!-- TO -->
 
+                   <!-- TO -->
                    <k-field label="To">
                        <q-input v-model="form.receiver"
                                 dense outlined stack-label readonly></q-input>

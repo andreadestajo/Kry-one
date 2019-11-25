@@ -54,6 +54,7 @@ module.exports =
     },
     async update(id, data)
     {
+        console.log({id, data});
         return await this.doc(id).set(data, { merge: true} )
     },
     async remove(id)
