@@ -1,6 +1,7 @@
 import RouteGuard             from './route_guards'
 
 const routes = [
+	{ name: 'member_monarchy', path: '/monarchy', component: () => import('pages/Member/Monarchy/PMMonarchy.vue') }, // Temporary
 	{
 		path: '/', component: () => import('layouts/FrontLayout.vue'),
 		children:
