@@ -1,42 +1,52 @@
 <template>
     <li>
-        <a @click="checkChildren()" href="#">Child</a>
-        <ul v-show="!is_hidden" v-if="has_children">
-            <!-- Put Children Data HERE -->
-            <Children />
-            <Children />
+        <a @click="checkChildren()" href="#">{{ data.full_name }}</a>
+        <ul v-if="has_children">
+            <template v-if="childrens.length">
+                <Children :data="children" :key="key" v-for="(children, key) of childrens" />
+            </template>
+            <template v-else>
+                <li style="width: 100%;">
+                    <a href="#">+</a>
+                </li>
+            </template>
         </ul>
     </li>
 </template>
 
 <script>
+import DB_USER from "../../../models/DB_USER";
+
 export default
 {
     name: 'Children',
     filters: { },
+    props:
+    {
+        data: Object
+    },
     data:() =>(
     {
         has_children: false,
-        is_hidden: false
+        is_hidden: false,
+        childrens: null
     }),
     mounted() { },
     methods: 
     {
-        checkChildren()
+        async checkChildren()
         {
             if (this.has_children)
             {
-                this.is_hidden = !this.is_hidden;
+                this.has_children = false;
+                this.$unbind('childrens');
             }
             else
             {
                 this.$q.loading.show();
-                setTimeout(() =>
-                {
-                    // Get Children Data HERE
-                    this.has_children = true;
-                    this.$q.loading.hide();
-                }, 1000);
+                await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.data.id));
+                this.has_children = true;
+                this.$q.loading.hide();
             }
         }
     },

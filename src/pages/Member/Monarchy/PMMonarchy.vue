@@ -1,14 +1,12 @@
 <template>
     <div class="page-name monarchy">
-        <div v-dragscroll style="overflow: hidden; width: 100vw; height: 100vh;">
-            <div class="tree">
+        <div v-dragscroll style="overflow: hidden; width: 100%; height: calc(100vh - 50px);">
+            <div class="tree" ref="tree">
                 <ul>
                     <li>
-                        <a href="#">Parent</a>
+                        <a href="#">{{ this.$_current_user_data.full_name }}</a>
                         <ul>
-                            <Children />
-                            <Children />
-                            <Children />
+                            <Children :data="children" :key="key" v-for="(children, key) of childrens" />
                         </ul>
                     </li>
                 </ul>
@@ -44,6 +42,8 @@
             transition: all 0.5s;
             -webkit-transition: all 0.5s;
             -moz-transition: all 0.5s;
+
+            // width: 100%;
         }
 
         /*We will use ::before and ::after to draw the connectors*/
@@ -132,7 +132,8 @@
 
 <script>
 import Children from "./PMMonarchyChildren";
-import { dragscroll } from 'vue-dragscroll'
+import { dragscroll } from 'vue-dragscroll';
+import DB_USER from "../../../models/DB_USER";
 
 export default
 {
@@ -141,8 +142,15 @@ export default
     directives: { dragscroll },
     data:() =>(
     {
-
+        childrens: null
     }),
+    async created()
+    {
+        this.$q.loading.show();
+        await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id));
+        console.log(this.childrens);
+        this.$q.loading.hide();
+    },
     mounted() { },
     methods: { },
     computed: { }
