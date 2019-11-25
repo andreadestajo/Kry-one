@@ -23,7 +23,6 @@ module.exports =
                                             rank_order:     nobility_list[0].rank_order,
                                             badge_color:    nobility_list[0].badge_color,
                                         };
-
         
         /* initialize earning */
         await MDB_USER_EARNING.initializeEarning(user_info.id);
