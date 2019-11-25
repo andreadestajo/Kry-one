@@ -5,3 +5,4 @@ import KAmountConversion from '../components/Global/KAmountConversion'
 export default ({ Vue }) => {
     Vue.component('k-amount-conversion', KAmountConversion);
 }
+

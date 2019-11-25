@@ -66,7 +66,7 @@
                     </q-form>
                     <q-btn @click="confirmTransaction" class="step-button next full-width q-mt-md" unelevated color="primary">Next <q-icon class="icon" name="fa fa-arrow-right"></q-icon></q-btn>
                     <q-btn class="step-button back full-width q-mt-sm" outline color="primary"> View Pricing</q-btn>
-                    <q-btn @click="step = 1" class="step-button back full-width q-mt-sm" outline color="gray"> Back</q-btn>
+                    <q-btn @click="step = 1" class="step-button back full-width q-mt-sm" outline color="gray">Back</q-btn>
                 </q-step>
 
                 <!-- STEP 3: CONFIRM PURCHASE -->
