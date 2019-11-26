@@ -1,13 +1,19 @@
 <template>
     <li>
-        <a @click="checkChildren()" href="#">{{ data.full_name }}</a>
+        <a @click="checkChildren()" href="#">
+            <div class="name">{{ data.full_name }}</div>
+            <div class="rank">{{ data.nobility_info.title }}</div>
+        </a>
+
         <ul v-if="has_children">
             <template v-if="childrens.length">
                 <Children :data="children" :key="key" v-for="(children, key) of childrens" />
             </template>
             <template v-else>
                 <li style="width: 100%;">
-                    <a href="#">+</a>
+                    <a href="#">
+                        <div class="no-downline">+</div>
+                    </a>
                 </li>
             </template>
         </ul>

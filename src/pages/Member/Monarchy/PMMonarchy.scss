@@ -96,6 +96,21 @@
         transition: all 0.5s;
         -webkit-transition: all 0.5s;
         -moz-transition: all 0.5s;
+        background-color: #1fa0e0;
+        color: #fff;
+        width: 100px;
+
+        .name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .rank {
+            opacity: 0.8;
+        }
+        .no-downline {
+            padding: 3px 10px;
+            font-size: 20px;
+        }
     }
 
     /*Time for some hover effects*/

@@ -1,6 +1,5 @@
 <template>
     <div class="page-name monarchy">
-        <k-header icon="fa fa-crown" detail="Explore different kinds of royalties.">Monarchy View</k-header>
         <div>
             <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                 <q-tab name="unilevel_tree" label="Unilevel Tree" />
@@ -12,11 +11,16 @@
         </div>
 
         <div class="tree-container"  ref="tree" v-dragscroll :style="`overflow: hidden; width: 100%; height: calc(100vh - 50px);`">
-            <div :style="`width: 999999px; height: 999999px; padding-top: 1000px; margin-top: -1000px; background-image: url(${require('../../../statics/grey.png')})`">
+            <div :style="`width: 999999px; height: 999999px; padding-top: 1000px; margin-top: -980px; background-image: url(${require('../../../statics/grey.png')})`">
                 <div class="tree" style="margin-top: 1000px;">
                     <ul>
                         <li>
-                            <a href="#">{{ this.$_current_user_data.full_name }}</a>
+                            <div>
+                                <a href="#">
+                                    <div class="name">{{ this.$_current_user_data.full_name }}</div>
+                                    <div class="rank">{{ this.$_current_user_data.nobility_info.title }}</div>
+                                </a>
+                            </div>
                             <ul>
                                 <Children :data="children" :key="key" v-for="(children, key) of childrens" />
                             </ul>
