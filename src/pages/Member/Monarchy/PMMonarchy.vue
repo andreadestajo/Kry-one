@@ -17,6 +17,7 @@
                         <li>
                             <div>
                                 <a href="#">
+                                    <div class="image"><q-img spinner-size="5px" src="../statics/boy.jpg"></q-img></div>
                                     <div class="name">{{ this.$_current_user_data.full_name }}</div>
                                     <div class="rank">{{ this.$_current_user_data.nobility_info.title }}</div>
                                 </a>
