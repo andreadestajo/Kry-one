@@ -1,4 +1,4 @@
-<template>
+    <template>
     <div class="enlist">
         <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Enlist Knight</k-header>
         <q-form @submit="confirmEnlist()">
@@ -10,7 +10,7 @@
 
 
                 <!-- E-MAIL ADDRESS -->
-                <k-field label="E-Mail Address">
+                <k-field label="E-mail Address">
                     <q-input v-model="form.email" dense placeholder="Enter e-mail of person you'll invite" class="input" outlined stack-label></q-input>
                 </k-field>
 
@@ -65,7 +65,7 @@
                     </div>
 
                     <q-btn @click="submitEnlist()" unelevated color="primary">Enlist Knight!</q-btn>
-                    <q-btn @click="confirm_dialog = false" class="q-ml-sm" outline color="primary">Cancel Enlist</q-btn>
+                    <q-btn @click="confirm_dialog = false" class="q-ml-sm" outline color="primary">Cancel</q-btn>
                 </q-card>
             </div>
         </q-dialog>
@@ -74,9 +74,10 @@
 
 <script>
 import './PMEnlist.scss';
-import KHeader from '../../../components/Member/KHeader'
-import KField from '../../../components/Member/KField'
-import KCard from '../../../components/Member/KCard'
+import KHeader  from '../../../components/Member/KHeader'
+import KField   from '../../../components/Member/KField'
+import KCard    from '../../../components/Member/KCard'
+
 import refs_countries from "../../../references/refs_countries";
 
 import { FN_ENLIST_KNIGHT } from "../../../references/refs_functions";
@@ -87,7 +88,6 @@ import DB_NOBILITY from "../../../models/DB_NOBILITY";
 export default
 {
     components: { KHeader, KField, KCard },
-    filters: { },
     data:() =>(
     {
         form:
@@ -101,22 +101,10 @@ export default
         nobilities: [],
         confirm_dialog: false,
         payment_options: [
-            { label: 'Bitcoin', value: 'btc' },
-            { label: 'Ethereum', value: 'eth' },
+            { label: 'Bitcoin'  , value: 'btc' },
+            { label: 'Ethereum' , value: 'eth' },
         ]
     }),
-    position_options: [
-        { label: 'Left', value: 'left' },
-        { label: 'Right', value: 'right' },
-    ],
-    country_options: refs_countries,
-    watch:
-    {
-        form()
-        {
-            console.log(this.form);
-        }
-    },
     computed:
     {
         nobility_options()
@@ -125,6 +113,31 @@ export default
                 .filter(n => parseFloat(n.price) !== 0 && this.$_current_user_data.nobility_id !== n.id)
                 .map(n => ({label: n.title, value: n.id}))
         },
+    },
+    methods:
+    {
+        confirmEnlist()
+        {
+            this.confirm_dialog = true;
+        },
+        async submitEnlist()
+        {
+            this.$_showPageLoading();
+
+            const data = Object.assign({}, this.form);
+            data.nobility       = this.form.nobility.value;
+            data.payment_method = this.form.payment_method.value;
+            data.created_at     = new Date();
+
+            await fbCall(FN_ENLIST_KNIGHT, JSON.stringify(data))
+                .then()
+                .catch(error =>
+                {
+                    console.log(error.message)
+                });
+
+            this.$_hidePageLoading();
+        }
     },
     async mounted()
     {
@@ -138,17 +151,9 @@ export default
         
         this.$_hidePageLoading();
     },
-    methods:
-    {
-        confirmEnlist()
-        {
-            this.confirm_dialog = true;
-        },
-        submitEnlist()
-        {
-            console.log(this.form);
-            fbCall(FN_ENLIST_KNIGHT, this.form);
-        }
-    },
+    position_options: [
+        { label: 'Left' , value: 'left' },
+        { label: 'Right', value: 'right' },
+    ],
 }
 </script>

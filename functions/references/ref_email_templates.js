@@ -26,3 +26,17 @@ exports.passwordResetTemplate = (email, link) =>
     <p>If you did not request a password change, you can safely ignore this email.</p>
 
 `;
+
+exports.knightRegistrationTemplate = (name, link) =>
+`
+    <h4>Hi! ${name}</h4> 
+    
+    <p>Congratulations! omeone invited you to be a Knight at <b>Kryptoone</b>! 
+    To complete your registration, please click the link below.</p>
+    
+    <p>
+        <a href="${link}">${link}</a>
+    </p>
+    
+    <p>Thank you.</p>
+`;

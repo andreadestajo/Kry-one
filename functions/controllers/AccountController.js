@@ -118,7 +118,7 @@ module.exports =
             return {error: add_user_info.error}
         }
 
-        await sendEmailVerificationLink(user_info.email, user_info.fullname);
+        await sendEmailVerificationLink(user_info.email, user_info.full_name);
 
         return user_record.uid;
     },

@@ -1,20 +1,37 @@
-const moment                = require('moment-timezone');
-const momentTZ              = moment.tz('Asia/Manila');
-const AUTH                  = require('../globals/Auth');
-const WALLET                = require('../globals/Wallet');
-const EARNING               = require('../globals/Earning');
-const FORMAT                = require('../globals/FormatHelper');
+const moment                 = require('moment-timezone');
+const momentTZ               = moment.tz('Asia/Manila');
+const AUTH                   = require('../globals/Auth');
+const WALLET                 = require('../globals/Wallet');
+const EARNING                = require('../globals/Earning');
+const FORMAT                 = require('../globals/FormatHelper');
 
-const MDB_USER_WALLET       = require('../models/MDB_USER_WALLET');
-const MDB_USER              = require('../models/MDB_USER');
-const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
-const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
-const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
-const MDB_TRANSFER_WALLET   = require('../models/MDB_TRANSFER_WALLET');
-const MDB_KYC_VERIFICATION  = require('../models/MDB_KYC_VERIFICATION');
-const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
+const MDB_USER_WALLET        = require('../models/MDB_USER_WALLET');
+const MDB_USER               = require('../models/MDB_USER');
+const MDB_NOBILITY           = require('../models/MDB_NOBILITY');
+const MDB_CURRENCY           = require('../models/MDB_CURRENCY');
+const MDB_PROMOTION          = require('../models/MDB_PROMOTION');
+const MDB_TRANSFER_WALLET    = require('../models/MDB_TRANSFER_WALLET');
+const MDB_KYC_VERIFICATION   = require('../models/MDB_KYC_VERIFICATION');
+const MDB_USER_NOTIFICATION  = require('../models/MDB_USER_NOTIFICATION');
+const MDB_USER_ENLIST_KNIGHT = require('../models/MDB_USER_ENLIST_KNIGHT');
 
-const { HTTPS_ERROR }       = require('../plugin/firebase');
+const {HTTPS_ERROR} = require('../plugin/firebase');
+const {knightRegistrationTemplate} = require('../references/ref_email_templates');
+const {sendMail}                   = require('../globals/EmailHelper');
+
+const sendRegistrationLink = async (email, name) =>
+{
+    const mail_options = {
+            to      : email,
+            from    : 'no-reply@kryptoone.com',
+            subject : 'Email Verification',
+            text    : knightRegistrationTemplate(name, process.env.APP_DOMAIN),
+            html    : knightRegistrationTemplate(name, process.env.APP_DOMAIN)
+        };
+
+    return sendMail(mail_options);
+};
+
 
 module.exports =
 {
@@ -197,5 +214,33 @@ module.exports =
     },
     async enlistKnight(data, context)
     {
+        const knight_data = JSON.parse(data);
+
+
+        return sendRegistrationLink(knight_data.email, knight_data.full_name);
+
+
+        return 0;
+        // Computation before enlisting the knight goes here.
+
+        // Prepare other data to be stored
+        knight_data.created_at  = new Date(knight_data.created_at);
+        knight_data.enlisted_by = context.auth.uid;
+        knight_data.status      = 'pending';
+
+        const add_new_knight = await MDB_USER_ENLIST_KNIGHT.add(context.auth.uid, knight_data)
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(add_new_knight.error)
+        {
+            HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
+            return 0;
+        }
+
+        // Start sending email
+
+
+        return 0;
     }
 };
