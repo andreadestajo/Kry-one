@@ -16,7 +16,7 @@
                                 <div class="label">{{ currency.label }}</div>
                                 <div class="amount">
                                     <div class="amount-value">
-                                        <div class="actual">{{ $_formatNumber(currency.amount || 0, { decimal: currency.decimals }) }}</div>
+                                        <div class="actual">{{ $_formatNumber($_current_user_wallet[currency.abb].wallet || 0, { decimal: currency.decimals }) }}</div>
                                         <div class="currency">{{ currency.abb }}</div>
                                     </div>
                                     <div class="amount-conversion">
@@ -63,15 +63,9 @@ export default
     }),
     async mounted()
     {
-        // Get user wallet
-        const user_wallet_arr = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
-        const user_wallet_obj = !!user_wallet_arr.length ? arrayToObject(user_wallet_arr, 'key') : null;
-
         this.$options.currency_options.forEach((currency) =>
         {
-            const key = currency.abb === 'UNIQ' ? 'XAU' : currency.abb;
-            currency.amount = user_wallet_obj[key].wallet
-            currency.address = user_wallet_obj[key].address
+            currency.abb = currency.abb ==='UNIQ' ? 'XAU' : currency.abb;
         });
 
         this.ready = true;
