@@ -157,7 +157,9 @@
                 </div>
             </q-form>
 
-            <p-f-registration-confirmation v-if="isRegistered" :email="registration_form_data.email"/>
+            <p-f-registration-confirmation v-if="isRegistered"
+                                           :email="registration_form_data.email"
+                                           :full_name="registration_form_data.full_name"/>
         </q-page>
     </q-page-container>
 </template>

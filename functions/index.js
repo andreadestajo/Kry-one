@@ -27,6 +27,7 @@ exports.enlistKnight            = FUNCTIONS_HTTPS.onCall(member_controller.enlis
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);
 exports.login                   = FUNCTIONS_HTTPS.onCall(account_controller.login);
 exports.resetPassword           = FUNCTIONS_HTTPS.onCall(account_controller.resetPassword);
+exports.resendEmailVerification = FUNCTIONS_HTTPS.onCall(account_controller.resendEmailVerification);
 
 // Admin
 exports.promoteUser             = FUNCTIONS_HTTPS.onCall(admin_controller.promoteUser);

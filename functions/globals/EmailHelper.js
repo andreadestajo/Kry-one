@@ -2,8 +2,10 @@ const NODEMAILER     = require('nodemailer');
 const SMTP_TRANSPORT = require('nodemailer-smtp-transport');
 
 const TRANSPORTER = NODEMAILER.createTransport({
-    service: process.env.SMTP_SERVICE,
-    auth: {
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_USERMAME,
+    auth:
+    {
         user: process.env.SMTP_USERMAME,
         pass: process.env.SMTP_PASSWORD
     }

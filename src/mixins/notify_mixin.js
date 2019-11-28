@@ -15,7 +15,7 @@ export default {
                 ? opts.color
                     : opts.mode === 'positive'
                 ? 'green'
-                    : opts.message === 'negative'
+                    : opts.mode === 'negative'
                 ? 'red' : 'primary';
 
             this.$q.notify({

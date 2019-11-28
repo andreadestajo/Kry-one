@@ -141,6 +141,18 @@ module.exports =
         return user_record.uid;
     },
 
+    resendEmailVerification(data, context)
+    {
+        const user_data = JSON.parse(data);
+
+        if(!user_data.hasOwnProperty('email') || !user_data.hasOwnProperty('full_name'))
+        {
+            HTTPS_ERROR('failed-precondition', 'Unable to resend verification link. Please try again');
+        }
+
+        return sendEmailVerificationLink(user_data.email, user_data.full_name)
+    },
+
     async resetPassword(data, context)
     {
         // Generate the link for resetting password
