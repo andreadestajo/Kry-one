@@ -241,5 +241,9 @@ module.exports =
         const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
 
         return sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
+    },
+    async transferCrypto(data, context)
+    {
+        
     }
 };
