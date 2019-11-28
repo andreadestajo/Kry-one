@@ -130,11 +130,14 @@ export default
             data.created_at     = new Date();
 
             await fbCall(FN_ENLIST_KNIGHT, JSON.stringify(data))
-                .then()
-                .catch(error =>
-                {
-                    console.log(error.message)
-                });
+            .then(() =>
+            {
+                this.$_notify({message: 'Successfully Enlisted a Knight', mode: 'positive'})
+            })
+            .catch(error =>
+            {
+                this.$_notify({message: error.message, mode: 'negative'})
+            });
 
             this.$_hidePageLoading();
         }

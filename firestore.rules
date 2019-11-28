@@ -44,5 +44,9 @@ service cloud.firestore
         {
             allow read, write;
         }
+        match /enlistKnights/{enlistKnightID}
+        {
+            allow read, write;
+        }
 	}
 }

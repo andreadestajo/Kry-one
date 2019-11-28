@@ -26,6 +26,7 @@
                          class="input"
                          outlined
                          stack-label
+                         :readonly="has_valid_eid"
                          v-model="registration_form_data.full_name"
                          :error="$v.registration_form_data.full_name.$error"
                          :error-message="'full name is required'"
@@ -53,6 +54,7 @@
                          class="input"
                          outlined
                          type="email"
+                         :readonly="has_valid_eid"
                          v-model.lazy="registration_form_data.email"
                          :error="$v.registration_form_data.email.$error"
                          :error-message="emailError"
@@ -117,6 +119,7 @@
                          class="input"
                          outlined
                          stack-label
+                         :readonly="has_valid_eid"
                          v-model="registration_form_data.referral_code"
                          :error="$v.registration_form_data.referral_code.$error"
                          :error-message="referralCodeError"
@@ -163,7 +166,8 @@
     import './PFRegistration.scss';
     import PFRegistrationConfirmation from "./PFRegistrationConfirmation"
 
-    import DB_USER        from "../../../models/DB_USER"
+    import DB_USER          from "../../../models/DB_USER"
+    import DB_ENLIST_KNIGHT from "../../../models/DB_ENLIST_KNIGHT"
 
     import {fbCall} 	  from "../../../utilities/Callables";
     import {FN_REGISTER}  from "../../../references/refs_functions";
@@ -202,7 +206,8 @@
             {
                 code    : '',
                 message : ''
-            }
+            },
+            has_valid_eid: false
         }),
         computed:
         {
@@ -265,11 +270,38 @@
                 })
             }
         },
-        mounted()
+        async mounted()
         {
             if(this.$route.query.refcode)
             {
                 this.registration_form_data.referral_code = this.$route.query.refcode
+            }
+
+            if(this.$route.query.hasOwnProperty('id') && this.$route.query.hasOwnProperty('eid'))
+            {
+                this.$_showPageLoading();
+
+
+                // Validate eid and id
+                const knight_data = await DB_ENLIST_KNIGHT.doc(this.$route.query.id).get()
+                    .then(doc => doc.exists ? doc.data() : null);
+
+                // Halt process if not valid
+                if(!knight_data && this.$route.query.id === knight_data.eid)
+                {
+                    console.log('invalid id or eid');
+                    this.$_hidePageLoading();
+                    return 0;
+                }
+                else
+                {
+                    this.has_valid_eid = true;
+                    this.registration_form_data.referral_code = knight_data.sponsor;
+                    this.registration_form_data.full_name     = knight_data.full_name;
+                    this.registration_form_data.email         = knight_data.email;
+                }
+
+                this.$_hidePageLoading();
             }
         },
         validations:
