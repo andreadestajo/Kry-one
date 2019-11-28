@@ -13,7 +13,7 @@ const MDB_PROMOTION          = require('../models/MDB_PROMOTION');
 const MDB_TRANSFER_WALLET    = require('../models/MDB_TRANSFER_WALLET');
 const MDB_KYC_VERIFICATION   = require('../models/MDB_KYC_VERIFICATION');
 const MDB_USER_NOTIFICATION  = require('../models/MDB_USER_NOTIFICATION');
-const MDB_USER_ENLIST_KNIGHT = require('../models/MDB_USER_ENLIST_KNIGHT');
+const MDB_ENLIST_KNIGHT      = require('../models/MDB_ENLIST_KNIGHT');
 
 const {HTTPS_ERROR} = require('../plugin/firebase');
 const {knightRegistrationTemplate} = require('../references/ref_enlist_knight_email_template');
@@ -25,7 +25,7 @@ const sendRegistrationLink = async (email, name, link) =>
     const mail_options = {
             to      : email,
             from    : 'no-reply@kryptoone.com',
-            subject : 'Email Verification',
+            subject : 'Invitation',
             text    : knightRegistrationTemplate(name, link),
             html    : knightRegistrationTemplate(name, link)
         };
@@ -227,7 +227,7 @@ module.exports =
         // generate enlistment id based on email
         knight_data.eid = generateAccessCode(knight_data.email);
 
-        const add_new_knight = await MDB_USER_ENLIST_KNIGHT.add(context.auth.uid, knight_data)
+        const add_new_knight = await MDB_ENLIST_KNIGHT.add(knight_data)
             .then(data => ({error: null, data}))
             .catch(error => ({error}));
 
@@ -240,8 +240,6 @@ module.exports =
         // structure link
         const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
 
-        sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
-
-        return 0;
+        return sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
     }
 };

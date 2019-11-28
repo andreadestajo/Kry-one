@@ -7,7 +7,16 @@ export default
     {
         $_current_user_data()
         {
-            return this.$store.getters[GETTER_CURRENT_USER_DATA];
+            const default_data =
+            {
+                notification_count: 0,
+                nobility_info :
+                {
+                    title: ''
+                },
+                kyc_status: ''
+            };
+            return this.$store.getters[GETTER_CURRENT_USER_DATA] ? this.$store.getters[GETTER_CURRENT_USER_DATA] : default_data;
         }
     }
 }
