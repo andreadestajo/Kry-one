@@ -25,7 +25,7 @@ const sendRegistrationLink = async (email, name, link) =>
     const mail_options = {
             to      : email,
             from    : 'no-reply@kryptoone.com',
-            subject : 'Email Verification',
+            subject : 'Invitation',
             text    : knightRegistrationTemplate(name, link),
             html    : knightRegistrationTemplate(name, link)
         };

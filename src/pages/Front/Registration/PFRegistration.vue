@@ -207,7 +207,8 @@
                 code    : '',
                 message : ''
             },
-            has_valid_eid: false
+            has_valid_eid: false,
+            knight_data: null,
         }),
         computed:
         {
@@ -254,6 +255,13 @@
                 const registration_form_data    = Object.assign({}, this.registration_form_data);
                 registration_form_data.currency = this.registration_form_data.currency.value;
 
+                // Do something if enlisted. Just in case u need, you can access knight_data,
+                if(this.has_valid_eid)
+                {
+                    registration_form_data.eid = this.$route.query.eid;
+                    registration_form_data.id  = this.$route.query.id;
+                }
+
                 this.$_showPageLoading({message: 'Creating an account.'});
                 await fbCall(FN_REGISTER, {registration_form_data})
                 .then(data =>
@@ -281,7 +289,6 @@
             {
                 this.$_showPageLoading();
 
-
                 // Validate eid and id
                 const knight_data = await DB_ENLIST_KNIGHT.doc(this.$route.query.id).get()
                     .then(doc => doc.exists ? doc.data() : null);
@@ -295,6 +302,7 @@
                 }
                 else
                 {
+                    this.knight_data   = Object.assign({}, knight_data);
                     this.has_valid_eid = true;
                     this.registration_form_data.referral_code = knight_data.sponsor;
                     this.registration_form_data.full_name     = knight_data.full_name;
