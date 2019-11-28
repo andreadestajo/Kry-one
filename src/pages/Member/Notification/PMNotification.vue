@@ -93,8 +93,15 @@ export default
 
                     // Get last document and assign to start_after
                     this.last_history = notifications[notifications.length - 1];
+
+                    if(notifications.length < 10)
+                    {
+                        this.$refs.notificationRef.stop()
+                    }
                 } else {
-                    this.$refs.notificationRef.stop()
+                    this.$nextTick(function () {
+                        this.$refs.notificationRef.stop();
+                    });
                 }
 
                 // Push to notifications

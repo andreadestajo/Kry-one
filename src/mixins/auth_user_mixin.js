@@ -1,5 +1,8 @@
 import {mapGetters}               from 'vuex'
-import {GETTER_CURRENT_USER_DATA} from "../store/user-module/getters";
+import {
+    GETTER_CURRENT_USER_DATA,
+    GETTER_CURRENT_USER_WALLET
+} from "../store/user-module/getters";
 
 export default
 {
@@ -17,6 +20,10 @@ export default
                 kyc_status: ''
             };
             return this.$store.getters[GETTER_CURRENT_USER_DATA] ? this.$store.getters[GETTER_CURRENT_USER_DATA] : default_data;
-        }
+        },
+        $_current_user_wallet()
+        {
+            return this.$store.getters[GETTER_CURRENT_USER_WALLET];
+        },
     }
 }
