@@ -10,7 +10,7 @@
             <q-separator />
         </div>
 
-        <div class="tree-container"  ref="tree" v-dragscroll :style="`overflow: hidden; width: 100%; height: calc(100vh - 50px);`">
+        <div class="tree-container"  ref="tree" v-dragscroll :style="`overflow: hidden; width: 100%; height: calc(100vh - 87px);`">
             <div :style="`width: 999999px; height: 999999px; padding-top: 1000px; margin-top: -980px; background-image: url(${require('../../../statics/grey.png')})`">
                 <div class="tree" style="margin-top: 1000px;">
                     <ul>
