@@ -36,6 +36,22 @@ module.exports =
             return null;
         }
     },
+    async getDownline(id)
+    {
+        let res = await this.collection().where('upline_id', '==', id).get();
+        let data = [];
+
+        if(!res.empty)
+        {
+            res.docs.forEach((d, i) =>
+            {
+                data[i] = d.data();
+                data[i].id = d.id;
+            })
+        }
+
+        return data;
+    },
     async getMany(order_by = null)
     {
         let res = await this.collection(order_by).get();
@@ -54,7 +70,6 @@ module.exports =
     },
     async update(id, data)
     {
-        console.log({id, data});
         return await this.doc(id).set(data, { merge: true} )
     },
     async remove(id)

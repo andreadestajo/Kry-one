@@ -61,7 +61,8 @@ module.exports =
 
         if(user_info.hasOwnProperty('knight_data'))
         {
-            // Do something here if enlisted
+            /* UNILEVEL EARNING UPON UNIQ PURCHASE */
+            //await EARNING.unilevel(logged_in_user, data.amount);
         }
 
         // Create new user and return result

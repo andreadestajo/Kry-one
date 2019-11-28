@@ -119,10 +119,20 @@ module.exports =
     },
     async upgradeAccount(data, context)
     {
-        //context.auth.uid                = '0AEz5KrhiQWjTJrPivgKdqcAmPM2'; //temporary for testing
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
+
+        if(logged_in_user.roles.includes('admin'))
+        {
+            if(data.uid)
+            {
+                context.auth.uid = data.uid;
+            }
+
+            logged_in_user = await AUTH.member_only(context);
+        }
+
         let logged_in_user_wallet       = MDB_USER_WALLET.get(logged_in_user.id, data.payment_method.toUpperCase());
         let target_nobility             = MDB_NOBILITY.get(data.target_nobility);
         let current_nobility            = MDB_NOBILITY.get(logged_in_user.nobility_id);
@@ -151,6 +161,7 @@ module.exports =
         }
         else
         {
+
             /* ready record rank up promotions */
             let promotions                      = {};
             promotions.previous_nobility_id     = current_nobility.id;
@@ -194,8 +205,8 @@ module.exports =
 
             /* UNILEVEL EARNING UPON UNIQ PURCHASE */
             await EARNING.unilevel(logged_in_user, data.amount);
-
             await Promise.all(promise_list);     
+            await EARNING.updateRank(logged_in_user.upline_id);
         }
 
 

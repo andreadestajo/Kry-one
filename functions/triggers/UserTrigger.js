@@ -3,6 +3,7 @@ const MDB_USER_WALLET   = require('../models/MDB_USER_WALLET');
 const MDB_USER_EARNING  = require('../models/MDB_USER_EARNING');
 const MDB_CURRENCY      = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY      = require('../models/MDB_NOBILITY');
+const EARNING           = require('../globals/Earning');
 const Bitcoin           = require('../globals/Bitcoin');
 
 module.exports =
@@ -43,6 +44,25 @@ module.exports =
         }
         
         user_info.notification_count    = 0;
+
+        /* CHECK IF ENLISTED */
+        if(user_info.hasOwnProperty('knight_data'))
+        {
+            /* ready record rank up promotions */
+            // let promotions                      = {};
+            // promotions.previous_nobility_id     = current_nobility.id;
+            // promotions.previous_nobility_title  = current_nobility.title;
+            // promotions.nobility_id              = target_nobility.id;
+            // promotions.nobility_title           = target_nobility.title;
+            // promotions.method                   = "Accelerate";
+            // promotions.full_name                = logged_in_user.full_name;
+            // promotions.user_id                  = logged_in_user.id;
+            // promotions.payment_method           = data.payment_method.toUpperCase();
+            // promotions.amount                   = data.amount;
+            // promotions.required_price           = required_price;  
+            // promotions.created_date             = new Date();
+            //EARNING.
+        }
 
         await MDB_USER.update(id, user_info);
     },

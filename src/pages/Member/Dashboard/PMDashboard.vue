@@ -12,6 +12,10 @@
                 <div class="group-label">Your next target</div>
                 <div class="group-value next">{{target_nobility}}</div>
             </div>
+                <div v-if="target_nobility_info" class="detail">
+                    <div class="detail-requirements">You need <b>{{ target_nobility_info.required_direct }} {{ target_nobility_info.required_rank_title }}</b><br></div>
+                    <div class="detail-target">In order for you to become a <b>{{ target_nobility }}</b></div>
+                </div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
                 <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
@@ -103,6 +107,7 @@ export default
     data: () =>
     ({
         target_nobility : '',
+        target_nobility_info : {},
         user_wallet     : [],
         user_earning    : []
     }),
@@ -128,6 +133,7 @@ export default
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
+            this.target_nobility_info = nobility ? nobility : {};
 
             // Get user wallet
             this.user_wallet = await DB_USER_WALLET.getMany(this.$_current_user_data.id);

@@ -32,6 +32,19 @@
                 }
             }
         } 
+
+       .detail {
+           padding: 10px;
+           text-align: center;
+           color: $text-two;
+
+            &-requirements {
+                font-size: 20px;
+            }   
+            &-target {
+                
+            }
+       }
     }
 
     &__wallet {

@@ -196,6 +196,7 @@ export default
             upgrade_account.target_nobility     = target_rank;
             upgrade_account.amount              = parseFloat(amount);
             upgrade_account.payment_method      = payment_method;
+            upgrade_account.uid                 = this.last_id;
 
             // console.log(upgrade_account);
             // return 0;
