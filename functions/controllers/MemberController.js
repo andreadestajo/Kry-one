@@ -16,17 +16,18 @@ const MDB_USER_NOTIFICATION  = require('../models/MDB_USER_NOTIFICATION');
 const MDB_USER_ENLIST_KNIGHT = require('../models/MDB_USER_ENLIST_KNIGHT');
 
 const {HTTPS_ERROR} = require('../plugin/firebase');
-const {knightRegistrationTemplate} = require('../references/ref_email_templates');
+const {knightRegistrationTemplate} = require('../references/ref_enlist_knight_email_template');
+const {generateAccessCode}           = require('../globals/HashHelper');
 const {sendMail}                   = require('../globals/EmailHelper');
 
-const sendRegistrationLink = async (email, name) =>
+const sendRegistrationLink = async (email, name, link) =>
 {
     const mail_options = {
             to      : email,
             from    : 'no-reply@kryptoone.com',
             subject : 'Email Verification',
-            text    : knightRegistrationTemplate(name, process.env.APP_DOMAIN),
-            html    : knightRegistrationTemplate(name, process.env.APP_DOMAIN)
+            text    : knightRegistrationTemplate(name, link),
+            html    : knightRegistrationTemplate(name, link)
         };
 
     return sendMail(mail_options);
@@ -216,17 +217,15 @@ module.exports =
     {
         const knight_data = JSON.parse(data);
 
-
-        return sendRegistrationLink(knight_data.email, knight_data.full_name);
-
-
-        return 0;
         // Computation before enlisting the knight goes here.
 
         // Prepare other data to be stored
         knight_data.created_at  = new Date(knight_data.created_at);
         knight_data.enlisted_by = context.auth.uid;
         knight_data.status      = 'pending';
+
+        // generate enlistment id based on email
+        knight_data.eid = generateAccessCode(knight_data.email);
 
         const add_new_knight = await MDB_USER_ENLIST_KNIGHT.add(context.auth.uid, knight_data)
             .then(data => ({error: null, data}))
@@ -238,8 +237,10 @@ module.exports =
             return 0;
         }
 
-        // Start sending email
+        // structure link
+        const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
 
+        sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
 
         return 0;
     }
