@@ -67,8 +67,6 @@ export default
         const user_wallet_arr = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
         const user_wallet_obj = !!user_wallet_arr.length ? arrayToObject(user_wallet_arr, 'key') : null;
 
-        //add random value for now (temporary)
-        console.log(user_wallet_obj);
         this.$options.currency_options.forEach((currency) =>
         {
             const key = currency.abb === 'UNIQ' ? 'XAU' : currency.abb;

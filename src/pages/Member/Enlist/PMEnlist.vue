@@ -1,4 +1,4 @@
-    <template>
+<template>
     <div class="enlist">
         <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Enlist Knight</k-header>
         <q-form @submit="confirmEnlist()">
@@ -185,7 +185,7 @@ export default
         {
             this.form.full_name = '';
             this.form.email     = '';
-            this.$v.form.reset();
+            this.$v.form.$reset();
         }
     },
     async mounted()
