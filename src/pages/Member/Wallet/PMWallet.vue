@@ -20,7 +20,7 @@
                                         <div class="currency">{{ currency.abb }}</div>
                                     </div>
                                     <div class="amount-conversion">
-                                        <k-amount-conversion :amount="currency.amount" :coin="currency.abb"/>
+                                        <k-amount-conversion :amount="parseFloat($_current_user_wallet[currency.abb].wallet)" :coin="currency.abb"/>
                                     </div>
                                 </div>
                             </div>
