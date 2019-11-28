@@ -57,6 +57,18 @@ module.exports =
     async register (data, context)
     {
         const user_info       = data.registration_form_data;
+
+        // Check if sponsor is
+        const is_eligible_sponsor = await MDB_USER.getUserByReferralCode(user_info.referral_code)
+        .then(user =>
+        {
+            return user && user.nobility_info.rank_order > 1;
+        });
+
+        if(!is_eligible_sponsor)
+        {
+            HTTPS_ERROR('failed-precondition', 'Not eligible to be a sponsor.');
+        }
         user_info.referred_by = user_info.referral_code;
 
         if(user_info.hasOwnProperty('knight_data'))
@@ -128,6 +140,18 @@ module.exports =
         await sendEmailVerificationLink(user_info.email, user_info.full_name);
 
         return user_record.uid;
+    },
+
+    resendEmailVerification(data, context)
+    {
+        const user_data = JSON.parse(data);
+
+        if(!user_data.hasOwnProperty('email') || !user_data.hasOwnProperty('full_name'))
+        {
+            HTTPS_ERROR('failed-precondition', 'Unable to resend verification link. Please try again');
+        }
+
+        return sendEmailVerificationLink(user_data.email, user_data.full_name)
     },
 
     async resetPassword(data, context)

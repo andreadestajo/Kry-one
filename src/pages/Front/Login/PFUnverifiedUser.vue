@@ -29,6 +29,11 @@
                            color="primary"
                            label="Sign out"
                            @click="signOut()"/>
+
+                    <div class="q-pt-md text-center">
+                        Still waiting for the activation link ?
+                        <q-btn @click="resendVerificationLink" color="primary" flat dense>Resend Activation Link</q-btn>
+                    </div>
                 </q-card-actions>
             </q-card>
         </q-page>
@@ -36,13 +41,17 @@
 </template>
 
 <script>
+    import {fbCall} from "../../../utilities/Callables";
+    import {FN_RESEND_EMAIL_VERIFICATION} from "../../../references/refs_functions";
+
     import DB_USER from '../../../models/DB_USER'
 
     export default {
         name: "PFRegistrationConfirmation",
         data: () =>
         ({
-           unverified_email: ''
+           unverified_email: '',
+           full_name       : ''
         }),
         methods:
         {
@@ -50,6 +59,23 @@
             {
                 DB_USER.signOut();
                 this.$router.push('login');
+            },
+            async resendVerificationLink()
+            {
+                this.$_showPageLoading();
+
+                const data = JSON.stringify({email: this.unverified_email, full_name: this.full_name});
+                await fbCall(FN_RESEND_EMAIL_VERIFICATION, data)
+                    .then(data =>
+                    {
+                        this.$_notify({message: 'Email has been successfully sent.', mode: 'positive'})
+                    })
+                    .catch(error =>
+                    {
+                        this.$_notify({message: error.message || 'Unable to resend email. Please try again.', mode: 'negative'})
+                    });
+
+                this.$_hidePageLoading();
             }
         },
         mounted() {
@@ -58,7 +84,9 @@
                 this.$router.push('login');
                 return 0;
             }
+
             this.unverified_email = DB_USER.getCurrentUser().email;
+            this.full_name        = this.$_current_user_data.full_name;
         }
     }
 </script>

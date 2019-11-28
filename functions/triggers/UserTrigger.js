@@ -4,7 +4,8 @@ const MDB_USER_EARNING  = require('../models/MDB_USER_EARNING');
 const MDB_CURRENCY      = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY      = require('../models/MDB_NOBILITY');
 const EARNING           = require('../globals/Earning');
-const Bitcoin           = require('../globals/Bitcoin');
+const Bitcoin           = require('../globals/Bitaps/Bitcoin');
+const Ethereum          = require('../globals/Bitaps/Ethereum');
 
 module.exports =
 {
@@ -73,6 +74,9 @@ module.exports =
 
         if (uid)
         {
+            const bitcoin = new Bitcoin(uid);
+            const ethereum = new Ethereum(uid);
+
             for (let currency of currency_list)
             {
                 let initial_data = { key: currency.id, address: '', wallet: 0, log_count: 0 };
@@ -80,10 +84,24 @@ module.exports =
                 // generate btc wallet
                 if (currency.id === "BTC")
                 {
-                    const bitcoin = new Bitcoin(uid);
                     const bitcoin_wallet = await bitcoin.createWallet();
-                    initial_data.address = bitcoin_wallet.address;
-                    initial_data.info = bitcoin_wallet;
+
+                    if (bitcoin_wallet)
+                    {
+                        initial_data.address = bitcoin_wallet.address;
+                        initial_data.info = bitcoin_wallet;
+                    }
+                }
+                // generate eth wallet
+                else if (currency.id === "ETH")
+                {
+                    const ethereum_wallet = await ethereum.createWallet();
+
+                    if (ethereum_wallet)
+                    {
+                        initial_data.address = ethereum_wallet.address;
+                        initial_data.info = ethereum_wallet;
+                    }
                 }
 
                 promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));
