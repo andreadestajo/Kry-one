@@ -33,7 +33,6 @@ export default
 
                     // Set local storage
                     localStorage.setItem('auth_id', user.uid);
-
                 }
                 else
                 {

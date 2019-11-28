@@ -53,7 +53,6 @@
                 this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, auth_id)
             } else
             {
-                this.$router.push({name: 'front_login'});
                 this.is_page_loading = false;
             }
         },
@@ -73,9 +72,10 @@
             current_user_data(user_data)
             {
                 const _userData = Object.assign({}, user_data);
-                _userData.uid   = this.current_auth_id;
+                _userData.id   = this.current_auth_id;
+                _userData.uid  = this.current_auth_id;
 
-                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, user_data)
+                this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, _userData)
             },
             currency_data(currency_data)
             {

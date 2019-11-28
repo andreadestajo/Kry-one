@@ -130,6 +130,8 @@ export default
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
 
             // Get user wallet
+            console.log(Object.assign(this.$_current_user_data));
+            console.log(Object.assign(this.$_current_user_data.id));
             this.user_wallet = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
 
             // Get earnings breakdown TODO should I bind this one ?
