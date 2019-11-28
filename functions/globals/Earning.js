@@ -9,8 +9,71 @@ const FORMAT                = require('../globals/FormatHelper');
 module.exports =
 {
     earning_currency: 'BTC',
+    async updateRank(user_id)
+    {
+        let user_info       = MDB_USER.get(user_id);
+        let downline_list   = MDB_USER.getDownline(user_id);
+        
+        await Promise.all([user_info, downline_list]).then((res) =>
+        {
+            user_info       = res[0];
+            downline_list   = res[1];
+        });
+
+        let next_nobility           = await MDB_NOBILITY.getNextTargetNobilityByRankOrder(user_info.nobility_info.rank_order);
+
+        if(next_nobility.required_direct > 0)
+        {
+            let required_nobility_info  = await MDB_NOBILITY.get(next_nobility.required_rank_id);
+
+            console.log("Target rank is ", next_nobility.title);
+            console.log("Need ", next_nobility.required_direct, next_nobility.required_rank_title, required_nobility_info.rank_order)
+
+            let downline_ranks = [];
+
+            downline_list.forEach((downline) =>
+            {
+                if(downline_ranks[downline.nobility_info.rank_order])
+                {
+                    downline_ranks[downline.nobility_info.rank_order].count = downline_ranks[downline.nobility_info.rank_order].count + 1;
+                }
+                else
+                {
+                    downline_ranks[downline.nobility_info.rank_order]            = {};
+                    downline_ranks[downline.nobility_info.rank_order].count      = 1;
+                    downline_ranks[downline.nobility_info.rank_order].id         = downline.nobility_id;
+                    downline_ranks[downline.nobility_info.rank_order].name       = downline.nobility_info.title;
+                    downline_ranks[downline.nobility_info.rank_order].rank_order = downline.nobility_info.rank_order;
+                }
+            });
+
+            let requirement_count = 0;
+
+            downline_ranks.forEach((rank) =>
+            {
+               if(rank) 
+               {
+                   if(rank.rank_order >= required_nobility_info.rank_order)
+                   {
+                       requirement_count += rank.count;
+                   }
+               } 
+            });
+
+            console.log(`${requirement_count} direct met the requirement out of ${next_nobility.required_direct}.`);
+
+            if(requirement_count >= next_nobility.required_direct)
+            {
+                
+            }
+        }
+
+
+    },
     async unilevel(user_info, uniq_amount_purchase)
     {
+        console.log("UNILEVEL METHOD");
+
         let promise_list        = [];
         let conversion_rates    = await MDB_CURRENCY.get('XAU');
         let bitcoin_equivalent  = conversion_rates[this.earning_currency] * uniq_amount_purchase;
@@ -34,11 +97,12 @@ module.exports =
         if(level === 1)
         {
             let direct_referral_amount  = bitcoin_equivalent * 0.01;
-            description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_info.full_name}</b> purchased UNIQ.`;
+            description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
             type                        = "earned";
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
             promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
             promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+            console.log(description);
         }
 
         /* STAIRSTEP OVERRIDE */
@@ -46,13 +110,14 @@ module.exports =
         {
             let override_bonus          = nobility_info.override_bonus - stairstep.current_percentage;
             let stairstep_amount        = bitcoin_equivalent * (override_bonus / 100);
-            description                 = `You earned <b>${override_bonus}% override bonus (${FORMAT.numberFormat(stairstep_amount, { decimal: 8, currency: this.earning_currency })})</b> because <b>${user_info.full_name}</b> purchased UNIQ.`;
+            description                 = `You earned <b>${override_bonus}% override bonus (${FORMAT.numberFormat(stairstep_amount, { decimal: 8, currency: this.earning_currency })})</b> because <b>${user_cause.full_name}</b> purchased UNIQ.`;
             type                        = "earned";
  
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, stairstep_amount, type, description, user_cause.id));
             promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'stairstep', stairstep_amount));
             promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
             stairstep.current_percentage = nobility_info.override_bonus;
+            console.log(description);
         }
 
         let upline_info = await MDB_USER.get(user_info.upline_id);

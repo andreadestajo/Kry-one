@@ -77,7 +77,7 @@
                                         <div>BTC Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }) }} BTC</b></div>
                                         <div>ETH Price: <b>{{ $_convertRate(nobility.price, 'XAU', 'ETH', { decimal: 2 }) }} ETH</b></div>
                                         <div v-if="wallet_info.length > 0">
-                                            <div class="q-mt-md"><q-btn @click="upgradeAccount(nobility.id,'BTC', $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }))" color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
+                                            <div class="q-mt-md"><q-btn @click="upgradeAccount(nobility.id, 'BTC', $_convertRate(nobility.price, 'XAU', 'BTC', { decimal: 8 }))" color="primary">UPGRADE USING BTC<br>{{ $_formatNumber(wallet_info[0].wallet, { decimal: 8 })}} BTC</q-btn></div>
                                             <div class="q-mt-md"><q-btn color="primary">UPGRADE USING ETH<br>{{ $_formatNumber(wallet_info[1].wallet, { decimal: 2 })}} ETH</q-btn></div>
                                         </div>
                                     </div>
@@ -196,10 +196,10 @@ export default
             upgrade_account.target_nobility     = target_rank;
             upgrade_account.amount              = parseFloat(amount);
             upgrade_account.payment_method      = payment_method;
+            upgrade_account.uid                 = this.last_id;
 
-
-            console.log(upgrade_account);
-            return 0;
+            // console.log(upgrade_account);
+            // return 0;
             try
             {
                 let res = await fbCall(FN_UPGRADE_ACCOUNT, upgrade_account);

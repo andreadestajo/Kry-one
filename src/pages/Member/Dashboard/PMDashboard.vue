@@ -12,6 +12,10 @@
                 <div class="group-label">Your next target</div>
                 <div class="group-value next">{{target_nobility}}</div>
             </div>
+                <div v-if="target_nobility_info" class="detail">
+                    <div class="detail-requirements">You need <b>{{ target_nobility_info.required_direct }} {{ target_nobility_info.required_rank_title }}</b><br></div>
+                    <div class="detail-target">In order for you to become a <b>{{ target_nobility }}</b></div>
+                </div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
                 <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
@@ -42,9 +46,9 @@
 
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber(userWallet.BTC.wallet, {currency: 'BTC'})}}</div>
+            <div class="value">{{$_formatNumber($_current_user_wallet.BTC.wallet, {currency: 'BTC'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="userWallet.BTC.wallet" coin="BTC"/>
+                <k-amount-conversion :amount="$_current_user_wallet.BTC.wallet" coin="BTC"/>
             </div>
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
@@ -55,9 +59,9 @@
 
         <!-- UNIQ -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber(userWallet.XAU.wallet, {currency: 'XAU'})}}</div>
+            <div class="value">{{$_formatNumber($_current_user_wallet.XAU.wallet, {currency: 'XAU'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="userWallet.XAU.wallet" coin="XAU"/>
+                <k-amount-conversion :amount="$_current_user_wallet.XAU.wallet" coin="XAU"/>
             </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
@@ -74,7 +78,7 @@
                     <div class="breakdown-icon"><q-icon :name="earning.icon"></q-icon></div>
                     <div class="breakdown-label">{{ earning.label }} </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_formatNumber(userEarning[earning.key].total, {currency: 'BTC'}) }}</div>
+                        <div class="amount">{{ $_formatNumber(userEarning[earning.key].total || 0, {currency: 'BTC'}) }}</div>
                         <div class="conversion">
                             <k-amount-conversion :amount="userEarning[earning.key].total" coin="BTC"/>
                         </div>
@@ -103,17 +107,12 @@ export default
     data: () =>
     ({
         target_nobility : '',
+        target_nobility_info : {},
         user_wallet     : [],
         user_earning    : []
     }),
     computed:
     {
-        userWallet()
-        {
-            return !!this.user_wallet.length
-                ? arrayToObject(this.user_wallet, 'key')
-                : {BTC: {wallet: 0}, XAU: {wallet: 0}}
-        },
         userEarning()
         {
             return !!this.user_earning.length
@@ -128,9 +127,7 @@ export default
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
-
-            // Get user wallet
-            this.user_wallet = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
+            this.target_nobility_info = nobility ? nobility : {};
 
             // Get earnings breakdown TODO should I bind this one ?
             this.user_earning = await DB_USER_EARNING.getMany(this.$_current_user_data.id);
