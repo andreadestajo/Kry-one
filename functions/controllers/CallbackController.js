@@ -76,7 +76,7 @@ module.exports =
                 let description = "Bitcoin Received";
                 let transaction_detail = "You received <b>bitcoin (BTC)</b> in your wallet.";
 
-                Wallet.add(postback.uid, 'BTC', postback.amount, 'received', description, "", transaction_detail);
+                Wallet.add(postback.uid, 'BTC', (postback.amount/100000000), 'received', description, "", transaction_detail);
                 MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, btc_image, { tx_hash: postback.tx_hash });
             }
 
