@@ -236,7 +236,9 @@
                     ? 'Referral Code is required.'
                         : !this.$v.registration_form_data.referral_code.doesExists
                     ? 'Referral Code does not belong to anyone.'
-                    :   `Referral from ${this.referral_name}`
+                        : !this.$v.registration_form_data.referral_code.isEligible
+                    ? 'Not Eligible to be a sponsor.'
+                        :   `Referral from ${this.referral_name}`
             },
             registrationError()
             {
@@ -342,6 +344,15 @@
                         {
                             this.referral_name = user && !user.error ? user.full_name : null;
                             return !!user
+                        })
+                    },
+                    async isEligible(referral_code)
+                    {
+                        // Returns true if eligible
+                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        {
+                            this.referral_name = user && !user.error ? user.full_name : null;
+                            return user && user.nobility_info.rank_order > 1;
                         })
                     }
                 }

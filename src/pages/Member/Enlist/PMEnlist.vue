@@ -144,6 +144,8 @@ export default
                 ? 'Sponsor is required.'
                     : !this.$v.form.sponsor.doesExists
                 ? 'Sponsor not found.'
+                    : !this.$v.form.sponsor.isEligible
+                ? 'Not Eligible to be a sponsor.'
                     : `${this.sponsor_name}`
         }
     },
@@ -151,6 +153,9 @@ export default
     {
         confirmEnlist()
         {
+            this.$v.form.$touch();
+            if(this.$v.form.$error || this.$v.form.$pending) {return 0}
+
             this.confirm_dialog = true;
         },
         async submitEnlist()
@@ -221,6 +226,15 @@ export default
                     {
                         this.sponsor_name = user && !user.error ? user.full_name : null;
                         return !!user
+                    })
+                },
+                async isEligible(referral_code)
+                {
+                    // Returns true if eligible
+                    return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                    {
+                        this.sponsor_name = user && !user.error ? user.full_name : null;
+                        return user && user.nobility_info.rank_order > 1;
                     })
                 }
             }
