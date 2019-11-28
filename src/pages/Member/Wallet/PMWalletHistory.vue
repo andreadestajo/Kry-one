@@ -20,7 +20,7 @@
                         </div>
                         <div class="list-logs-description">
                             <div class="detail" v-html="history.description"></div>
-                            <div class="remark">{{ history.remark }}</div>
+                            <div class="remark" v-html="history.remark"></div>
                         </div>
                         <div class="list-logs-value">
                             <div  :class="`amount ${history.method}`">{{ history.amount }}</div>
