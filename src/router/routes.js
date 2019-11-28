@@ -31,6 +31,7 @@ const routes = [
 			{ name: 'member_monarchy',      path: 'monarchy', component: () => import('pages/Member/Monarchy/PMMonarchy.vue') },
 			{ name: 'member_buy',           path: 'buy', component: () => import('pages/Member/Buy/PMBuy.vue') },
 			{ name: 'member_notification',  path: 'notification', component: () => import('pages/Member/Notification/PMNotification.vue') },
+			{ name: 'member_profile',       path: 'profile', component: () => import('pages/Member/Profile/PMProfile.vue') },
 		]
 	},
 	{

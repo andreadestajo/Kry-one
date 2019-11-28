@@ -157,7 +157,9 @@
                 </div>
             </q-form>
 
-            <p-f-registration-confirmation v-if="isRegistered" :email="registration_form_data.email"/>
+            <p-f-registration-confirmation v-if="isRegistered"
+                                           :email="registration_form_data.email"
+                                           :full_name="registration_form_data.full_name"/>
         </q-page>
     </q-page-container>
 </template>
@@ -255,7 +257,8 @@
                 if(this.$v.registration_form_data.$error || this.$v.registration_form_data.$pending) {return 0}
 
                 const registration_form_data    = Object.assign({}, this.registration_form_data);
-                registration_form_data.currency = this.registration_form_data.currency.value;
+                registration_form_data.currency    = this.registration_form_data.currency.value;
+                registration_form_data.knight_data = this.knight_data;
 
                 // Do something if enlisted. Just in case u need, you can access knight_data,
                 if(this.has_valid_eid)
@@ -296,7 +299,7 @@
                     .then(doc => doc.exists ? doc.data() : null);
 
                 // Halt process if not valid
-                if(!knight_data && this.$route.query.id === knight_data.eid)
+                if(!knight_data)
                 {
                     console.log('invalid id or eid');
                     this.$_hidePageLoading();

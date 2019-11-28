@@ -1,8 +1,9 @@
 
 export const
-FN_LOGIN               = `login`,
-FN_REGISTER            = `register`,
-FN_RESET_PASSWORD      = `resetPassword`;
+FN_LOGIN                     = `login`,
+FN_REGISTER                  = `register`,
+FN_RESET_PASSWORD            = `resetPassword`,
+FN_RESEND_EMAIL_VERIFICATION = `resendEmailVerification`;
 
 // Member
 export const

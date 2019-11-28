@@ -32,9 +32,10 @@
         },
         data: () =>
         ({
-            current_user_data : {},
-            currency_data     : [],
-            is_page_loading   : true
+            current_user_data   : {},
+            currency_data       : [],
+            current_user_wallet : {},
+            is_page_loading     : true
         }),
         computed:
         {
