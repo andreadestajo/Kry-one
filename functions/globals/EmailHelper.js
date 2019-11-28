@@ -9,6 +9,9 @@ const TRANSPORTER = NODEMAILER.createTransport({
     }
 });
 
+console.log("for testing purposes only, must be deleted");
+console.log(process.env.SMTP_USERMAME, process.env.SMTP_PASSWORD)
+
 TRANSPORTER.verify(function(error, success) {
     if (error) {
         console.log(error);

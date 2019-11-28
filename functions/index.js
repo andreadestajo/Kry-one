@@ -13,6 +13,7 @@ const account_controller        = require('./controllers/AccountController');
 const admin_controller          = require('./controllers/AdminController');
 const member_controller         = require('./controllers/MemberController');
 const schedule_controller       = require('./controllers/ScheduleController');
+const callback_controller       = require('./controllers/CallbackController');
 const user_trigger              = require('./triggers/UserTrigger');
 
 // Member
@@ -36,6 +37,9 @@ exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onR
 
 // Triggers
 exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onCreate(user_trigger.create);
+
+// Callback
+exports.bitcoinCallback         = FUNCTIONS_HTTPS.onRequest(callback_controller.bitcoin);
 
 //Test Calls
 exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);

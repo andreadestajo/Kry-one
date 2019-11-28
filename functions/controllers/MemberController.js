@@ -1,20 +1,38 @@
-const moment                = require('moment-timezone');
-const momentTZ              = moment.tz('Asia/Manila');
-const AUTH                  = require('../globals/Auth');
-const WALLET                = require('../globals/Wallet');
-const EARNING               = require('../globals/Earning');
-const FORMAT                = require('../globals/FormatHelper');
+const moment                 = require('moment-timezone');
+const momentTZ               = moment.tz('Asia/Manila');
+const AUTH                   = require('../globals/Auth');
+const WALLET                 = require('../globals/Wallet');
+const EARNING                = require('../globals/Earning');
+const FORMAT                 = require('../globals/FormatHelper');
 
-const MDB_USER_WALLET       = require('../models/MDB_USER_WALLET');
-const MDB_USER              = require('../models/MDB_USER');
-const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
-const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
-const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
-const MDB_TRANSFER_WALLET   = require('../models/MDB_TRANSFER_WALLET');
-const MDB_KYC_VERIFICATION  = require('../models/MDB_KYC_VERIFICATION');
-const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
+const MDB_USER_WALLET        = require('../models/MDB_USER_WALLET');
+const MDB_USER               = require('../models/MDB_USER');
+const MDB_NOBILITY           = require('../models/MDB_NOBILITY');
+const MDB_CURRENCY           = require('../models/MDB_CURRENCY');
+const MDB_PROMOTION          = require('../models/MDB_PROMOTION');
+const MDB_TRANSFER_WALLET    = require('../models/MDB_TRANSFER_WALLET');
+const MDB_KYC_VERIFICATION   = require('../models/MDB_KYC_VERIFICATION');
+const MDB_USER_NOTIFICATION  = require('../models/MDB_USER_NOTIFICATION');
+const MDB_ENLIST_KNIGHT      = require('../models/MDB_ENLIST_KNIGHT');
 
-const { HTTPS_ERROR }       = require('../plugin/firebase');
+const {HTTPS_ERROR} = require('../plugin/firebase');
+const {knightRegistrationTemplate} = require('../references/ref_enlist_knight_email_template');
+const {generateAccessCode}           = require('../globals/HashHelper');
+const {sendMail}                   = require('../globals/EmailHelper');
+
+const sendRegistrationLink = async (email, name, link) =>
+{
+    const mail_options = {
+            to      : email,
+            from    : 'no-reply@kryptoone.com',
+            subject : 'Invitation',
+            text    : knightRegistrationTemplate(name, link),
+            html    : knightRegistrationTemplate(name, link)
+        };
+
+    return sendMail(mail_options);
+};
+
 
 module.exports =
 {
@@ -101,7 +119,7 @@ module.exports =
     },
     async upgradeAccount(data, context)
     {
-        //context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
+        //context.auth.uid                = '0AEz5KrhiQWjTJrPivgKdqcAmPM2'; //temporary for testing
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
@@ -122,12 +140,12 @@ module.exports =
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
-        
+
         if(logged_in_user_wallet.wallet < data.amount)
         {
             HTTPS_ERROR('failed-precondition', `You don't have enough ${data.payment_method.toUpperCase()} balance to proceed on this transaction.`);
         }
-        else if(data.amount < required_price)
+        else if(data.amount < required_price.toFixed(8))
         {
             HTTPS_ERROR('failed-precondition', `The amount of ${data.payment_method.toUpperCase()} you are trying to use is not enough to reach ${target_nobility.title}.`);
         }
@@ -197,5 +215,31 @@ module.exports =
     },
     async enlistKnight(data, context)
     {
+        const knight_data = JSON.parse(data);
+
+        // Computation before enlisting the knight goes here.
+
+        // Prepare other data to be stored
+        knight_data.created_at  = new Date(knight_data.created_at);
+        knight_data.enlisted_by = context.auth.uid;
+        knight_data.status      = 'pending';
+
+        // generate enlistment id based on email
+        knight_data.eid = generateAccessCode(knight_data.email);
+
+        const add_new_knight = await MDB_ENLIST_KNIGHT.add(knight_data)
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(add_new_knight.error)
+        {
+            HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
+            return 0;
+        }
+
+        // structure link
+        const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
+
+        return sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
     }
 };

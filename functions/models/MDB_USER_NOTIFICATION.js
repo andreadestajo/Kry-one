@@ -15,7 +15,7 @@ module.exports =
         return collection;
     },
 
-    async addNew(uid, description, image)
+    async addNew(uid, description, image, options = {})
     {
         let add =   {
                         image: image ? image : '../statics/boy.jpg',
@@ -23,6 +23,7 @@ module.exports =
                         created_date: new Date(),
                         read_date: new Date(),
                         detail: description, 
+                        options
                     };
 
         await this.add(uid, add);

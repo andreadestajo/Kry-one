@@ -7,7 +7,7 @@
                label="Add New Nobility"
                type="submit"
                color="primary"
-               class="q-mt-sm"
+               class="q-my-sm"
                @click="showAddNobilityModal"/>
 
         <!--TABLE-->

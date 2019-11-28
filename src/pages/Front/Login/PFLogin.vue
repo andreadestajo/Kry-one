@@ -153,6 +153,12 @@
                         let current_user = await DB_USER.doc(data.user.uid).get();
                         current_user = Object.assign(current_user.data(), {id: current_user.id});
 
+                        // Update email
+                        if(data.user.emailVerified && !current_user.email_verified)
+                        {
+                            DB_USER.doc(data.user.uid).update({email_verified: data.user.emailVerified})
+                        }
+
                         // commit here
                         this.$store.commit(MUTATION_SET_CURRENT_AUTH_ID, data.user.uid);
                         this.$store.commit(MUTATION_SET_CURRENT_USER_DATA, current_user);

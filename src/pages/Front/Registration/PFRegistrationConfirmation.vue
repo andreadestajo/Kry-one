@@ -1,5 +1,5 @@
 <template>
-    <q-card class="q-pa-lg">
+    <q-card class="q-pa-md q-mt-lg">
         <q-card-section>
             <div class="row no-wrap items-center text-center">
                 <div class="col text-h6 ellipsis">Congratulations!</div>

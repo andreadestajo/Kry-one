@@ -25,7 +25,7 @@
                                 </div>
                             </div>
                             <div class="panel-actions">
-                                <div v-for="action in actionsList(currency.actions)" :key="action.key" class="action" @click="$router.push({ name: action.route, params: { currency: currency.key } })">
+                                <div v-for="action in actionsList(currency.actions)" :key="action.key" class="action" @click="$router.push({ name: action.route, params: { currency: currency.key, address: currency.address } })">
                                     <div class="action-icon" :style="`background-color: ${action.color}`">
                                         <q-icon class="icon" :name="action.icon"></q-icon>
                                     </div>
@@ -68,10 +68,12 @@ export default
         const user_wallet_obj = !!user_wallet_arr.length ? arrayToObject(user_wallet_arr, 'key') : null;
 
         //add random value for now (temporary)
+        console.log(user_wallet_obj);
         this.$options.currency_options.forEach((currency) =>
         {
             const key = currency.abb === 'UNIQ' ? 'XAU' : currency.abb;
             currency.amount = user_wallet_obj[key].wallet
+            currency.address = user_wallet_obj[key].address
         });
 
         this.ready = true;

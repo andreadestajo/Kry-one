@@ -19,11 +19,24 @@
         </k-card>
 
         <!-- WARNING -->
-        <div @click="$router.push({ name: 'member_verification' })" class="dashboard__warning q-mt-md">
+        <div @click="$router.push({ name: 'member_verification' })"
+             v-if="!$_current_user_data.kyc_status"
+             class="dashboard__warning q-mt-md">
             <div class="icon"><q-icon name="warning"></q-icon></div>
             <div class="message">
                 <div class="message-title">Please verify your account</div>
                 <div class="message-detail">This warning is shown because your account is not yet verified.</div>
+            </div>
+        </div>
+
+        <!--INFO-->
+        <div v-if="$_current_user_data.kyc_status === 'pending'"
+             class="dashboard__warning q-mt-md"
+             style="background-color: #26A69A">
+            <div class="icon"><q-icon name="info"></q-icon></div>
+            <div class="message">
+                <div class="message-title">KYC Verification is being processed.</div>
+                <div class="message-detail">Your account verification is under confirmation, this usually takes around 2-3 business days. Thank you for your patience..</div>
             </div>
         </div>
 

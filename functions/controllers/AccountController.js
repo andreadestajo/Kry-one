@@ -59,6 +59,11 @@ module.exports =
         const user_info       = data.registration_form_data;
         user_info.referred_by = user_info.referral_code;
 
+        if(user_info.hasOwnProperty('knight_data'))
+        {
+            // Do something here if enlisted
+        }
+
         // Create new user and return result
         const create_user = await ADMIN_AUTH.createUser
         ({
@@ -91,6 +96,7 @@ module.exports =
         // Initialize kyc status and add created_at
         user_info.kyc_status = '';
         user_info.created_at = momentTZ.toDate();
+        user_info.filters    = [user_info.email, user_info.referral_code, user_info.full_name];
 
         // Add new user data to collection
         const user_record = create_user.data;
@@ -118,7 +124,7 @@ module.exports =
             return {error: add_user_info.error}
         }
 
-        await sendEmailVerificationLink(user_info.email, user_info.fullname);
+        await sendEmailVerificationLink(user_info.email, user_info.full_name);
 
         return user_record.uid;
     },
