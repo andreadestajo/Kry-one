@@ -39,7 +39,7 @@ exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onR
 exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onCreate(user_trigger.create);
 
 // Callback
-exports.bitcoinCallback         = FUNCTIONS_HTTPS.onRequest(callback_controller.bitcoin);
+exports.bitapsCallback          = FUNCTIONS_HTTPS.onRequest(callback_controller.bitaps);
 
 //Test Calls
 exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);
