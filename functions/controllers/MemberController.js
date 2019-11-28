@@ -194,7 +194,7 @@ module.exports =
                                                                                 title: target_nobility.title }
                                                         };
 
-                MDB_USER.update(logged_in_user.id, update_user);
+                promise_list.push(MDB_USER.update(logged_in_user.id, update_user));
             }
 
             /* give user corresponding UNIQ equivalent of purchase */
