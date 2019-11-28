@@ -29,6 +29,7 @@
             </div>
         </div>
 
+        <!--INFO-->
         <div v-if="$_current_user_data.kyc_status === 'pending'"
              class="dashboard__warning q-mt-md"
              style="background-color: #26A69A">

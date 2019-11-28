@@ -41,6 +41,7 @@
     import KModal from "../../../components/Admin/KModal"
 
     import DB_KYC_VERIFICATION from "../../../models/DB_KYC_VERIFICATION"
+    import DB_USER from "../../../models/DB_USER";
 
     export default
     {
@@ -92,13 +93,27 @@
             {
                 const message  = `Are you sure you want to ${is_accepted ? 'accept' : 'reject'} kyc verification?`;
 
-                const callback = () =>
+                const callback = async () =>
                 {
-                    DB_KYC_VERIFICATION.update
-                    (
-                        this.kyc_details_value.id,
-                        {status: is_accepted ? 'approved' : 'rejected'}
-                    );
+                    this.$_showPageLoading();
+                    const user_id = DB_USER.getCurrentUser().uid;
+
+                    const data =
+                    {
+                        status          : is_accepted ? 'approved' : 'rejected',
+                        modified_by     : user_id,
+                        modified_date   : new Date()
+                    };
+
+                    await DB_KYC_VERIFICATION.update(this.kyc_details_value.id, data);
+                    await DB_USER.update(this.kyc_details_value.id, {kyc_status: data.status});
+
+                    this.$_hidePageLoading();
+                    this.$_notify
+                    ({
+                        message : `Successfully ${data.status} KYC`,
+                        mode    : 'positive'
+                    });
                     this.$refs.kModalRef.hideModal()
                 };
 
