@@ -57,6 +57,18 @@ module.exports =
     async register (data, context)
     {
         const user_info       = data.registration_form_data;
+
+        // Check if sponsor is
+        const is_eligible_sponsor = await MDB_USER.getUserByReferralCode(user_info.referral_code)
+        .then(user =>
+        {
+            return user && user.nobility_info.rank_order > 1;
+        });
+
+        if(!is_eligible_sponsor)
+        {
+            HTTPS_ERROR('failed-precondition', 'Not eligible to be a sponsor.');
+        }
         user_info.referred_by = user_info.referral_code;
 
         if(user_info.hasOwnProperty('knight_data'))
