@@ -349,21 +349,25 @@
 
                         console.log(referral_code);
                         // Returns true if referral code belongs to an existing user.
-                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        const does_exist = await DB_USER.getUserByReferralCode(referral_code).then(user =>
                         {
                             this.referral_name = user && !user.error ? user.full_name : null;
                             return !!user
-                        })
+                        });
+
+                        return Promise.resolve(does_exist)
                     },
                     async isEligible(referral_code)
                     {
                         console.log(referral_code);
                         // Returns true if eligible
-                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        const is_eligible = await DB_USER.getUserByReferralCode(referral_code).then(user =>
                         {
                             this.referral_name = user && !user.error ? user.full_name : null;
                             return user && user.nobility_info.rank_order > 1;
-                        })
+                        });
+
+                        return Promise.resolve(is_eligible)
                     }
                 }
             }

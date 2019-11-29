@@ -236,7 +236,7 @@ export default
 
         // Initial Computation
         this.computeTotalAmount();
-        
+
         this.$_hidePageLoading();
     },
     validations()
