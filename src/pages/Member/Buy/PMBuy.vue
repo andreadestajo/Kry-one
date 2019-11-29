@@ -147,7 +147,11 @@ export default
         nobility_options()
         {
             return this.nobilities
-                .filter(n => parseFloat(n.price) !== 0 && this.$_current_user_data.nobility_id !== n.id)
+                .filter(n =>
+                    parseFloat(n.price) !== 0
+                    && this.$_current_user_data.nobility_id !== n.id
+                    && n.rank_order > this.$_current_user_data.nobility_info.rank_order
+                )
                 .map(n => ({label: n.title, value: n.id}))
         },
         walletAmount()
@@ -203,15 +207,24 @@ export default
                 return parseFloat(n.price) <= this.uniqAmount && parseFloat(n.price) !== 0
             });
 
+
             if(!matched_nobilities.length)
             {
                 this.form.nobility = {label: '', value: null};
                 return 0;
             }
 
+            // If rank order is lower than the current
+            const computed_nobility = matched_nobilities[matched_nobilities.length - 1].rank_order <= this.$_current_user_data.nobility_info.rank_order
+                ? this.$_current_user_data.nobility_info
+                : matched_nobilities[matched_nobilities.length - 1];
+
+            console.log(matched_nobilities[matched_nobilities.length - 1]);
+            console.log(computed_nobility.title);
+
             this.form.nobility = {
-                label: matched_nobilities[matched_nobilities.length - 1].title,
-                value: matched_nobilities[matched_nobilities.length - 1].id
+                label: computed_nobility.title,
+                value: computed_nobility.id
             }
         },
         confirmTransaction()
