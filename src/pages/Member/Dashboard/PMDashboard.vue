@@ -156,7 +156,7 @@ export default
         async initializeData()
         {
             // Get people to place
-            this.paid_downline = await DB_USER.getPaidDownline(this.$_current_user_data.id);
+            this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
 
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);

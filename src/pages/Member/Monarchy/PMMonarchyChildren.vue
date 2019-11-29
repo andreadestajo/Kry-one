@@ -6,7 +6,7 @@
                 <div class="name">{{ data.full_name }}</div>
                 <div class="rank">{{ data.nobility_info.title }}</div>
             </div>
-            <!-- <input @click="copyLink(data.id)" type="text" v-model="data.id"> -->
+            <input @click="copyLink(data.id)" type="text" v-model="data.id">
         </a>
 
         <ul v-if="has_children">
