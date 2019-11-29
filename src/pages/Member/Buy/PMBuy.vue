@@ -219,9 +219,6 @@ export default
                 ? this.$_current_user_data.nobility_info
                 : matched_nobilities[matched_nobilities.length - 1];
 
-            console.log(matched_nobilities[matched_nobilities.length - 1]);
-            console.log(computed_nobility.title);
-
             this.form.nobility = {
                 label: computed_nobility.title,
                 value: computed_nobility.id
