@@ -228,6 +228,7 @@ export default
             send_wallet.amount         = this.send_wallet_form.amount;
             send_wallet.currency       = this.active_wallet.abb;
             send_wallet.remarks        = this.send_wallet_form.remarks;
+            send_wallet.address        = this.send_wallet_form.send_to;
             
             try
             {
@@ -239,6 +240,8 @@ export default
             {
                 this.$q.notify({ message: err.message, color: 'red' });
             }
+
+            this.$_hidePageLoading();
         },
         async transferWallet()
         {

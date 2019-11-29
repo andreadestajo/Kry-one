@@ -16,7 +16,9 @@ FN_TRANSFER_CRYPTO       = `transferCrypto`;
 
 // Admin
 export const
-FN_PROMOTE_USER        = `promoteUser`;
+FN_PROMOTE_USER        = `promoteUser`,
+FN_REJECT_TRANSFER     = `rejectTransfer`,
+FN_PROCESS_TRANSFER    = `processTransfer`;
 
 export const
 FN_ISSUE_WALLET        = `issueWallet`;

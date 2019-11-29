@@ -43,6 +43,7 @@ const routes = [
 			{ name: 'admin_promotions'       , path: 'promotions'      , component: () => import('pages/Admin/Promotions/PAPromotions.vue') },
 			{ name: 'admin_kyc_submits'      , path: 'kycsubmits'      , component: () => import('pages/Admin/KycSubmits/PAKycSubmits.vue') },
 			{ name: 'admin_cashout_requests' , path: 'cashoutrequests' , component: () => import('pages/Admin/CashoutRequests/PACashoutRequests.vue') },
+			{ name: 'admin_transfer_requests', path: 'transferrequests', component: () => import('pages/Admin/TransferRequests/PATransferRequests.vue') },
 			{ name: 'admin_commissions'      , path: 'commissions'     , component: () => import('pages/Admin/Commissions/PACommissions.vue') },
 			{ name: 'admin_nobilities'       , path: 'nobilities'      , component: () => import('pages/Admin/Nobilities/PANobilities.vue') },
             {
