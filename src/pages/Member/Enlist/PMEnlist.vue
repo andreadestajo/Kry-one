@@ -233,6 +233,9 @@ export default
         this.form.payment_method = this.payment_options[0];
         await DB_NOBILITY.bindNobilities(this);
         this.form.nobility = this.nobility_options[0];
+
+        // Initial Computation
+        this.computeTotalAmount();
         
         this.$_hidePageLoading();
     },
