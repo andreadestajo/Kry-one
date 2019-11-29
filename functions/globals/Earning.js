@@ -116,6 +116,8 @@ module.exports =
         let upline_info         = await MDB_USER.get(user_info.upline_id);
         let nobilities          = await MDB_NOBILITY.getMany();
 
+        promise_list.push(MDB_USER.addBinaryPointValue(user_info.id, uniq_amount_purchase));
+
         if(upline_info)
         {
             await this.unilevelGoToUpline(upline_info, 1, bitcoin_equivalent, promise_list, user_info, { current_percentage: 0, nobilities: nobilities });
@@ -178,7 +180,28 @@ module.exports =
 
         return res;
     },
-    async binary()
+    async binary(user_info)
     {
+        console.log("BINARY METHOD");
+
+        let promise_list        = [];
+        let points              = user_info.binary_point_value;
+        let upline_info         = await MDB_USER.get(user_info.placement_id);
+
+        await this.binaryGoToUpline(upline_info, 1, points, promise_list, user_info, user_info.placement_position);
+        await Promise.all(promise_list);
     },
+    async binaryGoToUpline(user_info, level, points, promise_list, user_cause, downline_position)
+    {
+        console.log(level, user_info.id, downline_position);
+
+        await MDB_USER.addBinaryPointLeftRight(user_info.id, downline_position, points);
+
+        let upline_info = await MDB_USER.get(user_info.placement_id || 0);
+
+        if(upline_info)
+        {
+            await this.binaryGoToUpline(upline_info, level+1, points, promise_list, user_cause, user_info.placement_position);
+        }
+    }
 };

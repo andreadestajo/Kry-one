@@ -98,7 +98,6 @@ export default
         this.tab = this.$route.query.tab || 'unilevel_tree';
 
         // Get people to place
-
         await this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
 
     },
