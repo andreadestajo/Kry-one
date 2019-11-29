@@ -7,7 +7,7 @@
                 <k-field label="Source Wallet">
                     <div class="source" @click="is_wallet_dialog_open = true">
                         <div class="source-icon"><q-icon name="fa fa-wallet"></q-icon></div>
-                        <div class="source-value" v-if="active_wallet.abb">{{active_wallet.abb}} ({{active_wallet.amount}})</div>
+                        <div class="source-value" v-if="active_wallet.abb">{{active_wallet.abb}} ({{active_wallet.display_amount}})</div>
                         <div class="source-dropdown"><q-icon name="fa fa-caret-down"></q-icon></div>
                     </div>
                 </k-field>
@@ -23,7 +23,7 @@
                 <!-- TO -->
                 <k-field label="To">
                     <q-input v-model="send_wallet_form.send_to"
-                             dense placeholder="Enter BTC Address" class="input" outlined stack-label
+                             dense :placeholder="`Enter ${ this.active_wallet.abb } Address`" class="input" outlined stack-label
                              :error="$v.send_wallet_form.send_to.$error"
                              :error-message="'This field is required.'"
                              @blur="$v.send_wallet_form.send_to.$touch()">
@@ -187,8 +187,9 @@ export default
         chooseWallet(wallet)
         {
             this.active_wallet          = {
-                abb     : wallet.abb,
-                amount  : wallet.amount
+                abb            : wallet.abb,
+                amount         : Number(this.removeCommas(wallet.amount)),
+                display_amount : wallet.amount
             };
 
             this.is_wallet_dialog_open  = false;
@@ -266,6 +267,10 @@ export default
 
             this.$_hidePageLoading();
         },
+        removeCommas(str) 
+        {
+            return(str.replace(/,/g,''));
+        }
     },
     async mounted()
     {
@@ -284,8 +289,9 @@ export default
             {
                 this.active_wallet =
                 {
-                    abb     : currency.abb,
-                    amount  : currency.amount
+                    abb             : currency.abb,
+                    amount          : Number(this.removeCommas(currency.amount)),
+                    display_amount  : currency.amount
                 };
             }
         });
