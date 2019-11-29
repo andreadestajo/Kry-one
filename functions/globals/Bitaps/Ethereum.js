@@ -13,8 +13,9 @@ class Ethereum extends Bitaps
         // const wallet_id_hash = "";
 
         const currency = "eth";
+        const confirmation = 12;
 
-        super(uid, wallet_id, wallet_id_hash, currency);
+        super(uid, wallet_id, wallet_id_hash, currency, confirmation);
     }
 }
 

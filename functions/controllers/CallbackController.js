@@ -1,14 +1,13 @@
 const MDB_BTC_ADDRESS = require('../models/MDB_BTC_ADDRESS');
 const MDB_ETH_ADDRESS = require('../models/MDB_ETH_ADDRESS');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
-const required_confirmation = 3;
 const Wallet = require('../globals/Wallet');
 
 module.exports =
 {
     async bitaps(req, res)
     {
-        if (parseInt(req.body.confirmations) > 3)
+        if (parseInt(req.body.confirmations) > 12)
         {
             return res.status(200).send(true);
         }
@@ -21,6 +20,7 @@ module.exports =
         let current_currency_name = null;
         let converted_amount = 0;
         let image_notification = null;
+        let required_confirmation = null;
 
         if (is_btc)
         {
@@ -29,6 +29,7 @@ module.exports =
             current_currency_name = "Bitcoin";
             converted_amount = parseFloat(req.body.amount) / 100000000;
             image_notification = 'https://cdn2.iconfinder.com/data/icons/cryptocurrency-5/100/cryptocurrency_blockchain_crypto-01-512.png';
+            required_confirmation = 6;
         }
         else if (is_eth)
         {
@@ -37,6 +38,7 @@ module.exports =
             current_currency_name = "Ethereum";
             converted_amount = parseFloat(req.body.amount) / 1000000000000000000;
             image_notification = 'https://cdn4.iconfinder.com/data/icons/cryptocoins/227/ETH-alt-512.png';
+            required_confirmation = 12;
         }
         else
         {

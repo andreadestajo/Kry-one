@@ -13,8 +13,9 @@ class Bitcoin extends Bitaps
         // const wallet_id_hash = "412c1ece26658a67e4a91e3afa757a4773ea1f5fe41a6ee1088fbffb2ef89d37";
 
         const currency = "btc";
+        const confirmation = 6;
 
-        super(uid, wallet_id, wallet_id_hash, currency);
+        super(uid, wallet_id, wallet_id_hash, currency, confirmation);
     }
 }
 

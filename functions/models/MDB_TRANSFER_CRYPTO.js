@@ -25,9 +25,9 @@ module.exports =
         data.id     = res.id;
         return data;
     },
-    async getMany(order_by = null)
+    async getMany(order_by = null, currency = 'btc')
     {
-        let res = await this.collection(order_by).where('status', '==', 'pending').get();
+        let res = await this.collection(order_by).where('status', '==', 'pending').where('currency', '==', currency).get();
         let data = [];
 
         if(!res.empty)
