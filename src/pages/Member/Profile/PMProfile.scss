@@ -18,6 +18,24 @@
         }
     }
 
+    &__profile {
+
+        .avatar {
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 100%;
+            margin-bottom: 5px;
+
+        }
+        .name {
+            color: $primary;
+        }
+        .email {
+            color: $text-three;
+            opacity: 0.7;
+        }
+    }
+
     &__form {
         padding: 20px;
         background-color: #fff;

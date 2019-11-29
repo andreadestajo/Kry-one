@@ -19,7 +19,7 @@
         <!-- DRAWER-->
         <q-drawer  v-model="drawer" show-if-above>
             <q-list class="member__sidebar" separator>
-                <q-item class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
+                <q-item @click.native="$router.push({name: 'member_profile'})" class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
                     <span class="profile-avatar q-pa-sm">
                         <q-avatar size="120px">
                             <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>

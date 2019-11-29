@@ -175,10 +175,10 @@
             { label: 'View Wallet'    , icon: 'far fa-eye'              , key: 'view_wallet'},
             { label: 'Issue Wallet'   , icon: 'account_balance_wallet'  , key: 'issue_wallet'},
             { label: 'Edit'           , icon: 'far fa-edit'             , key: 'edit_user'},
-            { label: 'Accelerate User', icon: 'trending_up'             , key: 'accelerate_user'},
+            //{ label: 'Accelerate User', icon: 'trending_up'             , key: 'accelerate_user'},
             { label: 'Referrals'      , icon: 'people'                  , key: 'referrals'},
-            { label: 'Monarchy'       , icon: 'fas fa-users'            , key: 'monarchy'},
-            { label: 'Block User'     , icon: 'fas fa-ban'              , key: 'block_user'},
+            //{ label: 'Monarchy'       , icon: 'fas fa-users'            , key: 'monarchy'},
+            //{ label: 'Block User'     , icon: 'fas fa-ban'              , key: 'block_user'},
         ]
     }
 </script>
