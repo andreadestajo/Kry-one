@@ -210,7 +210,6 @@ module.exports =
             await EARNING.updateRank(logged_in_user.upline_id);
         }
 
-
         return { status: "success", message: `I can do this!`};
     },
     async readNewNotifications(data, context)
@@ -223,7 +222,7 @@ module.exports =
             MDB_USER_NOTIFICATION.update(uid, notif_id, {new: false})
         });
 
-        return Promise.resolve(1)
+        return Promise.resolve(1);
     },
     async enlistKnight(data, context)
     {
@@ -306,6 +305,9 @@ module.exports =
             update_user.placement.date_placed    = new Date();
 
             await MDB_USER.update(downline_to_place.id, update_user);
+            downline_to_place = await MDB_USER.get(data.user_id);
+            
+            await EARNING.binary(downline_to_place);
         }
 
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};

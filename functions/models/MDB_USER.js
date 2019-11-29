@@ -16,6 +16,21 @@ module.exports =
     {
         this.doc(uid).update({ notification_count: FieldValue.increment(1) });
     },
+    async addBinaryPointValue(uid, binary_point_value)
+    {
+        this.doc(uid).update({ binary_point_value : FieldValue.increment(binary_point_value) });
+    },
+    async addBinaryPointLeftRight(uid, position, points)
+    {
+        if(position.toLowerCase() === 'left')
+        {
+            this.doc(uid).update({ binary_points_left : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
+        }
+        else
+        {
+            this.doc(uid).update({ binary_points_right : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
+        } 
+    },
     async add(data)
     {
         let res = await ADMIN_DB.collection(this.table).add(data);
