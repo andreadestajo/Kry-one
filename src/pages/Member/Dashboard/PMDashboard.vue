@@ -81,7 +81,7 @@
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
                 <q-btn @click="$router.push({ name: 'member_send', params: { currency: 'btc' }})" flat class="action-button"><q-icon name="send"></q-icon> &nbsp; Send</q-btn>
-                <q-btn @click="$router.push({ name: 'member_receive', params: { currency: 'btc', address: userWallet.BTC.address }})" flat class="action-button"><q-icon name="fa fa-qrcode"></q-icon> &nbsp; Receive</q-btn>
+                <q-btn @click="$router.push({ name: 'member_receive', params: { currency: 'btc', address: $_current_user_wallet.BTC.address }})" flat class="action-button"><q-icon name="fa fa-qrcode"></q-icon> &nbsp; Receive</q-btn>
             </div>
         </k-card>
 
