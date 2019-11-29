@@ -87,14 +87,8 @@
                        type="submit"
                        color="primary"
                        class="full-width"
-                       @click=""></q-btn>
-
-                <q-btn unelevated
-                       label="Back"
-                       type="reset"
-                       color="grey"
-                       class="q-mt-sm full-width"
-                       @click="$router.push('/')"/>
+                       @click="confirmUpdate">
+                </q-btn>
             </div>
         </q-form>
 
@@ -107,9 +101,11 @@
     import KField   from '../../../components/Member/KField'
     import KCard    from '../../../components/Member/KCard'
 
-    import refs_countries     from "../../../references/refs_countries";
-    import {currencies_list}  from "../../../references/refs_currencies";
-    import {required} from "vuelidate/src/validators";
+    import refs_countries      from "../../../references/refs_countries";
+    import {currencies_list}   from "../../../references/refs_currencies";
+    import {required}          from "vuelidate/src/validators";
+    import {fbCall}            from "../../../utilities/Callables";
+    import {FN_UPDATE_PROFILE} from "../../../references/refs_functions";
 
     export default {
         name: "PMProfile",
@@ -123,8 +119,54 @@
                 email          : '',
                 country        : '',
                 currency       : ''
+            },
+            update_error :
+            {
+                code    : '',
+                message : ''
             }
         }),
+        methods:
+        {
+            confirmUpdate()
+            {
+                this.$v.form.$touch();
+                if(this.$v.form.$error || this.$v.form.$pending) {return 0}
+
+                this.$_showConfirmDialog(
+                    'Are you sure you want to update your profile ?',
+                    this.updateProfile
+                )
+
+            },
+            async updateProfile()
+            {
+                // We temporarily can update contact number, country and currency
+                this.$_showPageLoading({message: 'Updating...'});
+
+                const data =
+                {
+                    contact_number : this.form.contact_number,
+                    country        : this.form.country,
+                    currency       : this.form.currency.value,
+                    date_modified  : new Date()
+                };
+
+                await fbCall(FN_UPDATE_PROFILE, JSON.stringify(data))
+                    .then(data =>
+                    {
+                        this.$_notify({message: 'Succesfully updated profile.', mode: 'positive'});
+                        this.$_hidePageLoading();
+                    })
+                    .catch(error =>
+                    {
+                        this.$_notify({message: error.message, mode: 'negative'});
+                        this.$_hidePageLoading();
+                    });
+
+                this.$_hidePageLoading();
+            }
+        },
         mounted()
         {
             // Initilize Data here
@@ -141,8 +183,6 @@
             };
 
             this.form = Object.assign(this.form, initial_data);
-
-            console.log(this.$_current_user_data);
         },
         validations:
         {

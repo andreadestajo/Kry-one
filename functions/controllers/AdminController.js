@@ -70,9 +70,16 @@ module.exports =
     async rejectTransfer(data, context)
     {
         await AUTH.admin_only(context);
-        MDB_TRANSFER_CRYPTO.update(data.id, {
+        
+        const transfer_info = await MDB_TRANSFER_CRYPTO.get(data.id);
+        const transfer_update = MDB_TRANSFER_CRYPTO.update(data.id, 
+        {
             status: 'rejected'
         });
+
+        const promise = await Promise.all([transfer_info, transfer_update]);
+
+        await WALLET.add(promise[0].issue_by_id, promise[0].currency, promise[0].amount, 'received', 'Wallet transfer rejected');
 
         return { status: 'success', message: 'Successfully rejected the transfer.' };
     },

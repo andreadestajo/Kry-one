@@ -6,7 +6,12 @@
         <k-card class="dashboard__nobility q-mt-md">
             <div class="group">
                 <div class="group-label">Your current nobility</div>
-                <div class="group-value current">{{$_current_user_data.nobility_info.title.toUpperCase()}}</div>
+                <div class="group-value current">
+                    <q-spinner v-if="!$_current_user_data.hasOwnProperty('nobility_info')" color="primary" size="1em"/>
+                    <span v-if="$_current_user_data.hasOwnProperty('nobility_info')">
+                        {{$_current_user_data.nobility_info.title.toUpperCase()}}
+                    </span>
+                </div>
             </div>
             <div class="group q-pa-sm" v-if="!Object.keys(target_nobility_info).length">
                 <q-spinner color="primary" size="2em"/>
@@ -67,9 +72,6 @@
             </div>
         </div>
 
-
-
-
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
             <div class="value">{{$_formatNumber($_current_user_wallet.BTC.wallet, {currency: 'BTC'})}}</div>
@@ -99,14 +101,17 @@
         <!-- EARNING BREAKDOWN -->
         <k-card class="dashboard__breakdown member__card q-mt-md">
             <div class="subtitle">Earning Breakdown</div>
-            <div class="breakdown">
+            <div class="text-center q-pa-lg" v-if="!earning_breakdown">
+                <q-spinner color="primary" size="2em"/>
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
                 <div v-for="earning in $options.earning_breakdown" :key="earning.label" class="breakdown-list">
                     <div class="breakdown-icon"><q-icon :name="earning.icon"></q-icon></div>
                     <div class="breakdown-label">{{ earning.label }} </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_formatNumber(userEarning[earning.key].total || 0, {currency: 'BTC'}) }}</div>
+                        <div class="amount">{{ $_formatNumber(earning_breakdown[earning.key].total, {currency: 'BTC'}) }}</div>
                         <div class="conversion">
-                            <k-amount-conversion :amount="userEarning[earning.key].total" coin="BTC"/>
+                            <k-amount-conversion :amount="earning_breakdown[earning.key].total" coin="BTC"/>
                         </div>
                     </div>
                 </div>  
@@ -131,21 +136,16 @@ export default
     components: { KCard },
     data: () =>
     ({
-        target_nobility : '',
+        target_nobility      : '',
         target_nobility_info : {},
-        user_wallet     : [],
-        user_earning    : [],
-        placement_message : false,
-        paid_downline   : [],
+        user_wallet          : [],
+        user_earning         : [],
+        placement_message    : false,
+        paid_downline        : [],
+        earning_breakdown    : null
     }),
     computed:
     {
-        userEarning()
-        {
-            return !!this.user_earning.length
-                ? arrayToObject(this.user_earning, 'id')
-                : {binary: {amount: 0}, direct: {amount: 0}, stairstep: {amount: 0}}
-        },
         unplaced_downline()
         {
             return this.paid_downline.filter(n => !n.hasOwnProperty('placement'));
@@ -163,8 +163,8 @@ export default
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
             this.target_nobility_info = nobility ? nobility : {};
 
-            // Get earnings breakdown TODO should I bind this one ?
-            this.user_earning = await DB_USER_EARNING.getMany(this.$_current_user_data.id);
+            // Bind earnings
+            await this.$bind('user_earning', DB_USER_EARNING.collection(this.$_current_user_data.id));
         }
     },
     earning_breakdown:
@@ -185,6 +185,27 @@ export default
         }
 
         this.initializeData();
+    },
+    watch:
+    {
+        user_earning(user_earning)
+        {
+            const default_data = {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}};
+
+            if(!user_earning.length)
+            {
+                return default_data;
+            }
+
+            const earning = {};
+
+            // Get object keys
+            user_earning.forEach(e => {
+                earning[e.id] = Object.assign(e)
+            });
+
+            this.earning_breakdown = Object.assign(default_data, earning)
+        },
     }
 }
 </script>

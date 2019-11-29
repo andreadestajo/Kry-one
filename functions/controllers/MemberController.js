@@ -124,7 +124,7 @@ module.exports =
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
 
-        if(logged_in_user.roles.includes('admin'))
+        if(logged_in_user.hasOwnProperty('roles') && logged_in_user.roles.includes('admin'))
         {
             if(data.uid)
             {
@@ -390,5 +390,21 @@ module.exports =
         }
 
         return { status: "success", message: `Your request to transfer ${scientificToDecimal(transfer_wallet.amount)} ${transfer_wallet.currency.toUpperCase()} to ${data.address} has been submitted.` };
+    },
+    async updateProfile(data, context)
+    {
+        const user_data = JSON.parse(data);
+
+        const update_data = await MDB_USER.update(context.auth.uid, user_data)
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(update_data.error)
+        {
+            HTTPS_ERROR('failed-precondition', update_data.error.errorInfo.message);
+            return 0;
+        }
+
+        return MDB_USER.update(context.auth.uid, user_data);
     }
 };
