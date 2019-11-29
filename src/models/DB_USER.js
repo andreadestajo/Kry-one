@@ -57,6 +57,22 @@ export default
 
         return data;
     },
+    async getPaidDownline(upline_id, options = null)
+    {
+        let res = await this.collection(options).where('upline_id', '==', upline_id).where('nobility_info.rank_order', '>', 1).get();
+        let data = [];
+
+        if(!res.empty)
+        {
+            res.docs.forEach((d, i) =>
+            {
+                data[i] = d.data();
+                data[i].id = d.id;
+            })
+        }
+
+        return data;
+    },
     async update(id, data)
     {
         return await this.doc(id).set(data, { merge: true} )

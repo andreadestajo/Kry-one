@@ -1,26 +1,17 @@
 <template>
     <li>
-        <a href="javascript:">
+        <a v-if="data" href="javascript:">
             <div @click="checkChildren()">
                 <div class="image"><q-img spinner-size="5px" :src="data.photo_url ? data.photo_url : `../statics/boy.jpg`"></q-img></div>
                 <div class="name">{{ data.full_name }}</div>
                 <div class="rank">{{ data.nobility_info.title }}</div>
             </div>
-            <!-- <input @click="copyLink(data.id)" type="text" v-model="data.id"> -->
         </a>
-
-        <ul v-if="has_children">
-            <template v-if="childrens.length">
-                <Children :data="children" :key="key" v-for="(children, key) of childrens" />
-            </template>
-            <template v-else>
-                <li style="width: 100%;">
-                    <a href="javascript:" style="background-color: #aaa;">
-                        <div class="no-downline">No Downline</div>
-                    </a>
-                </li>
-            </template>
-        </ul>
+        <a v-if="!data" href="javascript:" style="background-color: #aaa">
+            <div>
+                + Place Downline
+            </div>
+        </a>
     </li>
 </template>
 
@@ -33,7 +24,8 @@ export default
     filters: { },
     props:
     {
-        data: Object
+        data: Object,
+        position: String,
     },
     data:() =>(
     {
@@ -41,7 +33,10 @@ export default
         is_hidden: false,
         childrens: null
     }),
-    mounted() { },
+    mounted()
+    {
+        console.log(this.data);
+    },
     methods: 
     {
         async checkChildren()

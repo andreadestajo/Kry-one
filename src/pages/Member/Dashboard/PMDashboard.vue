@@ -33,6 +33,24 @@
             </div>
         </div>
 
+
+        <!-- NOT YET PLACED -->
+        <div v-if="placement_message == true" class="dashboard__warning q-mt-md">
+            <div class="message">
+                <div class="message-title">You are not yet placed.</div>
+                <div class="message-detail">You need to ask your upline to place you.</div>
+            </div>
+        </div>
+
+        <!-- PLACE YOUR DOWNLINE -->
+        <div @click="$router.push({ name: 'member_monarchy', query: { tab: 'binary_tree' } })" v-if="this.unplaced_downline.length > 0" class="dashboard__warning q-mt-md">
+            <div class="icon"><q-icon name="warning"></q-icon></div>
+            <div class="message">
+                <div class="message-title">Place your downline!</div>
+                <div class="message-detail">There {{ this.unplaced_downline.length == 1 ? 'is' : 'are' }} <b>{{ this.unplaced_downline.length }} {{ this.unplaced_downline.length == 1 ? 'person' : 'people' }}</b> you need to place! Click here in order to place {{ this.unplaced_downline.length == 1 ? 'that' : 'those' }} {{ this.unplaced_downline.length == 1 ? 'downline' : 'downlines' }}.</div>
+            </div>
+        </div>
+
         <!--INFO-->
         <div v-if="$_current_user_data.kyc_status === 'pending'"
              class="dashboard__warning q-mt-md"
@@ -43,6 +61,9 @@
                 <div class="message-detail">Your account verification is under confirmation, this usually takes around 2-3 business days. Thank you for your patience..</div>
             </div>
         </div>
+
+
+
 
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
@@ -93,11 +114,10 @@
 import './PMDashboard.scss';
 
 import KCard    from '../../../components/Member/KCard';
-
-import DB_NOBILITY      from "../../../models/DB_NOBILITY"
-import DB_USER_WALLET   from '../../../models/DB_USER_WALLET'
-import DB_USER_EARNING  from '../../../models/DB_USER_EARNING'
-
+import DB_NOBILITY      from "../../../models/DB_NOBILITY";
+import DB_USER_WALLET   from '../../../models/DB_USER_WALLET';
+import DB_USER          from '../../../models/DB_USER';
+import DB_USER_EARNING  from '../../../models/DB_USER_EARNING';
 import {arrayToObject} from "../../../utilities/ObjectUtils";
 
 export default
@@ -109,7 +129,9 @@ export default
         target_nobility : '',
         target_nobility_info : {},
         user_wallet     : [],
-        user_earning    : []
+        user_earning    : [],
+        placement_message : false,
+        paid_downline   : [],
     }),
     computed:
     {
@@ -118,12 +140,19 @@ export default
             return !!this.user_earning.length
                 ? arrayToObject(this.user_earning, 'id')
                 : {binary: {amount: 0}, direct: {amount: 0}, stairstep: {amount: 0}}
+        },
+        unplaced_downline()
+        {
+            return this.paid_downline.filter(n => !n.hasOwnProperty('placement'));
         }
     },
     methods:
     {
         async initializeData()
         {
+            // Get people to place
+            this.paid_downline = await DB_USER.getPaidDownline(this.$_current_user_data.id);
+
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
@@ -141,6 +170,15 @@ export default
     ],
     mounted()
     {
+        // Check Placement
+        if(this.$_current_user_data.nobility_info.rank_order != 1)
+        {
+            if(!this.$_current_user_data.hasOwnProperty('placement'))
+            {
+                this.placement_message = true;
+            }
+        }
+
         this.initializeData();
     }
 }
