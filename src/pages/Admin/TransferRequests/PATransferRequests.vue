@@ -93,13 +93,17 @@ export default {
                         this.$q.notify({ message: err.message, color: 'red' });
                     }
 
-                    this.$unbind('users_wew');
-                    this.users_wew = [];
-                    this.users_data = [];
-                    await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
+                    await this.reload();
                     
                     this.$q.loading.hide();
                 }
+            },
+            async reload()
+            {
+                this.$unbind('users_wew');
+                this.users_wew = [];
+                this.users_data = [];
+                await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
             },
             scientificToDecimal(num) 
             {
@@ -156,6 +160,8 @@ export default {
                             {
                                 this.$q.notify({ message: err.message, color: 'red' });
                             }
+
+                            await this.reload();
                             
                             this.$q.loading.hide();
                         }

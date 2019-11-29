@@ -6,8 +6,9 @@ const MDB_TRANSFER_CRYPTO_LOG = require('../../models/MDB_TRANSFER_CRYPTO_LOG');
 
 class Bitaps
 {
-    constructor(uid = null, wallet_id, wallet_id_hash, currency)
+    constructor(uid = null, wallet_id, wallet_id_hash, currency, confirmation)
     {
+        this.confirmation = confirmation;
         this.wallet_id = wallet_id;
         this.wallet_id_hash = wallet_id_hash;
         this.currency = currency;
@@ -32,7 +33,7 @@ class Bitaps
             {
                 wallet_id: this.wallet_id,
                 callback_url: this.callback_url,
-                confirmation: 3
+                confirmation: this.confirmation
             });
 
             if (this.currency === 'btc')
@@ -61,7 +62,16 @@ class Bitaps
 
     async sendAllPayment()
     {
-        const transfers = await MDB_TRANSFER_CRYPTO.getMany();
+        const transfers = await MDB_TRANSFER_CRYPTO.getMany(null, this.currency);
+
+        if (transfers.length === 0)
+        {
+            return {
+                status: 'success',
+                message: 'Already processed.'
+            };
+        }
+
         let receivers_list = [];
 
         transfers.forEach(transfer =>

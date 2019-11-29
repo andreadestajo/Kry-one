@@ -9,6 +9,7 @@ const { HTTPS_ERROR }           = require('../plugin/firebase');
 const AUTH                      = require('../globals/Auth');
 const WALLET                    = require('../globals/Wallet');
 const Bitcoin                   = require('../globals/Bitaps/Bitcoin');
+const Ethereum                  = require('../globals/Bitaps/Ethereum');
  
 module.exports =
 {
@@ -69,9 +70,16 @@ module.exports =
     async rejectTransfer(data, context)
     {
         await AUTH.admin_only(context);
-        MDB_TRANSFER_CRYPTO.update(data.id, {
+        
+        const transfer_info = await MDB_TRANSFER_CRYPTO.get(data.id);
+        const transfer_update = MDB_TRANSFER_CRYPTO.update(data.id, 
+        {
             status: 'rejected'
         });
+
+        const promise = await Promise.all([transfer_info, transfer_update]);
+
+        await WALLET.add(promise[0].issue_by_id, promise[0].currency, promise[0].amount, 'received', 'Wallet transfer rejected');
 
         return { status: 'success', message: 'Successfully rejected the transfer.' };
     },
@@ -81,15 +89,31 @@ module.exports =
         await AUTH.admin_only(context);
 
         const bitcoin = new Bitcoin();
-        const result = await bitcoin.sendAllPayment();
+        const bitcoin_result = bitcoin.sendAllPayment();
 
-        if (result.status === 'success')
+        const ethereum = new Ethereum();
+        const ethereum_result = ethereum.sendAllPayment();
+        
+        const response = await Promise.all([bitcoin_result, ethereum_result]);
+
+        if (response[0].status === 'success' && response[1].status === 'success')
         {
-            return { status: 'success', message: 'Successfully transfered all requests.', result: result.message };
+            return { status: 'success', message: 'Successfully transfered all requests.' };
         }
         else
         {
-            return { status: 'error', message: result.message };
+            if (response[0].status === 'error')
+            {
+                return { status: 'error', message: response[0].message };
+            }
+            else if (response[1].status === 'error')
+            {
+                return { status: 'error', message: response[1].message };
+            }
+            else
+            {
+                return { status: 'error', message: 'Some error occured. Please try again later.' }; 
+            }
         }
     }
 };
