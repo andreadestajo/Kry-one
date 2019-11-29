@@ -346,6 +346,8 @@
                     required,
                     async doesExists(referral_code)
                     {
+
+                        console.log(referral_code);
                         // Returns true if referral code belongs to an existing user.
                         return await DB_USER.getUserByReferralCode(referral_code).then(user =>
                         {
@@ -355,6 +357,7 @@
                     },
                     async isEligible(referral_code)
                     {
+                        console.log(referral_code);
                         // Returns true if eligible
                         return await DB_USER.getUserByReferralCode(referral_code).then(user =>
                         {
