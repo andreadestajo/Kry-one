@@ -14,6 +14,7 @@ const MDB_TRANSFER_WALLET    = require('../models/MDB_TRANSFER_WALLET');
 const MDB_KYC_VERIFICATION   = require('../models/MDB_KYC_VERIFICATION');
 const MDB_USER_NOTIFICATION  = require('../models/MDB_USER_NOTIFICATION');
 const MDB_ENLIST_KNIGHT      = require('../models/MDB_ENLIST_KNIGHT');
+const MDB_TRANSFER_CRYPTO    = require('../models/MDB_TRANSFER_CRYPTO');
 
 const {HTTPS_ERROR} = require('../plugin/firebase');
 const {knightRegistrationTemplate} = require('../references/ref_enlist_knight_email_template');
@@ -308,5 +309,84 @@ module.exports =
         }
 
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};
+    },
+    async transferCrypto(data, context)
+    {
+        function scientificToDecimal(num) {
+            const sign = Math.sign(num);
+            //if the number is in scientific notation remove it
+            if(/\d+\.?\d*e[\+\-]*\d+/i.test(num)) {
+                const zero = '0';
+                const parts = String(num).toLowerCase().split('e'); //split into coeff and exponent
+                const e = parts.pop(); //store the exponential part
+                let l = Math.abs(e); //get the number of zeros
+                const direction = e/l; // use to determine the zeroes on the left or right
+                const coeff_array = parts[0].split('.');
+                
+                if (direction === -1) {
+                    coeff_array[0] = Math.abs(coeff_array[0]);
+                    num = zero + '.' + new Array(l).join(zero) + coeff_array.join('');
+                }
+                else {
+                    const dec = coeff_array[1];
+                    if (dec) l = l - dec.length;
+                    num = coeff_array.join('') + new Array(l+1).join(zero);
+                }
+            }
+            
+            if (sign < 0) {
+                num = -num;
+            }
+    
+            return num;
+        }
+        
+        data.amount                     = parseFloat(data.amount);
+
+        if (data.amount < 0.0001)
+        {
+            HTTPS_ERROR('failed-precondition', `Minimum amount is 0.0001.`);
+        }
+
+        data.currency                   = data.currency.toLowerCase();
+        let description, type           = "";
+        let promise_list                = [];
+        let logged_in_user              = await AUTH.member_only(context);
+        let logged_in_user_wallet       = await MDB_USER_WALLET.get(logged_in_user.id, data.currency.toUpperCase());
+        let transfer_wallet             = {};
+
+        if(logged_in_user_wallet.wallet < data.amount)
+        {
+            HTTPS_ERROR('failed-precondition', `You don't have enough balance to proceed on this transaction.`);
+        }
+        else if(logged_in_user_wallet.address == data.address)
+        {
+            HTTPS_ERROR('failed-precondition', `Sending money to self is not allowed.`);
+        }
+        else
+        {
+            /* list of request to admin */
+            transfer_wallet                 = {};
+            transfer_wallet.amount          = Number(data.amount);
+            transfer_wallet.issue_by_id     = logged_in_user.id;
+            transfer_wallet.issue_by        = logged_in_user.full_name;
+            transfer_wallet.currency        = data.currency;
+            transfer_wallet.remarks         = data.remarks;
+            transfer_wallet.address         = data.address;
+            transfer_wallet.status          = "pending";
+            transfer_wallet.date_created    = new Date();
+
+            promise_list.push(MDB_TRANSFER_CRYPTO.add(transfer_wallet));
+
+            /* deduct wallet to sender */
+            description                     = `You have requested to transfer <b>${scientificToDecimal(transfer_wallet.amount)} ${data.currency}</b> to <b>${data.address}</b>.`;
+            type                            = "sent";
+
+            promise_list.push(WALLET.deduct(logged_in_user.id, transfer_wallet.currency, transfer_wallet.amount, type, description));
+
+            await Promise.all(promise_list);
+        }
+
+        return { status: "success", message: `Your request to transfer ${scientificToDecimal(transfer_wallet.amount)} ${transfer_wallet.currency.toUpperCase()} to ${data.address} has been submitted.` };
     }
 };

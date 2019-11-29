@@ -22,6 +22,7 @@ exports.transferWallet          = FUNCTIONS_HTTPS.onCall(member_controller.trans
 exports.upgradeAccount          = FUNCTIONS_HTTPS.onCall(member_controller.upgradeAccount);
 exports.readNewNotifications    = FUNCTIONS_HTTPS.onCall(member_controller.readNewNotifications);
 exports.enlistKnight            = FUNCTIONS_HTTPS.onCall(member_controller.enlistKnight);
+exports.transferCrypto          = FUNCTIONS_HTTPS.onCall(member_controller.transferCrypto);
 exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
 
 // Account
@@ -33,6 +34,8 @@ exports.resendEmailVerification = FUNCTIONS_HTTPS.onCall(account_controller.rese
 // Admin
 exports.promoteUser             = FUNCTIONS_HTTPS.onCall(admin_controller.promoteUser);
 exports.issueWallet             = FUNCTIONS_HTTPS.onCall(admin_controller.issueWallet);
+exports.rejectTransfer          = FUNCTIONS_HTTPS.onCall(admin_controller.rejectTransfer);
+exports.processTransfer         = FUNCTIONS_HTTPS.onCall(admin_controller.processTransfer);
 
 // Schedules
 exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onRun(schedule_controller.updateCurrency);

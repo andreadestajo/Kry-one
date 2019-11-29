@@ -48,5 +48,9 @@ service cloud.firestore
         {
             allow read, write;
         }
+        match /transferCrypto/{transferCryptoId}
+        {
+            allow read;
+        }
 	}
 }

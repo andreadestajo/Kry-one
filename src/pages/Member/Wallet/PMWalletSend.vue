@@ -140,7 +140,7 @@ import ref_currencies  from '../../../references/refs_currencies';
 import DB_USER_WALLET  from '../../../models/DB_USER_WALLET'
 import {arrayToObject} from "../../../utilities/ObjectUtils";
 
-import {FN_TRANSFER_WALLET} from "../../../references/refs_functions";
+import {FN_TRANSFER_WALLET, FN_TRANSFER_CRYPTO} from "../../../references/refs_functions";
 import {fbCall}             from "../../../utilities/Callables";
 
 import {
@@ -206,10 +206,42 @@ export default
 
             // Get user details
             const user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
-            if(!user) {return 0}
 
-            this.send_wallet_form.send_to_id = user.id;
-            this.transferWallet()
+            if (user)
+            {
+                this.send_wallet_form.send_to_id = user.id;
+                this.transferWallet();
+            }
+            else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH') // BTC AND ETH
+            {
+                this.transferCrypto();
+            }
+            else
+            {
+                this.$q.notify({ message: 'Address not found', color: 'red' });
+                this.$_hidePageLoading();
+            }
+        },
+        async transferCrypto()
+        {
+            let send_wallet            = {};
+            send_wallet.amount         = this.send_wallet_form.amount;
+            send_wallet.currency       = this.active_wallet.abb;
+            send_wallet.remarks        = this.send_wallet_form.remarks;
+            send_wallet.address        = this.send_wallet_form.send_to;
+            
+            try
+            {
+                let res = await fbCall(FN_TRANSFER_CRYPTO, send_wallet);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+                this.$router.push({name: 'member_wallet'})
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
         },
         async transferWallet()
         {
