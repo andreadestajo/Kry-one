@@ -217,8 +217,6 @@ module.exports =
     {
         const knight_data = JSON.parse(data);
 
-        // Computation before enlisting the knight goes here.
-
         // Prepare other data to be stored
         knight_data.created_at  = new Date(knight_data.created_at);
         knight_data.enlisted_by = context.auth.uid;
@@ -236,6 +234,11 @@ module.exports =
             HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
             return 0;
         }
+
+        // deduct wallet to account of user who is enlisting
+        const description = `You have spent <b>${FORMAT.numberFormat(knight_data.amount, { decimal: 8, currency: knight_data.payment_method.toUpperCase() })}</b> in order to enlist<b>${knight_data.full_name}</b>.`;
+        const type        = "purchased";
+        WALLET.deduct(context.auth.uid, knight_data.payment_method.toLowerCase(), knight_data.amount, type, description, context.auth.uid);
 
         // structure link
         const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
