@@ -69,10 +69,12 @@
                     await this.$bind('current_user_data'   , DB_USER.doc(authId));
                     await this.$bind('currency_data'       , DB_CURRENCY.collection());
                 } else {
-                    if(this.$route.params.hasOwnProperty('eid') || this.$route.params.hasOwnProperty('refCode')) {}
-                    else{
-                        this.$router.push({name: 'front_login'})
-                    }
+                    setTimeout(() => {
+                        console.log(this.$route.name);
+                        if(this.$route.name !== 'front_register' || this.$route.name !== 'front_login') {
+                            this.$router.push({name: 'front_login'})
+                        }
+                    }, 500);
                 }
                 this.is_page_loading = false;
             },
