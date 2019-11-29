@@ -84,7 +84,7 @@
             {label: 'Promotions'      , icon: 'people'                  , side: '', route: 'admin_promotions'},
             {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: 'admin_kyc_submits'},
             {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: 'admin_cashout_requests'},
-            {label: 'Transfer Request', icon: 'sync_alt'                , side: '', route: 'admin_transfer_requests'},
+            {label: 'Central Wallet'  , icon: 'sync_alt'                , side: '', route: 'admin_transfer_requests'},
             {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: 'admin_commissions'},
             {label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', route: 'admin_nobilities' },
             {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: 'admin_monarchy'},

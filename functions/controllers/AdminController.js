@@ -115,5 +115,25 @@ module.exports =
                 return { status: 'error', message: 'Some error occured. Please try again later.' }; 
             }
         }
+    },
+
+    async checkCentralWallet(data, context)
+    {
+        await AUTH.admin_only(context);
+
+        if (data.currency === 'btc')
+        {
+            const bitcoin = new Bitcoin();
+            return bitcoin.checkWallet();
+        }
+        else if (data.currency === 'eth')
+        {
+            const ethereum = new Ethereum();
+            return ethereum.checkWallet();
+        }
+        else
+        {
+            return null;
+        }
     }
 };

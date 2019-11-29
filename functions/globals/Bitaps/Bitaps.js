@@ -22,6 +22,7 @@ class Bitaps
 
         this.api_create_wallet_url = `${ this.api_url }/create/wallet/payment/address`;
         this.api_send_wallet_url = `${ this.api_url }/wallet/send/payment/${ this.wallet_id }`;
+        this.api_check_wallet = `${ this.api_url }/wallet/state/${ this.wallet_id }`;
         this.uid = uid;
     }
 
@@ -122,6 +123,27 @@ class Bitaps
                 status: 'error',
                 message: e.response.data.message
             };
+        }
+    }
+
+    async checkWallet()
+    {
+        try
+        {
+            const response = await axios.get(this.api_check_wallet, 
+            {
+                params:
+                {
+                    wallet_id: this.wallet_id
+                }
+            });
+
+            return response.data;
+        }
+        catch (e)
+        {
+            console.log(e.response.data);
+            return null;
         }
     }
 }
