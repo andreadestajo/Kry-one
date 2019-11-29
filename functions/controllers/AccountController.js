@@ -93,8 +93,7 @@ module.exports =
         })
         .catch(function (error)
         {
-            console.log(error);
-            HTTPS_ERROR('failed-precondition', error.errorInfo.message)
+            HTTPS_ERROR('invalid-argument', error.errorInfo.message)
         });
 
         // Throw error and halt process
