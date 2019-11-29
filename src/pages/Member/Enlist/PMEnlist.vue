@@ -198,7 +198,8 @@ export default
             {
                 this.confirm_dialog = false;
                 this.clearForm();
-                this.$_notify({message: 'Successfully Enlisted a Knight', mode: 'positive'})
+                this.$_notify({message: 'Successfully Enlisted a Knight', mode: 'positive'});
+                this.$router.push({name: 'member_dashboard'})
             })
             .catch(error =>
             {
