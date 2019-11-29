@@ -99,13 +99,20 @@ export default
                     options
                 );
 
-
                 // Get last document and assign to start_after
                 if(wallet_history.length)
                 {
                     this.last_history = wallet_history[wallet_history.length - 1];
+
+                    // warning. Change this too if you wanna change the default limit
+                    if(wallet_history.length < 10)
+                    {
+                        this.$refs.historyRef.stop()
+                    }
                 } else {
-                    this.$refs.historyRef.stop()
+                    this.$nextTick(function () {
+                        this.$refs.historyRef.stop()
+                    });
                 }
 
                 // Push to wallet_history

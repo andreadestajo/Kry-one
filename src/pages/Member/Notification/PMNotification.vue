@@ -94,6 +94,7 @@ export default
                     // Get last document and assign to start_after
                     this.last_history = notifications[notifications.length - 1];
 
+                    // warning. Change this too if you wanna change the default limit
                     if(notifications.length < 10)
                     {
                         this.$refs.notificationRef.stop()
