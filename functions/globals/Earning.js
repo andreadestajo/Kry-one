@@ -3,6 +3,7 @@ const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
+const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
 
@@ -19,6 +20,12 @@ module.exports =
             user_info       = res[0];
             downline_list   = res[1];
         });
+
+        if(!user_info)
+        {
+            console.log("no upline");
+            return 0;
+        }
 
         let next_nobility           = await MDB_NOBILITY.getNextTargetNobilityByRankOrder(user_info.nobility_info.rank_order);
 
@@ -64,7 +71,36 @@ module.exports =
 
             if(requirement_count >= next_nobility.required_direct)
             {
-                
+                let promise_list                    = [];
+
+                /* ready record rank up promotions */
+                let promotions                      = {};
+                promotions.previous_nobility_id     = user_info.nobility_id;
+                promotions.previous_nobility_title  = user_info.nobility_info.title;
+                promotions.nobility_id              = next_nobility.id;
+                promotions.nobility_title           = next_nobility.title;
+                promotions.method                   = "Requirement Met";
+                promotions.full_name                = user_info.full_name;
+                promotions.user_id                  = user_info.id;
+                promotions.payment_method           = "No Payment"
+                promotions.amount                   = 0;
+                promotions.required_price           = 0;  
+                promotions.created_date             = new Date();
+
+                promise_list.push(MDB_PROMOTION.add(promotions));
+
+                /* update rank of user */
+                let update_user                     =   {   nobility_id: next_nobility.id,
+                                                            nobility_info:  {   badge_color: next_nobility.badge_color,
+                                                                                id: next_nobility.id,
+                                                                                rank_order: next_nobility.rank_order,
+                                                                                title: next_nobility.title }
+                                                        };
+
+                promise_list.push(MDB_USER.update(user_info.id, update_user));
+
+                await Promise.all(promise_list);  
+                await this.updateRank(user_info.upline_id); //check upline if rank has gone up too
             }
         }
 

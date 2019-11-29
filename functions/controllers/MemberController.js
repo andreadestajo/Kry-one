@@ -195,7 +195,7 @@ module.exports =
                                                                                 title: target_nobility.title }
                                                         };
 
-                MDB_USER.update(logged_in_user.id, update_user);
+                promise_list.push(MDB_USER.update(logged_in_user.id, update_user));
             }
 
             /* give user corresponding UNIQ equivalent of purchase */
@@ -229,12 +229,26 @@ module.exports =
     {
         const knight_data = JSON.parse(data);
 
-        // Computation before enlisting the knight goes here.
-
         // Prepare other data to be stored
         knight_data.created_at  = new Date(knight_data.created_at);
         knight_data.enlisted_by = context.auth.uid;
         knight_data.status      = 'pending';
+
+        // Check value
+        const logged_in_user       = await AUTH.member_only(context);
+        let logged_in_user_wallet  = await MDB_USER_WALLET.get(logged_in_user.id, knight_data.payment_method.toUpperCase());
+        let target_nobility        = await MDB_NOBILITY.get(knight_data.nobility);
+        let conversion_rates       = await MDB_CURRENCY.get('XAU');
+        let required_price         = await conversion_rates[knight_data.payment_method.toUpperCase()] * target_nobility.price;
+
+        if(logged_in_user_wallet.wallet < knight_data.amount)
+        {
+            HTTPS_ERROR('failed-precondition', `You don't have enough ${knight_data.payment_method.toUpperCase()} balance to proceed on this transaction.`);
+        }
+        else if(data.amount < required_price.toFixed(8))
+        {
+            HTTPS_ERROR('failed-precondition', `The amount of ${knight_data.payment_method.toUpperCase()} you are trying to use is not enough to enlist a ${target_nobility.title}.`);
+        }
 
         // generate enlistment id based on email
         knight_data.eid = generateAccessCode(knight_data.email);
@@ -249,10 +263,52 @@ module.exports =
             return 0;
         }
 
+        // deduct wallet to account of user who is enlisting
+        const description = `You have spent <b>${FORMAT.numberFormat(knight_data.amount, { decimal: 8, currency: knight_data.payment_method.toUpperCase() })}</b> in order to enlist <b>${knight_data.full_name}</b>.`;
+        const type        = "purchased";
+        WALLET.deduct(context.auth.uid, knight_data.payment_method.toLowerCase(), knight_data.amount, type, description, context.auth.uid);
+
         // structure link
         const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
 
         return sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
+    },
+    async placeDownline(data, context)
+    {
+        let downline_to_place = await MDB_USER.get(data.user_id);
+        let check_position    = await MDB_USER.getBinaryDownline(data.upline_id, data.position);
+
+        //todo: do now allow to place account that are already placed
+
+        let upline_info       = await MDB_USER.get(data.upline_id);
+
+        if(downline_to_place.upline_id !== context.auth.uid)
+        {
+            HTTPS_ERROR('failed-precondition', `You can only place downline if you are the sponsor of that account.`);
+        }
+        else if(downline_to_place.hasOwnProperty('placement'))
+        {
+            HTTPS_ERROR('failed-precondition', `${downline_to_place.full_name} was already placed.`);
+        }
+        else if(check_position)
+        {
+            HTTPS_ERROR('failed-precondition', `Someone's already on the ${data.position} of ${upline_info.full_name}`);
+        }
+        else
+        {
+            let update_user                      = {};
+            update_user.placement_id             = upline_info.id;
+            update_user.placement_position       = data.position;
+            update_user.placement                = {};
+            update_user.placement.position       = data.position;
+            update_user.placement.upline_id      = upline_info.id;
+            update_user.placement.upline_name    = upline_info.full_name;
+            update_user.placement.date_placed    = new Date();
+
+            await MDB_USER.update(downline_to_place.id, update_user);
+        }
+
+        return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};
     },
     async transferCrypto(data, context)
     {

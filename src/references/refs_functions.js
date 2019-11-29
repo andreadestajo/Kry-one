@@ -12,7 +12,8 @@ FN_TRANSFER_WALLET       = `transferWallet`,
 FN_UPGRADE_ACCOUNT       = `upgradeAccount`,
 FN_READ_NEW_NOTIFICATION = `readNewNotifications`,
 FN_ENLIST_KNIGHT         = `enlistKnight`,
-FN_TRANSFER_CRYPTO       = `transferCrypto`;
+FN_TRANSFER_CRYPTO       = `transferCrypto`,
+FN_PLACE_DOWNLINE        = `placeDownline`;
 
 // Admin
 export const

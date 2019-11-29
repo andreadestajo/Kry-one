@@ -36,7 +36,7 @@
                     Contact Number
                 </div>
                 <q-input dense
-                         placeholder=""
+                         placeholder="+639982736473"
                          class="input"
                          outlined
                          stack-label
@@ -246,7 +246,11 @@
             {
                 return !this.registration_error.code
                     ? false
-                    : this.registration_error.message
+                        : this.registration_error.message === "TOO_SHORT"
+                    ? "Invalid Phone Number"
+                        : this.registration_error.code === "invalid-argument"
+                    ? "Invalid Phone Number"
+                        : this.registration_error.message
             }
         },
         methods:

@@ -1,14 +1,13 @@
 <template>
     <li>
-        <a href="#">
+        <a href="javascript:">
             <div @click="checkChildren()">
                 <div class="image"><q-img spinner-size="5px" :src="data.photo_url ? data.photo_url : `../statics/boy.jpg`"></q-img></div>
                 <div class="name">{{ data.full_name }}</div>
                 <div class="rank">{{ data.nobility_info.title }}</div>
             </div>
-            <input @click="copyLink(data.id)" type="text" v-model="data.id">
+            <!-- <input @click="copyLink(data.id)" type="text" v-model="data.id"> -->
         </a>
-        
 
         <ul v-if="has_children">
             <template v-if="childrens.length">
@@ -16,8 +15,8 @@
             </template>
             <template v-else>
                 <li style="width: 100%;">
-                    <a href="#">
-                        <div class="no-downline">+</div>
+                    <a href="javascript:" style="background-color: #aaa;">
+                        <div class="no-downline">No Downline</div>
                     </a>
                 </li>
             </template>

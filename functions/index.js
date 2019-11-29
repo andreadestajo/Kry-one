@@ -23,6 +23,7 @@ exports.upgradeAccount          = FUNCTIONS_HTTPS.onCall(member_controller.upgra
 exports.readNewNotifications    = FUNCTIONS_HTTPS.onCall(member_controller.readNewNotifications);
 exports.enlistKnight            = FUNCTIONS_HTTPS.onCall(member_controller.enlistKnight);
 exports.transferCrypto          = FUNCTIONS_HTTPS.onCall(member_controller.transferCrypto);
+exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);
