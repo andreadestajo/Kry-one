@@ -119,10 +119,20 @@ module.exports =
     },
     async upgradeAccount(data, context)
     {
-        //context.auth.uid                = 'RQZnnBRxX7fisDKn3c4HZPxaOUK2'; //temporary for testing
         data.amount                     = parseFloat(data.amount);
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
+
+        if(logged_in_user.roles.includes('admin'))
+        {
+            if(data.uid)
+            {
+                context.auth.uid = data.uid;
+            }
+
+            logged_in_user = await AUTH.member_only(context);
+        }
+
         let logged_in_user_wallet       = MDB_USER_WALLET.get(logged_in_user.id, data.payment_method.toUpperCase());
         let target_nobility             = MDB_NOBILITY.get(data.target_nobility);
         let current_nobility            = MDB_NOBILITY.get(logged_in_user.nobility_id);
@@ -140,17 +150,18 @@ module.exports =
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
-        
+
         if(logged_in_user_wallet.wallet < data.amount)
         {
             HTTPS_ERROR('failed-precondition', `You don't have enough ${data.payment_method.toUpperCase()} balance to proceed on this transaction.`);
         }
-        else if(data.amount < required_price)
+        else if(data.amount < required_price.toFixed(8))
         {
             HTTPS_ERROR('failed-precondition', `The amount of ${data.payment_method.toUpperCase()} you are trying to use is not enough to reach ${target_nobility.title}.`);
         }
         else
         {
+
             /* ready record rank up promotions */
             let promotions                      = {};
             promotions.previous_nobility_id     = current_nobility.id;
@@ -183,7 +194,7 @@ module.exports =
                                                                                 title: target_nobility.title }
                                                         };
 
-                MDB_USER.update(logged_in_user.id, update_user);
+                promise_list.push(MDB_USER.update(logged_in_user.id, update_user));
             }
 
             /* give user corresponding UNIQ equivalent of purchase */
@@ -194,8 +205,8 @@ module.exports =
 
             /* UNILEVEL EARNING UPON UNIQ PURCHASE */
             await EARNING.unilevel(logged_in_user, data.amount);
-
             await Promise.all(promise_list);     
+            await EARNING.updateRank(logged_in_user.upline_id);
         }
 
 

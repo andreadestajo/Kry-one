@@ -1,10 +1,14 @@
 <template>
     <li>
-        <a @click="checkChildren()" href="#">
-            <div class="image"><q-img spinner-size="5px" :src="data.photo_url ? data.photo_url : `../statics/boy.jpg`"></q-img></div>
-            <div class="name">{{ data.full_name }}</div>
-            <div class="rank">{{ data.nobility_info.title }}</div>
+        <a href="#">
+            <div @click="checkChildren()">
+                <div class="image"><q-img spinner-size="5px" :src="data.photo_url ? data.photo_url : `../statics/boy.jpg`"></q-img></div>
+                <div class="name">{{ data.full_name }}</div>
+                <div class="rank">{{ data.nobility_info.title }}</div>
+            </div>
+            <input @click="copyLink(data.id)" type="text" v-model="data.id">
         </a>
+        
 
         <ul v-if="has_children">
             <template v-if="childrens.length">
@@ -55,6 +59,16 @@ export default
                 this.has_children = true;
                 this.$q.loading.hide();
             }
+        },
+        copyLink(id)
+        {
+            const el = document.createElement('textarea');
+            el.value = id;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert(id + " copied");
         }
     },
     computed: { }
