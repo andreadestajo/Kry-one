@@ -13,7 +13,7 @@
                 </q-toolbar-title>
 
                 <q-btn flat round dense icon="notifications">
-                    <q-badge floating color="red">2</q-badge>
+                    <q-badge floating color="red" v-if="0">2</q-badge>
                 </q-btn>
             </q-toolbar>
         </q-header>

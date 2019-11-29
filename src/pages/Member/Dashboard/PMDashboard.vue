@@ -6,7 +6,12 @@
         <k-card class="dashboard__nobility q-mt-md">
             <div class="group">
                 <div class="group-label">Your current nobility</div>
-                <div class="group-value current">{{$_current_user_data.nobility_info.title.toUpperCase()}}</div>
+                <div class="group-value current">
+                    <q-spinner v-if="!$_current_user_data.hasOwnProperty('nobility_info')" color="primary" size="1em"/>
+                    <span v-if="$_current_user_data.hasOwnProperty('nobility_info')">
+                        {{$_current_user_data.nobility_info.title.toUpperCase()}}
+                    </span>
+                </div>
             </div>
             <div class="group q-pa-sm" v-if="!Object.keys(target_nobility_info).length">
                 <q-spinner color="primary" size="2em"/>
@@ -131,12 +136,12 @@ export default
     components: { KCard },
     data: () =>
     ({
-        target_nobility : '',
+        target_nobility      : '',
         target_nobility_info : {},
-        user_wallet     : [],
-        user_earning    : [],
-        placement_message : false,
-        paid_downline   : [],
+        user_wallet          : [],
+        user_earning         : [],
+        placement_message    : false,
+        paid_downline        : [],
     }),
     computed:
     {

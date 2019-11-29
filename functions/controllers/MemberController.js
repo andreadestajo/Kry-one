@@ -124,7 +124,7 @@ module.exports =
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
 
-        if(logged_in_user.roles.includes('admin'))
+        if(logged_in_user.hasOwnProperty('roles') && logged_in_user.roles.includes('admin'))
         {
             if(data.uid)
             {
