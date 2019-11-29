@@ -15,7 +15,7 @@
 
         <!-- PLACE DOWNLINE DIALOG -->
         <q-dialog class="placement-dialog" v-model="placement_dialog">
-            <q-card class="q-pa-md" style="width: 400px;">
+            <q-card v-if="unplaced_downline.length > 0" class="q-pa-md" style="width: 400px;">
                 <div class="placement-dialog__form">
                     <div class="label">Choose Downline to Place</div>
                     <q-select outlined class="input"
@@ -36,12 +36,20 @@
                 </div>
                 
             </q-card>
+
+            <q-card v-if="unplaced_downline.length == 0" class="q-pa-md" style="width: 400px;">
+                <div>
+                    <div style="text-align: center;">You don't have any pending downline to place.</div>
+                </div>
+            </q-card>
         </q-dialog>
     </li>
 </template>
 
 <script>
-import DB_USER from "../../../models/DB_USER";
+import DB_USER                  from "../../../models/DB_USER";
+import { fbCall }               from "../../../utilities/Callables";
+import { FN_PLACE_DOWNLINE }    from "../../../references/refs_functions";
 
 export default
 {
@@ -68,9 +76,27 @@ export default
     },
     methods: 
     {
-        placeDownline()
+        async placeDownline()
         {
+            this.$q.loading.show()
+            let placement_info          = {};
 
+            placement_info.user_id      = this.downline_to_place.id; 
+            placement_info.position     = this.position; 
+            placement_info.upline_id    = this.upline.id;
+
+            try
+            {
+                let res = await fbCall(FN_PLACE_DOWNLINE, placement_info);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$q.loading.hide();
+            this.placement_dialog = false;
         },
         placementConfirmation()
         {

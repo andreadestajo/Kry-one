@@ -82,6 +82,9 @@ export default
     },
     async mounted() 
     { 
+        this.binary_left = await DB_USER.getBinaryDownline(this.$_current_user_data.id, 'left');
+        this.binary_right = await DB_USER.getBinaryDownline(this.$_current_user_data.id, 'right');
+
         await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id));
         this.$q.loading.hide();
         this.$refs.tree.scrollLeft = (this.$refs.tree.scrollWidth - this.$refs.tree.clientWidth) / 2;

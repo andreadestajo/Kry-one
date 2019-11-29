@@ -22,6 +22,7 @@ exports.transferWallet          = FUNCTIONS_HTTPS.onCall(member_controller.trans
 exports.upgradeAccount          = FUNCTIONS_HTTPS.onCall(member_controller.upgradeAccount);
 exports.readNewNotifications    = FUNCTIONS_HTTPS.onCall(member_controller.readNewNotifications);
 exports.enlistKnight            = FUNCTIONS_HTTPS.onCall(member_controller.enlistKnight);
+exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);
