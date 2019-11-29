@@ -36,7 +36,8 @@
                 <k-field label="Payment Method">
                     <q-select  outlined class="input" dense
                                 v-model="form.payment_method"
-                                :options="payment_options" 
+                                :options="payment_options"
+                                @input="computeTotalAmount"
                                 error-message="Please choose a payment method."
                                 option-value="value"
                                 option-label="label">
@@ -47,11 +48,25 @@
                 <k-field label="Choose Nobility">
                     <q-select  outlined class="input" dense
                                 v-model="form.nobility"
-                                :options="nobility_options" 
+                                :options="nobility_options"
+                                @input="computeTotalAmount"
                                 error-message="Please choose a nobility."
                                 option-value="value"
                                 option-label="label">
                     </q-select>
+                </k-field>
+
+                <!-- AMOUNT -->
+                <k-field label="You will pay">
+                    <q-input  :value="form.amount"
+                              readonly
+                              :error="$v.form.amount.$error"
+                              :error-message="amountError"
+                              dense placeholder="You will pay" class="input" outlined stack-label>
+                        <template v-slot:append>
+                            <div class="currency-append">{{form.payment_method.abb}}</div>
+                        </template>
+                    </q-input>
                 </k-field>
 
                 <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
@@ -67,8 +82,8 @@
                         <div class="form-title">Confirm Enlist Knight</div>
                         <div class="form-group">
                             <div class="label">You need to pay</div>
-                            <div class="value">0.000000123 BTC</div>
-                            <div class="conversion"><k-amount-conversion :amount="0.000123" coin="BTC"/></div>
+                            <div class="value">{{this.form.amount}} {{this.form.payment_method.abb}}</div>
+                            <div class="conversion"><k-amount-conversion :amount="parseFloat(this.form.amount)" :coin="this.form.payment_method.abb"/></div>
                         </div>
                         <div class="form-group">
                             <div class="label">You are registering</div>
@@ -93,10 +108,11 @@ import KCard    from '../../../components/Member/KCard'
 
 import {FN_ENLIST_KNIGHT} from "../../../references/refs_functions";
 import {fbCall}           from "../../../utilities/Callables";
-import {required, email}  from "vuelidate/src/validators";
 
 import DB_NOBILITY from "../../../models/DB_NOBILITY";
 import DB_USER     from "../../../models/DB_USER"
+
+import {required, email, maxValue, minValue}  from "vuelidate/src/validators";
 
 export default
 {
@@ -107,16 +123,17 @@ export default
         {
             full_name       : '',
             email           : '',
-            payment_method  : '',
+            payment_method  : { label: 'Bitcoin'  , value: 'btc', abb: 'BTC'},
             sponsor         : '',
             nobility        : '',
+            amount          : ''
         },
         sponsor_name: '',
         nobilities: [],
         confirm_dialog: false,
         payment_options: [
-            { label: 'Bitcoin'  , value: 'btc' },
-            { label: 'Ethereum' , value: 'eth' },
+            { label: 'Bitcoin'  , value: 'btc', abb: 'BTC' },
+            { label: 'Ethereum' , value: 'eth', abb: 'ETH' },
         ],
     }),
     computed:
@@ -147,7 +164,16 @@ export default
                     : !this.$v.form.sponsor.isEligible
                 ? 'Not Eligible to be a sponsor.'
                     : `${this.sponsor_name}`
-        }
+        },
+        amountError()
+        {
+            return !this.$v.form.amount.required
+                ? 'Amount is required'
+                    : !this.$v.form.amount.maxValue
+                ? 'Insufficient balance'
+                    : !this.$v.form.amount.minValue
+                ? 'Amount must be greater than 0' : ''
+        },
     },
     methods:
     {
@@ -181,6 +207,16 @@ export default
 
             this.$_hidePageLoading();
         },
+        computeTotalAmount()
+        {
+            const nobility = this.nobilities.filter(n => n.id === this.form.nobility.value)[0];
+
+            if(!nobility) {return 0}
+
+            // Set amount
+            this.form.amount = this.$_convertRate(nobility.price, 'XAU', this.form.payment_method.abb);
+            this.$v.form.amount.$touch();
+        },
         clearForm()
         {
             this.form.full_name = '';
@@ -200,42 +236,50 @@ export default
         
         this.$_hidePageLoading();
     },
-    validations:
+    validations()
     {
-        form:
-        {
-            full_name: {required},
-            email:
+        return {
+            form:
             {
-                required,
-                email,
-                async isUnique(email)
+                full_name: {required},
+                email:
                 {
-                    // Returns true if no user found, meaning the email is available.
-                    return await DB_USER.getUserByEmailAddress(email)
-                        .then(user => !user)
-                }
-            },
-            sponsor :
-            {
-                required,
-                async doesExists(sponsor)
-                {
-                    // Returns true if referral code belongs to an existing user.
-                    return await DB_USER.getUserByReferralCode(sponsor).then(user =>
+                    required,
+                    email,
+                    async isUnique(email)
                     {
-                        this.sponsor_name = user && !user.error ? user.full_name : null;
-                        return !!user
-                    })
+                        // Returns true if no user found, meaning the email is available.
+                        return await DB_USER.getUserByEmailAddress(email)
+                            .then(user => !user)
+                    }
                 },
-                async isEligible(referral_code)
+                sponsor :
                 {
-                    // Returns true if eligible
-                    return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                    required,
+                    async doesExists(sponsor)
                     {
-                        this.sponsor_name = user && !user.error ? user.full_name : null;
-                        return user && user.nobility_info.rank_order > 1;
-                    })
+                        // Returns true if referral code belongs to an existing user.
+                        return await DB_USER.getUserByReferralCode(sponsor).then(user =>
+                        {
+                            this.sponsor_name = user && !user.error ? user.full_name : null;
+                            return !!user
+                        })
+                    },
+                    async isEligible(referral_code)
+                    {
+                        // Returns true if eligible
+                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        {
+                            this.sponsor_name = user && !user.error ? user.full_name : null;
+                            return user && user.nobility_info.rank_order > 1;
+                        })
+                    }
+                },
+                amount:
+                {
+                    required,
+                    maxValue: maxValue(this.$_current_user_wallet[this.form.payment_method.abb].wallet || 0),
+                    minValue: minValue(0.00000000000001)
                 }
             }
         }
