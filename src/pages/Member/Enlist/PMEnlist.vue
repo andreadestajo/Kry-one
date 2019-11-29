@@ -131,6 +131,7 @@ export default
         sponsor_name: '',
         nobilities: [],
         confirm_dialog: false,
+        is_eligible   : false,
         payment_options: [
             { label: 'Bitcoin'  , value: 'btc', abb: 'BTC' },
             { label: 'Ethereum' , value: 'eth', abb: 'ETH' },
@@ -264,27 +265,25 @@ export default
                     required,
                     async doesExists(sponsor)
                     {
+                        console.log('test');
                         // Returns true if referral code belongs to an existing user.
                         const does_exists = await DB_USER.getUserByReferralCode(sponsor).then(user =>
                         {
+                            this.is_eligible = false;
+
                             this.sponsor_name = user && !user.error ? user.full_name : null;
+
+                            // check if eligible
+                            this.is_eligible = user && !user.error ? user.nobility_info.rank_order > 1 : false;
+
                             return !!user
                         });
 
-                        return Promise.resolve(does_exists);
+                        return does_exists;
                     },
                     async isEligible(referral_code)
                     {
-                        if(this.$v.form.sponsor.doesExists.$pending || this.$v.form.sponsor.doesExists.$error) {return true}
-
-                        // Returns true if eligible
-                        const is_eligible = await DB_USER.getUserByReferralCode(referral_code).then(user =>
-                        {
-                            this.sponsor_name = user && !user.error ? user.full_name : null;
-                            return user && user.nobility_info.rank_order > 1;
-                        });
-
-                        return Promise.resolve(is_eligible);
+                        return this.is_eligible
                     }
                 },
                 amount:

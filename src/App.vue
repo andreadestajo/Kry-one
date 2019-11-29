@@ -71,7 +71,7 @@
                 } else {
                     setTimeout(() => {
                         console.log(this.$route.name);
-                        if(this.$route.name !== 'front_register' || this.$route.name !== 'front_login') {
+                        if(this.$route.name !== 'front_register' && this.$route.name !== 'front_login') {
                             this.$router.push({name: 'front_login'})
                         }
                     }, 500);
