@@ -2,6 +2,16 @@
     <q-page class="q-pa-lg registration">
         <k-header icon="fa fa-user" detail="Details about you">Profile</k-header>
 
+        <div class="registration__profile full-width column no-wrap justify-center items-center content-center q-pb-lg">
+            <span class="avatar q-pa-sm">
+                <q-avatar size="120px">
+                    <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
+                </q-avatar>
+            </span>
+            <span class="name text-weight-bold">{{$_current_user_data ? $_current_user_data.email : ''}}</span>
+            <span class="email">{{$_current_user_data ? $_current_user_data.full_name : ''}}</span>
+        </div>
+
         <q-form class="q-pa-lg registration__form">
             <div class="q-pa-none label">
                 Full Name
@@ -111,11 +121,29 @@
                 full_name      : '',
                 contact_number : '',
                 email          : '',
-                password       : '',
                 country        : '',
                 currency       : ''
             }
         }),
+        mounted()
+        {
+            // Initilize Data here
+            const currency = this.$options.currency_options
+                .filter(c => c.value === this.$_current_user_data.currency)[0];
+
+            const initial_data =
+            {
+                full_name      : this.$_current_user_data.full_name,
+                contact_number : this.$_current_user_data.contact_number,
+                email          : this.$_current_user_data.email,
+                country        : this.$_current_user_data.country,
+                currency       : currency ? currency : null
+            };
+
+            this.form = Object.assign(this.form, initial_data);
+
+            console.log(this.$_current_user_data);
+        },
         validations:
         {
             form:
