@@ -9,7 +9,9 @@
                 <div class="code-value">{{$_current_user_data.referral_code}}</div>
             </div>
             <div class="share">
-                <q-btn @click="copyLink" color="primary">Copy Share Link</q-btn>
+                <q-btn @click="copyLink" color="primary" label="Copy Share Link">
+                    <q-tooltip v-if="is_copied" :value="is_copied">Copied</q-tooltip>
+                </q-btn>
             </div>
             <div class="how">
                 <div class="main">HOW IT WORKS</div>
@@ -43,6 +45,7 @@ export default
     filters: { },
     data:() =>
     ({
+        is_copied: false
     }),
     computed: { },
     methods:
@@ -59,6 +62,12 @@ export default
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
+
+            this.is_copied = true;
+
+            setTimeout(() => {
+                this.is_copied = false;
+            }, 2000)
         },
     },
     mounted() { },
