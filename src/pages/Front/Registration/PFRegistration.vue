@@ -358,7 +358,7 @@
                             },
                             async isEligible(referral_code)
                             {
-                                if(this.$v.registration_form_data.referral_code.doesExists.$pending || !this.$v.registration_form_data.referral_code.doesExists.$error) {return true}
+                                if(this.$v.registration_form_data.referral_code.doesExists.$pending || this.$v.registration_form_data.referral_code.doesExists.$error) {return true}
 
                                 // Returns true if eligible
                                 const is_eligible = await DB_USER.getUserByReferralCode(referral_code).then(user =>

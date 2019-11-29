@@ -274,7 +274,7 @@ export default
                     },
                     async isEligible(referral_code)
                     {
-                        if(this.$v.form.sponsor.doesExists.$pending || !this.$v.form.sponsor.doesExists.$error) {return true}
+                        if(this.$v.form.sponsor.doesExists.$pending || this.$v.form.sponsor.doesExists.$error) {return true}
 
                         // Returns true if eligible
                         const is_eligible = await DB_USER.getUserByReferralCode(referral_code).then(user =>
