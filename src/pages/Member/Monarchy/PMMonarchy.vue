@@ -44,8 +44,8 @@
                                 </a>
                             </div>
                             <ul>
-                                <Children-Binary position="left" :data="binary_left" />
-                                <Children-Binary position="right" :data="binary_right" />
+                                <Children-Binary :unplaced_downline="unplaced_downline" :upline="this.$_current_user_data" position="left" :data="binary_left" />
+                                <Children-Binary :unplaced_downline="unplaced_downline" :upline="this.$_current_user_data" position="right" :data="binary_right" />
                             </ul>
                         </li>
                     </ul>

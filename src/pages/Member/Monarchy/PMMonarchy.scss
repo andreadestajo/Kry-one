@@ -139,4 +139,21 @@
 
     /*Thats all. I hope you enjoyed it.
     Thanks :)*/
+
+
+}
+
+.placement-dialog {
+    color: $text-two;
+
+    &__form {
+        .label {
+            margin-bottom: 5px;
+        }
+    }
+
+    &__message {
+        text-align: center;
+        padding-top: 20px;
+    }
 }

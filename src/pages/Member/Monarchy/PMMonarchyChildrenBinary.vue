@@ -7,11 +7,36 @@
                 <div class="rank">{{ data.nobility_info.title }}</div>
             </div>
         </a>
-        <a v-if="!data" href="javascript:" style="background-color: #aaa">
+        <a v-if="!data" href="javascript:" style="background-color: #aaa" @click="placementConfirmation()">
             <div>
                 + Place Downline
             </div>
         </a>
+
+        <!-- PLACE DOWNLINE DIALOG -->
+        <q-dialog class="placement-dialog" v-model="placement_dialog">
+            <q-card class="q-pa-md" style="width: 400px;">
+                <div class="placement-dialog__form">
+                    <div class="label">Choose Downline to Place</div>
+                    <q-select outlined class="input"
+                            v-model="downline_to_place"
+                            dense
+                            :options="unplaced_downline"
+                            option-value="id"
+                            option-label="full_name">
+                    </q-select>
+                </div>
+
+                <div class="placement-dialog__message" v-if="downline_to_place">
+                    <div>Are you sure you want to place<br><b>{{ downline_to_place.full_name }}</b> on <b>{{ position }}</b> of <b>{{ upline.full_name }}</b>?</div>
+                    <div class="q-mt-sm">
+                        <q-btn @click="placeDownline()" color="primary" unelevated class="q-mr-md">Confirm</q-btn>
+                        <q-btn @click="placement_dialog = false" unelevated>Cancel</q-btn>
+                    </div>
+                </div>
+                
+            </q-card>
+        </q-dialog>
     </li>
 </template>
 
@@ -26,12 +51,16 @@ export default
     {
         data: Object,
         position: String,
+        upline: Object,
+        unplaced_downline: Array,
     },
     data:() =>(
     {
         has_children: false,
         is_hidden: false,
-        childrens: null
+        childrens: null,
+        placement_dialog: false,
+        downline_to_place: null,
     }),
     mounted()
     {
@@ -39,6 +68,16 @@ export default
     },
     methods: 
     {
+        placeDownline()
+        {
+
+        },
+        placementConfirmation()
+        {
+            this.downline_to_place = null;
+            this.placement_dialog = true;
+            console.log(this.upline, this.position);
+        },
         async checkChildren()
         {
             if (this.has_children)
