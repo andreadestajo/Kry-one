@@ -49,6 +49,7 @@
         <!--MODALS-->
         <pa-users-accelerate-modal   ref="usersAccelerateModalRef"/>
         <pa-users-issue-wallet-modal ref="usersIssueWalletModal"/>
+        <pa-users-edit-modal         ref="usersEditModalRef"/>
 
         <router-view></router-view>
     </q-page>
@@ -60,6 +61,7 @@
 
     import PaUsersAccelerateModal  from './PAUsersAccelerateModal'
     import PaUsersIssueWalletModal from './PAUsersIssueWalletModal'
+    import PaUsersEditModal        from './PAUsersEditModal'
 
     import DB_USER   from '../../../models/DB_USER'
 
@@ -70,7 +72,8 @@
             KHeader,
             KTable,
             PaUsersAccelerateModal,
-            PaUsersIssueWalletModal
+            PaUsersIssueWalletModal,
+            PaUsersEditModal
         },
         data: () =>
         ({
@@ -97,6 +100,7 @@
                         this.$refs.usersIssueWalletModal.showUsersIssueWalletModal(item.data);
                         break;
                     case 'edit_user':
+                        this.$refs.usersEditModalRef.showUsersEditModal(item.data);
                         break;
                     case 'accelerate_user':
                         this.$refs.usersAccelerateModalRef.showUsersAccelerateModal(item.data);

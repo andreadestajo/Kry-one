@@ -321,47 +321,55 @@
                 this.$_hidePageLoading();
             }
         },
-        validations:
+        validations()
         {
-            registration_form_data:
-            {
-                full_name      : {required},
-                contact_number : {required},
-                password       : {required, minLength: minLength(6)},
-                country        : {required},
-                currency       : {required},
-                email          :
+            return {
+                registration_form_data:
                 {
-                    required,
-                    email,
-                    async isUnique(email)
+                    full_name      : {required},
+                    contact_number : {required},
+                    password       : {required, minLength: minLength(6)},
+                    country        : {required},
+                    currency       : {required},
+                    email          :
                     {
-                        // Returns true if no user found, meaning the email is available.
-                        return await DB_USER.getUserByEmailAddress(email)
-                            .then(user => !user)
-                    }
-                },
-                referral_code :
-                {
-                    required,
-                    async doesExists(referral_code)
+                            required,
+                            email,
+                            async isUnique(email)
+                            {
+                                // Returns true if no user found, meaning the email is available.
+                                return await DB_USER.getUserByEmailAddress(email)
+                                    .then(user => !user)
+                            }
+                        },
+                    referral_code :
                     {
-                        // Returns true if referral code belongs to an existing user.
-                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
-                        {
-                            this.referral_name = user && !user.error ? user.full_name : null;
-                            return !!user
-                        })
-                    },
-                    async isEligible(referral_code)
-                    {
-                        // Returns true if eligible
-                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
-                        {
-                            this.referral_name = user && !user.error ? user.full_name : null;
-                            return user && user.nobility_info.rank_order > 1;
-                        })
-                    }
+                            required,
+                            async doesExists(referral_code)
+                            {
+                                // Returns true if referral code belongs to an existing user.
+                                const does_exist = await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                                {
+                                    this.referral_name = user && !user.error ? user.full_name : null;
+                                    return !!user
+                                });
+
+                                return Promise.resolve(does_exist)
+                            },
+                            async isEligible(referral_code)
+                            {
+                                if(this.$v.registration_form_data.referral_code.doesExists.$pending || !this.$v.registration_form_data.referral_code.doesExists.$error) {return true}
+
+                                // Returns true if eligible
+                                const is_eligible = await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                                {
+                                    this.referral_name = user && !user.error ? user.full_name : null;
+                                    return user && user.nobility_info.rank_order > 1;
+                                });
+
+                                return Promise.resolve(is_eligible)
+                            }
+                        }
                 }
             }
         },

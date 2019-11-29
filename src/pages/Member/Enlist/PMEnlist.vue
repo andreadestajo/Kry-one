@@ -233,7 +233,12 @@ export default
         this.form.payment_method = this.payment_options[0];
         await DB_NOBILITY.bindNobilities(this);
         this.form.nobility = this.nobility_options[0];
-        
+
+        this.$v.form.sponsor.$touch()
+
+        // Initial Computation
+        this.computeTotalAmount();
+
         this.$_hidePageLoading();
     },
     validations()
@@ -259,20 +264,26 @@ export default
                     async doesExists(sponsor)
                     {
                         // Returns true if referral code belongs to an existing user.
-                        return await DB_USER.getUserByReferralCode(sponsor).then(user =>
+                        const does_exists = await DB_USER.getUserByReferralCode(sponsor).then(user =>
                         {
                             this.sponsor_name = user && !user.error ? user.full_name : null;
                             return !!user
-                        })
+                        });
+
+                        return Promise.resolve(does_exists);
                     },
                     async isEligible(referral_code)
                     {
+                        if(this.$v.form.sponsor.doesExists.$pending || !this.$v.form.sponsor.doesExists.$error) {return true}
+
                         // Returns true if eligible
-                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        const is_eligible = await DB_USER.getUserByReferralCode(referral_code).then(user =>
                         {
                             this.sponsor_name = user && !user.error ? user.full_name : null;
                             return user && user.nobility_info.rank_order > 1;
-                        })
+                        });
+
+                        return Promise.resolve(is_eligible);
                     }
                 },
                 amount:

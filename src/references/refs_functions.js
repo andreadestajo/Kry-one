@@ -13,7 +13,8 @@ FN_UPGRADE_ACCOUNT       = `upgradeAccount`,
 FN_READ_NEW_NOTIFICATION = `readNewNotifications`,
 FN_ENLIST_KNIGHT         = `enlistKnight`,
 FN_TRANSFER_CRYPTO       = `transferCrypto`,
-FN_PLACE_DOWNLINE        = `placeDownline`;
+FN_PLACE_DOWNLINE        = `placeDownline`,
+FN_UPDATE_PROFILE        = `updateProfile`;
 
 // Admin
 export const

@@ -17,6 +17,7 @@
         <div class="q-pa-lg">
             <q-btn class="q-mb-sm q-mx-sm" @click="testUserCreate()">User Create Test</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="bindUserInformation()">Bind User Information</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="bindAndTurnToPledger()">Bind and Turn to Pledger</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('btc')">Issue Bitcoin</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('eth')">Issue Ethereum</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('xau')">Issue Uniq</q-btn>
@@ -189,6 +190,7 @@ export default
 
         async upgradeAccount(target_rank, payment_method, amount)
         {
+            console.log(target_rank, payment_method, amount);
             this.$_showPageLoading();
 
             let upgrade_account                 = {};
@@ -270,15 +272,25 @@ export default
             this.registration_form_data.country         = {name: 'Afghanistan', code: 'AF'};
             this.registration_form_data.referral_code   = this.user_info ? this.user_info.referral_code : "3E1jmPok";
 
-            this.clear();
+            try
+            {
+                let res = await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data});
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
 
-            let res = await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data});
-            this.last_id = res.data;
-            
-
-            this.bindUserInformation();
+            //this.last_id = res.data;
+            //this.bindUserInformation();
             this.$_hidePageLoading();
             
+        },
+        async bindAndTurnToPledger()
+        {
+            await this.bindUserInformation();
+            await this.issueWallet('btc');
+            await this.upgradeAccount('X4aeO9PYZL4eWSwV2tl9', 'BTC', 0.00601377);
         },
         async bindUserInformation()
         {

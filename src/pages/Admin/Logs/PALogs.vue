@@ -27,7 +27,7 @@
             <template slot="table_rows" slot-scope="logs">
                 <q-td v-for="column in $options.columns.map(c => c.field)"
                       :key="column">
-                    {{logs.data[column]}}
+                    <span v-html="logs.data[column]"></span>
                 </q-td>
             </template>
         </k-table>
