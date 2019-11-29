@@ -13,9 +13,14 @@
             </div>
         </a>
 
+        <ul v-if="has_children">
+            <Children-Binary :unplaced_downline="unplaced_downline" :upline="data" position="left" :data="binary_left" />
+            <Children-Binary :unplaced_downline="unplaced_downline" :upline="data" position="right" :data="binary_right" />
+        </ul>
+
         <!-- PLACE DOWNLINE DIALOG -->
         <q-dialog class="placement-dialog" v-model="placement_dialog">
-            <q-card class="q-pa-md" style="width: 400px;">
+            <q-card v-if="unplaced_downline.length > 0" class="q-pa-md" style="width: 400px;">
                 <div class="placement-dialog__form">
                     <div class="label">Choose Downline to Place</div>
                     <q-select outlined class="input"
@@ -34,18 +39,25 @@
                         <q-btn @click="placement_dialog = false" unelevated>Cancel</q-btn>
                     </div>
                 </div>
-                
+            </q-card>
+
+            <q-card v-if="unplaced_downline.length == 0" class="q-pa-md" style="width: 400px;">
+                <div>
+                    <div style="text-align: center; ">You don't have any pending downline to place.</div>
+                </div>
             </q-card>
         </q-dialog>
     </li>
 </template>
 
 <script>
-import DB_USER from "../../../models/DB_USER";
+import DB_USER                  from "../../../models/DB_USER";
+import { fbCall }               from "../../../utilities/Callables";
+import { FN_PLACE_DOWNLINE }    from "../../../references/refs_functions";
 
 export default
 {
-    name: 'Children',
+    name: 'ChildrenBinary',
     filters: { },
     props:
     {
@@ -54,6 +66,7 @@ export default
         upline: Object,
         unplaced_downline: Array,
     },
+   
     data:() =>(
     {
         has_children: false,
@@ -61,6 +74,10 @@ export default
         childrens: null,
         placement_dialog: false,
         downline_to_place: null,
+        binary_left: null,
+        binary_right: null,
+        binary_left_query: [],
+        binary_right_query: [],
     }),
     mounted()
     {
@@ -68,9 +85,27 @@ export default
     },
     methods: 
     {
-        placeDownline()
+        async placeDownline()
         {
+            this.$q.loading.show()
+            let placement_info          = {};
 
+            placement_info.user_id      = this.downline_to_place.id; 
+            placement_info.position     = this.position; 
+            placement_info.upline_id    = this.upline.id;
+
+            try
+            {
+                let res = await fbCall(FN_PLACE_DOWNLINE, placement_info);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$q.loading.hide();
+            this.placement_dialog = false;
         },
         placementConfirmation()
         {
@@ -80,18 +115,26 @@ export default
         },
         async checkChildren()
         {
-            if (this.has_children)
-            {
-                this.has_children = false;
-                this.$unbind('childrens');
-            }
-            else
-            {
-                this.$q.loading.show();
-                await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.data.id));
-                this.has_children = true;
-                this.$q.loading.hide();
-            }
+            this.$q.loading.show();
+            await this.$bind('binary_left_query', DB_USER.collection().where("placement_id", "==", this.data.id).where("placement_position", "==", 'left'));
+            await this.$bind('binary_right_query', DB_USER.collection().where("placement_id", "==", this.data.id).where("placement_position", "==", 'right'));
+            this.binary_left = this.binary_left_query.length > 0 ? this.binary_left_query[0] : null;
+            this.binary_right = this.binary_right_query.length > 0 ? this.binary_right_query[0] : null;
+            this.has_children = true;
+            this.$q.loading.hide();
+
+            // if (this.has_children)
+            // {
+            //     this.has_children = false;
+            //     this.$unbind('childrens');
+            // }
+            // else
+            // {
+            //     this.$q.loading.show();
+            //     await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.data.id));
+            //     this.has_children = true;
+            //     this.$q.loading.hide();
+            // }
         },
         copyLink(id)
         {
@@ -104,6 +147,16 @@ export default
             alert(id + " copied");
         }
     },
-    computed: { }
+    computed: { },
+    watch: {
+        binary_left_query()
+        {
+            this.binary_left = this.binary_left_query.length > 0 ? this.binary_left_query[0] : null;
+        },
+        binary_right_query()
+        {
+            this.binary_right = this.binary_right_query.length > 0 ? this.binary_right_query[0] : null;
+        }
+    },
 }
 </script>

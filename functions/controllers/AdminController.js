@@ -4,9 +4,11 @@ const MDB_PROMOTION             = require('../models/MDB_PROMOTION');
 const MDB_USER                  = require('../models/MDB_USER');
 const MDB_ISSUE_WALLET          = require('../models/MDB_ISSUE_WALLET');
 const MDB_USER_NOTIFICATION     = require('../models/MDB_USER_NOTIFICATION');
+const MDB_TRANSFER_CRYPTO       = require('../models/MDB_TRANSFER_CRYPTO');
 const { HTTPS_ERROR }           = require('../plugin/firebase');
 const AUTH                      = require('../globals/Auth');
 const WALLET                    = require('../globals/Wallet');
+const Bitcoin                   = require('../globals/Bitaps/Bitcoin');
  
 module.exports =
 {
@@ -61,6 +63,33 @@ module.exports =
             await Promise.all(promise_list);
 
             return { status: 'success', message: `${issue_wallet.amount} ${data.currency} has been issued to the account of ${recipient.full_name} (${recipient.id}).` };
+        }
+    },
+
+    async rejectTransfer(data, context)
+    {
+        await AUTH.admin_only(context);
+        MDB_TRANSFER_CRYPTO.update(data.id, {
+            status: 'rejected'
+        });
+
+        return { status: 'success', message: 'Successfully rejected the transfer.' };
+    },
+
+    async processTransfer(data, context)
+    {
+        await AUTH.admin_only(context);
+
+        const bitcoin = new Bitcoin();
+        const result = await bitcoin.sendAllPayment();
+
+        if (result.status === 'success')
+        {
+            return { status: 'success', message: 'Successfully transfered all requests.', result: result.message };
+        }
+        else
+        {
+            return { status: 'error', message: result.message };
         }
     }
 };

@@ -36,6 +36,22 @@ module.exports =
             return null;
         }
     },
+    async getBinaryDownline(id, position)
+    {
+        let res = await this.collection()
+            .where("placement_id", "==", id)
+            .where("placement_position", "==", position)
+            .limit(1)
+            .get()
+            .then(user => {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error => {
+                return {error}
+            });
+
+        return res;
+    },
     async getDownline(id)
     {
         let res = await this.collection().where('upline_id', '==', id).get();

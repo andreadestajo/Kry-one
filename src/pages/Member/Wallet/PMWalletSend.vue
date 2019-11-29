@@ -7,7 +7,7 @@
                 <k-field label="Source Wallet">
                     <div class="source" @click="is_wallet_dialog_open = true">
                         <div class="source-icon"><q-icon name="fa fa-wallet"></q-icon></div>
-                        <div class="source-value" v-if="active_wallet.abb">{{active_wallet.abb}} ({{active_wallet.amount}})</div>
+                        <div class="source-value" v-if="active_wallet.abb">{{active_wallet.abb}} ({{active_wallet.display_amount}})</div>
                         <div class="source-dropdown"><q-icon name="fa fa-caret-down"></q-icon></div>
                     </div>
                 </k-field>
@@ -23,7 +23,7 @@
                 <!-- TO -->
                 <k-field label="To">
                     <q-input v-model="send_wallet_form.send_to"
-                             dense placeholder="Enter BTC Address" class="input" outlined stack-label
+                             dense :placeholder="`Enter ${ this.active_wallet.abb } Address`" class="input" outlined stack-label
                              :error="$v.send_wallet_form.send_to.$error"
                              :error-message="'This field is required.'"
                              @blur="$v.send_wallet_form.send_to.$touch()">
@@ -140,7 +140,7 @@ import ref_currencies  from '../../../references/refs_currencies';
 import DB_USER_WALLET  from '../../../models/DB_USER_WALLET'
 import {arrayToObject} from "../../../utilities/ObjectUtils";
 
-import {FN_TRANSFER_WALLET} from "../../../references/refs_functions";
+import {FN_TRANSFER_WALLET, FN_TRANSFER_CRYPTO} from "../../../references/refs_functions";
 import {fbCall}             from "../../../utilities/Callables";
 
 import {
@@ -187,8 +187,9 @@ export default
         chooseWallet(wallet)
         {
             this.active_wallet          = {
-                abb     : wallet.abb,
-                amount  : wallet.amount
+                abb            : wallet.abb,
+                amount         : Number(this.removeCommas(wallet.amount)),
+                display_amount : wallet.amount
             };
 
             this.is_wallet_dialog_open  = false;
@@ -206,10 +207,42 @@ export default
 
             // Get user details
             const user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
-            if(!user) {return 0}
 
-            this.send_wallet_form.send_to_id = user.id;
-            this.transferWallet()
+            if (user)
+            {
+                this.send_wallet_form.send_to_id = user.id;
+                this.transferWallet();
+            }
+            else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH') // BTC AND ETH
+            {
+                this.transferCrypto();
+            }
+            else
+            {
+                this.$q.notify({ message: 'Address not found', color: 'red' });
+                this.$_hidePageLoading();
+            }
+        },
+        async transferCrypto()
+        {
+            let send_wallet            = {};
+            send_wallet.amount         = this.send_wallet_form.amount;
+            send_wallet.currency       = this.active_wallet.abb;
+            send_wallet.remarks        = this.send_wallet_form.remarks;
+            send_wallet.address        = this.send_wallet_form.send_to;
+            
+            try
+            {
+                let res = await fbCall(FN_TRANSFER_CRYPTO, send_wallet);
+                this.$q.notify({ message: res.data.message, color: 'green' });
+                this.$router.push({name: 'member_wallet'})
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
         },
         async transferWallet()
         {
@@ -234,6 +267,10 @@ export default
 
             this.$_hidePageLoading();
         },
+        removeCommas(str) 
+        {
+            return(str.replace(/,/g,''));
+        }
     },
     async mounted()
     {
@@ -252,8 +289,9 @@ export default
             {
                 this.active_wallet =
                 {
-                    abb     : currency.abb,
-                    amount  : currency.amount
+                    abb             : currency.abb,
+                    amount          : Number(this.removeCommas(currency.amount)),
+                    display_amount  : currency.amount
                 };
             }
         });

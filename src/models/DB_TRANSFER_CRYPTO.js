@@ -2,7 +2,7 @@ import { DB, AUTH }   from "../boot/firebase";
 
 export default
 {
-    table: 'users',
+    table: 'transferCrypto',
 
     doc(id)
     {
@@ -44,38 +44,6 @@ export default
     async getDownline(upline_id, options = null)
     {
         let res = await this.collection(options).where('upline_id', '==', upline_id).get();
-        let data = [];
-
-        if(!res.empty)
-        {
-            res.docs.forEach((d, i) =>
-            {
-                data[i] = d.data();
-                data[i].id = d.id;
-            })
-        }
-
-        return data;
-    },
-    async getBinaryDownline(id, position)
-    {
-        let res = await this.collection()
-            .where("placement_id", "==", id)
-            .where("placement_position", "==", position)
-            .limit(1)
-            .get()
-            .then(user => {
-                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
-            })
-            .catch(error => {
-                return {error}
-            });
-
-        return res;
-    },
-    async getPaidDownline(upline_id, options = null)
-    {
-        let res = await this.collection(options).where('upline_id', '==', upline_id).where('nobility_info.rank_order', '>', 1).get();
         let data = [];
 
         if(!res.empty)
@@ -162,7 +130,7 @@ export default
      * @param options {name, limit, startAtId}
      * @returns {Promise<firebase.firestore.DocumentData[]> | Promise<firebase.firestore.DocumentData>}
      */
-    bindAllUsers(_this, options = {})
+    bindAllRequests(_this, options = {})
     {
         let query = this.collection();
 
@@ -179,7 +147,8 @@ export default
         }
 
         // order
-        query = query.orderBy('full_name');
+        query = query.orderBy('date_created');
+        query = query.where('status', '==', 'pending');
 
         return _this.$bind(options.name, query)
     },

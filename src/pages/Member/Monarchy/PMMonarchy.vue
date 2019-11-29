@@ -73,6 +73,8 @@ export default
         childrens: null,
         tab: 'unilevel_tree',
         paid_downline   : [],
+        binary_left_query: [],
+        binary_right_query: [],
         binary_left: null,
         binary_right: null,
     }),
@@ -82,6 +84,12 @@ export default
     },
     async mounted() 
     { 
+        await this.$bind('binary_left_query', DB_USER.collection().where("placement_id", "==", this.$_current_user_data.id).where("placement_position", "==", 'left'));
+        await this.$bind('binary_right_query', DB_USER.collection().where("placement_id", "==", this.$_current_user_data.id).where("placement_position", "==", 'right'));
+    
+        this.binary_left = this.binary_left_query.length > 0 ? this.binary_left_query[0] : null;
+        this.binary_right = this.binary_right_query.length > 0 ? this.binary_right_query[0] : null;
+ 
         await this.$bind('childrens', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id));
         this.$q.loading.hide();
         this.$refs.tree.scrollLeft = (this.$refs.tree.scrollWidth - this.$refs.tree.clientWidth) / 2;
@@ -90,8 +98,9 @@ export default
         this.tab = this.$route.query.tab || 'unilevel_tree';
 
         // Get people to place
-        this.paid_downline = await DB_USER.getPaidDownline(this.$_current_user_data.id);
-        // console.log("unplaced_downline", this.unplaced_downline);
+
+        await this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
+
     },
     watch: {
         tab()
@@ -101,7 +110,14 @@ export default
                 this.$refs.tree_binary.scrollLeft = (this.$refs.tree_binary.scrollWidth - this.$refs.tree_binary.clientWidth) / 2;
                 this.$refs.tree_binary.scrollTop = 1000;
             });
-
+        },
+        binary_left_query()
+        {
+            this.binary_left = this.binary_left_query.length > 0 ? this.binary_left_query[0] : null;
+        },
+        binary_right_query()
+        {
+            this.binary_right = this.binary_right_query.length > 0 ? this.binary_right_query[0] : null;
         }
     },
     methods: { },
