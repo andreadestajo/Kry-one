@@ -8,18 +8,23 @@
                 <div class="group-label">Your current nobility</div>
                 <div class="group-value current">{{$_current_user_data.nobility_info.title.toUpperCase()}}</div>
             </div>
-            <div class="group">
-                <div class="group-label">Your next target</div>
-                <div class="group-value next">{{target_nobility}}</div>
+            <div class="group q-pa-sm" v-if="!Object.keys(target_nobility_info).length">
+                <q-spinner color="primary" size="2em"/>
             </div>
-                <div v-if="target_nobility_info" class="detail">
+            <template v-if="Object.keys(target_nobility_info).length" >
+                <div class="group">
+                    <div class="group-label">Your next target</div>
+                    <div class="group-value next">{{target_nobility}}</div>
+                </div>
+                <div class="detail">
                     <div class="detail-requirements">You need <b>{{ target_nobility_info.required_direct }} {{ target_nobility_info.required_rank_title }}</b><br></div>
                     <div class="detail-target">In order for you to become a <b>{{ target_nobility }}</b></div>
                 </div>
-            <div class="action">
-                <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
-                <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
-            </div>
+                <div class="action">
+                    <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
+                    <q-btn @click="$router.push({ name: 'member_buy' })" flat class="action-button"><q-icon name="fa fa-arrow-up"></q-icon> &nbsp; Accelerate</q-btn>
+                </div>
+            </template>
         </k-card>
 
         <!-- WARNING -->
