@@ -169,8 +169,8 @@ export default
     },
     earning_breakdown:
     [
-        { label: 'Direct Referral' , key: 'binary'    , icon: 'fa fa-users'         },
-        { label: 'Knight Match'    , key: 'direct'    , icon: 'fa fa-hands-helping' },
+        { label: 'Direct Referral' , key: 'direct'    , icon: 'fa fa-users'         },
+        { label: 'Knight Match'    , key: 'binary'    , icon: 'fa fa-hands-helping' },
         { label: 'Team Override'   , key: 'stairstep' , icon: 'fa fa-layer-group'   },
     ],
     mounted()
