@@ -18,9 +18,10 @@ FN_UPDATE_PROFILE        = `updateProfile`;
 
 // Admin
 export const
-FN_PROMOTE_USER        = `promoteUser`,
-FN_REJECT_TRANSFER     = `rejectTransfer`,
-FN_PROCESS_TRANSFER    = `processTransfer`;
+FN_PROMOTE_USER         = `promoteUser`,
+FN_REJECT_TRANSFER      = `rejectTransfer`,
+FN_PROCESS_TRANSFER     = `processTransfer`,
+FN_CHECK_CENTRAL_WALLET = `checkCentralWallet`;
 
 export const
 FN_ISSUE_WALLET        = `issueWallet`;

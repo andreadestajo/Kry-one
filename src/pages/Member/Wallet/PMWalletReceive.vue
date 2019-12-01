@@ -5,10 +5,10 @@
             <div class="q-gutter-y-md">
                 <k-card>
                     <div class="receive__container">
-                        <q-input v-model="address" readonly filled />
+                        <q-input :value="walletAddress" readonly filled />
                         <q-separator style="margin: 1rem 0;" />
                         <div style="text-align: center;">
-                            <q-img style="max-width: 250px;" :src="`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${ address }`" spinner-color="white" />
+                            <q-img style="max-width: 250px;" :src="`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${walletAddress}`" spinner-color="white" />
                         </div>
                     </div>
                 </k-card>
@@ -24,18 +24,29 @@ import KCard from       '../../../components/Member/KCard';
 export default
 {
     components: { KHeader, KCard },
-    filters: { },
     data:() =>(
     {
         address: null
     }),
-    created() 
+    computed:
     {
-        this.address = this.$route.params.address;
+        walletAddress()
+        {
+            const currency = this.$route.params.currency ? this.$route.params.currency.toUpperCase() : null;
+            if(!currency) {return null}
+
+            const wallet_address = this.$_current_user_wallet.hasOwnProperty(currency)
+                ? this.$_current_user_wallet[currency] : null;
+
+            if(!wallet_address)
+            {
+                this.$_notify({message: 'Wallet address not found.'})
+            }
+
+            return wallet_address.address
+        }
     },
-    mounted() { },
-    methods: { },
-    computed: { }
+    methods: { }
 }
 </script>
 

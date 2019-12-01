@@ -15,7 +15,7 @@ export default {
     methods: {
         $_showPageLoading(options)
         {
-            const opts = Object.assign(defaultOptions, options);
+            const opts = Object.assign({}, defaultOptions, options);
 
             Loading.show({
                 spinner      : opts.spinner,

@@ -139,10 +139,10 @@ export default
         target_nobility      : '',
         target_nobility_info : {},
         user_wallet          : [],
-        user_earning         : [],
+        user_earning         : null,
         placement_message    : false,
         paid_downline        : [],
-        earning_breakdown    : null
+        earning_breakdown    : {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}}
     }),
     computed:
     {

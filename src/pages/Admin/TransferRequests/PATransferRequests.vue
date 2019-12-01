@@ -3,6 +3,37 @@
         <k-header icon="people" detail="Lorem ipsum dolor sit amet">Transfer Request</k-header>
         <!--TODO Jln filters here-->
 
+        <div style="display: grid; grid-template-columns: auto auto auto; margin-bottom: 25px;">
+            <div style="text-align: center;">
+                <h4 style="margin: 0;">{{ btc ? btc.balance_amount / 100000000 : 0 }} BTC</h4>
+                <!-- <h6 style="margin: 0; color: #2097E6;">USD 30.00</h6> -->
+                <h6 style="margin: 0; opacity: 0.5;">Wallet Balance</h6>
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin: 0;">{{ btc ? btc.pending_received_amount / 100000000 : 0 }} BTC</h4>
+                <h6 style="margin: 0; opacity: 0.5;">Pending Receive</h6>
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin: 0;">{{ btc ? btc.pending_sent_amount / 100000000 : 0 }} BTC</h4>
+                <h6 style="margin: 0; opacity: 0.5;">Pending Send</h6>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: auto auto auto; margin-bottom: 25px;">
+            <div style="text-align: center;">
+                <h4 style="margin: 0;">{{ eth ? eth.balance_amount / 1000000000000000000 : 0 }} ETH</h4>
+                <!-- <h6 style="margin: 0; color: #2097E6;">USD 30.00</h6> -->
+                <h6 style="margin: 0; opacity: 0.5;">Wallet Balance</h6>
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin: 0;">{{ eth ? eth.pending_received_amount / 1000000000000000000 : 0 }} ETH</h4>
+                <h6 style="margin: 0; opacity: 0.5;">Pending Receive</h6>
+            </div>
+            <div style="text-align: center;">
+                <h4 style="margin: 0;">{{ eth ? eth.pending_sent_amount / 1000000000000000000 : 0 }} ETH</h4>
+                <h6 style="margin: 0; opacity: 0.5;">Pending Send</h6>
+            </div>
+        </div>
+
         <k-table ref="kTableRef" :data="users_data" :columns="$options.columns" class="text-center">
             <template slot="table_top">
                 <!-- <q-input dense class="full-width"
@@ -13,7 +44,7 @@
                         <q-btn flat round color="primary" icon="search" @click="searchUser"/>
                     </template>
                 </q-input> -->
-                <q-btn @click="processAll()" label="Process All" style="width: 100%;" unelevated color="primary" />
+                <q-btn @click="processAll()" label="Process Payout" style="width: 100%;" unelevated color="primary" />
             </template>
 
             <template slot="table_rows" slot-scope="user">
@@ -57,7 +88,7 @@ import KHeader                 from '../../../components/Admin/KHeader'
 import KTable                  from '../../../components/Admin/KTable'
 
 import DB_TRANSFER_CRYPTO      from '../../../models/DB_TRANSFER_CRYPTO'
-import { FN_REJECT_TRANSFER, FN_PROCESS_TRANSFER } from "../../../references/refs_functions";
+import { FN_REJECT_TRANSFER, FN_PROCESS_TRANSFER, FN_CHECK_CENTRAL_WALLET } from "../../../references/refs_functions";
 
 import { fbCall } 			   from "../../../utilities/Callables";
 
@@ -73,7 +104,9 @@ export default {
             search_text : '',
             filters     : ['pending', 'approved', 'rejected'],
             users_wew   : [],
-            users_data  : []
+            users_data  : [],
+            btc: null,
+            eth: null
         }),
         methods:
         {
@@ -187,6 +220,18 @@ export default {
         {
             this.$refs.kTableRef.showLoading();
             await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
+            this.$refs.kTableRef.hideLoading();
+
+            
+            fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'btc' }).then(btc => 
+            {
+                this.btc = btc.data;
+            });
+
+            fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'eth' }).then(eth => 
+            {
+                this.eth = eth.data;
+            });
         },
         watch:
         {

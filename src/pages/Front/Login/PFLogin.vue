@@ -170,9 +170,9 @@
                         const route_name = !current_user.hasOwnProperty('roles') || !current_user.roles
                             ? 'member_dashboard'
                                 : current_user.roles.includes('developer')
-                            ? 'developer_dashboard'
+                            ? 'member_dashboard'
                                 : current_user.roles.includes('admin')
-                            ? 'admin_dashboard'
+                            ? 'member_dashboard'
                                 : 'member_dashboard';
 
                         this.$router.push({name: route_name})

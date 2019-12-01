@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"No test specified\" && exit 0",
-    "live": "quasar build && firebase deploy --only hosting"
+    "live": "quasar build && firebase deploy --only hosting && firebase deploy --only functions"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",

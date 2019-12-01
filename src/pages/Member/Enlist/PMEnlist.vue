@@ -131,6 +131,7 @@ export default
         sponsor_name: '',
         nobilities: [],
         confirm_dialog: false,
+        is_eligible   : false,
         payment_options: [
             { label: 'Bitcoin'  , value: 'btc', abb: 'BTC' },
             { label: 'Ethereum' , value: 'eth', abb: 'ETH' },
@@ -198,7 +199,8 @@ export default
             {
                 this.confirm_dialog = false;
                 this.clearForm();
-                this.$_notify({message: 'Successfully Enlisted a Knight', mode: 'positive'})
+                this.$_notify({message: 'Successfully Enlisted a Knight', mode: 'positive'});
+                this.$router.push({name: 'member_dashboard'})
             })
             .catch(error =>
             {
@@ -233,7 +235,12 @@ export default
         this.form.payment_method = this.payment_options[0];
         await DB_NOBILITY.bindNobilities(this);
         this.form.nobility = this.nobility_options[0];
-        
+
+        this.$v.form.sponsor.$touch()
+
+        // Initial Computation
+        this.computeTotalAmount();
+
         this.$_hidePageLoading();
     },
     validations()
@@ -258,21 +265,25 @@ export default
                     required,
                     async doesExists(sponsor)
                     {
+                        console.log('test');
                         // Returns true if referral code belongs to an existing user.
-                        return await DB_USER.getUserByReferralCode(sponsor).then(user =>
+                        const does_exists = await DB_USER.getUserByReferralCode(sponsor).then(user =>
                         {
+                            this.is_eligible = false;
+
                             this.sponsor_name = user && !user.error ? user.full_name : null;
+
+                            // check if eligible
+                            this.is_eligible = user && !user.error ? user.nobility_info.rank_order > 1 : false;
+
                             return !!user
-                        })
+                        });
+
+                        return does_exists;
                     },
                     async isEligible(referral_code)
                     {
-                        // Returns true if eligible
-                        return await DB_USER.getUserByReferralCode(referral_code).then(user =>
-                        {
-                            this.sponsor_name = user && !user.error ? user.full_name : null;
-                            return user && user.nobility_info.rank_order > 1;
-                        })
+                        return this.is_eligible
                     }
                 },
                 amount:
