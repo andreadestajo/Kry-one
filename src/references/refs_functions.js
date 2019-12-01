@@ -21,7 +21,8 @@ export const
 FN_PROMOTE_USER         = `promoteUser`,
 FN_REJECT_TRANSFER      = `rejectTransfer`,
 FN_PROCESS_TRANSFER     = `processTransfer`,
-FN_CHECK_CENTRAL_WALLET = `checkCentralWallet`;
+FN_CHECK_CENTRAL_WALLET = `checkCentralWallet`,
+FN_UPDATE_USER_DETAILS  = `updateUserDetails`;
 
 export const
 FN_ISSUE_WALLET        = `issueWallet`;

@@ -405,6 +405,6 @@ module.exports =
             return 0;
         }
 
-        return MDB_USER.update(context.auth.uid, user_data);
+        return update_data;
     }
 };

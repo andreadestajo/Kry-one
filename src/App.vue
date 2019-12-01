@@ -69,12 +69,14 @@
                     await this.$bind('current_user_data'   , DB_USER.doc(authId));
                     await this.$bind('currency_data'       , DB_CURRENCY.collection());
                 } else {
-                    setTimeout(() => {
+
+                    /*setTimeout(() => {
                         console.log(this.$route.name);
                         if(this.$route.name !== 'front_register' && this.$route.name !== 'front_login') {
                             this.$router.push({name: 'front_login'})
                         }
-                    }, 500);
+                    }, 500);*/
+                    this.$router.push({name: 'front_login'})
                 }
                 this.is_page_loading = false;
             },

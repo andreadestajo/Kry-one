@@ -38,6 +38,7 @@ exports.issueWallet             = FUNCTIONS_HTTPS.onCall(admin_controller.issueW
 exports.rejectTransfer          = FUNCTIONS_HTTPS.onCall(admin_controller.rejectTransfer);
 exports.processTransfer         = FUNCTIONS_HTTPS.onCall(admin_controller.processTransfer);
 exports.checkCentralWallet      = FUNCTIONS_HTTPS.onCall(admin_controller.checkCentralWallet);
+exports.updateUserDetails       = FUNCTIONS_HTTPS.onCall(admin_controller.updateUserDetails);
 
 // Schedules
 exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onRun(schedule_controller.updateCurrency);

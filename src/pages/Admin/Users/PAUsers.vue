@@ -49,7 +49,6 @@
         <!--MODALS-->
         <pa-users-accelerate-modal   ref="usersAccelerateModalRef"/>
         <pa-users-issue-wallet-modal ref="usersIssueWalletModal"/>
-        <pa-users-edit-modal         ref="usersEditModalRef"/>
 
         <router-view></router-view>
     </q-page>
@@ -72,8 +71,7 @@
             KHeader,
             KTable,
             PaUsersAccelerateModal,
-            PaUsersIssueWalletModal,
-            PaUsersEditModal
+            PaUsersIssueWalletModal
         },
         data: () =>
         ({
@@ -100,7 +98,11 @@
                         this.$refs.usersIssueWalletModal.showUsersIssueWalletModal(item.data);
                         break;
                     case 'edit_user':
-                        this.$refs.usersEditModalRef.showUsersEditModal(item.data);
+                        this.$router.push
+                        ({
+                            name  : 'admin_users_edit',
+                            params: {user_id: item.data.id}
+                        });
                         break;
                     case 'accelerate_user':
                         this.$refs.usersAccelerateModalRef.showUsersAccelerateModal(item.data);

@@ -1,6 +1,6 @@
 <template>
     <span>
-        <span v-if="coin !== 'USD'">
+        <span v-if="$_current_user_data.currency !== 'USD'">
             {{$_current_user_data.currency}}
             {{$_convertRate(parseFloat(amount), coin, $_current_user_data.currency, { decimal: 2 })}}
             <q-icon name="fa fa-exchange-alt"></q-icon>

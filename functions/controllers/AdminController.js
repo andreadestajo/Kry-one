@@ -1,3 +1,4 @@
+
 const moment                    = require('moment-timezone');
 const momentTZ                  = moment.tz('Asia/Manila');
 const MDB_PROMOTION             = require('../models/MDB_PROMOTION');
@@ -135,5 +136,26 @@ module.exports =
         {
             return null;
         }
+    },
+
+    async updateUserDetails(data, context)
+    {
+        let logged_in_user = await AUTH.admin_only(context);
+
+        // start updating profile
+        const user_details = JSON.parse(data);
+        user_details.modified_by = logged_in_user.id;
+
+        const update_data = await MDB_USER.update(context.auth.uid, user_details)
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(update_data.error)
+        {
+            HTTPS_ERROR('failed-precondition', update_data.error.errorInfo.message);
+            return 0;
+        }
+
+        return update_data;
     }
 };

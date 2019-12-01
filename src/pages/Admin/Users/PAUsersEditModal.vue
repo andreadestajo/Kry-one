@@ -21,6 +21,7 @@
                         <q-input dense outlined
                                  v-model="form.full_name"
                                  type="text"
+                                 readonly
                                  :error="$v.form.full_name.$error"
                                  :error-message="'Full name is required.'"
                                  @blur="$v.form.full_name.$touch()"/>
@@ -31,6 +32,7 @@
                         <q-input dense outlined
                                  v-model="form.email"
                                  type="text"
+                                 readonly
                                  :error="$v.form.email.$error"
                                  :error-message="'Email is required.'"
                                  @blur="$v.form.email.$touch()"/>
@@ -48,29 +50,39 @@
 
                     <!--COUNTRY-->
                     <k-field class="col-6" label="Country">
-                        <q-input dense outlined
-                                 v-model="form.country"
-                                 type="text"
-                                 :error="$v.form.country.$error"
-                                 :error-message="'Country is required.'"
-                                 @blur="$v.form.country.$touch()"/>
+                          <q-select outlined
+                                    class="input"
+                                    dense
+                                    v-model="form.country"
+                                    :options="$options.country_options"
+                                    option-value="code"
+                                    option-label="name"
+                                    :error="$v.form.country.$error"
+                                    :error-message="'Please select a country.'"
+                                    @blur="$v.form.country.$touch()">
+                        </q-select>
                     </k-field>
 
                     <!--CURRENCY-->
                     <k-field class="col" label="Currency">
-                        <q-input dense outlined
-                                 v-model="form.currency"
-                                 type="text"
-                                 :error="$v.form.currency.$error"
-                                 :error-message="'Currency is required.'"
-                                 @blur="$v.form.currency.$touch()"/>
+                        <q-select outlined
+                                  class="input"
+                                  dense
+                                  v-model="form.currency"
+                                  :options="$options.currency_options"
+                                  option-value="value"
+                                  option-label="label"
+                                  :error="$v.form.currency.$error"
+                                  :error-message="'Please select a currency.'"
+                                  @blur="$v.form.currency.$touch()">
+                </q-select>
                     </k-field>
                 </div>
             </span>
         </div>
 
         <div slot="modal-footer">
-            <q-btn flat label="UPDATE" @click="confirmUpdate" />
+            <q-btn flat label="Save" @click="confirmSave" />
         </div>
     </k-modal>
 
@@ -82,6 +94,12 @@
     import KField from '../../../components/Admin/KField'
 
     import {required} from "vuelidate/src/validators";
+
+    import refs_countries     from "../../../references/refs_countries";
+    import {currencies_list}  from "../../../references/refs_currencies";
+    import DB_USER            from "../../../models/DB_USER";
+    import {fbCall}           from "../../../utilities/Callables";
+    import {FN_UPDATE_USER_DETAILS} from "../../../references/refs_functions";
 
     export default {
         name: "PAUsersEditModal",
@@ -100,23 +118,87 @@
         }),
         methods:
         {
-            showUsersEditModal(user_details)
+            async showUsersEditModal(user_id)
             {
-                const user_id = user_details.id;
-
-                const user_data =
-
-                Object.assign(this.form, initial_data);
                 this.$refs.kModalRef.showModal();
+                this.$refs.kModalRef.showLoading();
+
+                // Get selected user details
+                const user_details = await DB_USER.doc(user_id).get()
+                    .then(doc => doc.exists ? doc.data() : null);
+
+                if(!user_details)
+                {
+                    this.$router.push({name: 'admin_users'});
+                    return 0;
+                }
+
+                const currency = this.$options.currency_options
+                    .filter(c => c.value === user_details.currency)[0];
+
+                // assign details
+                const initial_data =
+                {
+                    full_name       : user_details.full_name,
+                    email           : user_details.email,
+                    contact_number  : user_details.contact_number,
+                    referral_code   : user_details.referral_code,
+                    currency        : currency ? currency : null,
+                    country         : user_details.country
+                };
+
+                this.form = Object.assign(this.form, initial_data);
+                this.$refs.kModalRef.hideLoading();
             },
             hideUsersEditModal()
             {
-                this.$refs.kModalRef.hideModal()
+                this.$refs.kModalRef.hideModal();
+                this.$router.push({name: 'admin_users'});
             },
-            confirmUpdate()
+            confirmSave()
             {
+                this.$v.form.$touch();
+                if(this.$v.form.$error) {return 0}
 
+                this.$_showConfirmDialog(
+                    'Are you sure you want to save changes?',
+                    this.saveDetails
+                )
+            },
+            async saveDetails()
+            {
+                this.$_showPageLoading({message: 'Updating...'});
+
+                const data =
+                {
+                    contact_number : this.form.contact_number,
+                    country        : this.form.country,
+                    currency       : this.form.currency.value,
+                    date_modified  : new Date()
+                };
+
+                await fbCall(FN_UPDATE_USER_DETAILS, JSON.stringify(data))
+                    .then(data =>
+                    {
+                        this.$_notify({message: 'Succesfully saved changes.', mode: 'positive'});
+                        this.$_hidePageLoading();
+                    })
+                    .catch(error =>
+                    {
+                        this.$_notify({message: error.message, mode: 'negative'});
+                        this.$_hidePageLoading();
+                    });
+
+                this.$_hidePageLoading();
             }
+        },
+        mounted()
+        {
+            if(!this.$route.params.hasOwnProperty('user_id'))
+            {
+                this.$router.push({name: 'admin_users'})
+            }
+            this.showUsersEditModal(this.$route.params.user_id)
         },
         validations()
         {
@@ -131,6 +213,14 @@
                 }
             }
         },
+        country_options  : refs_countries,
+        currency_options : (() =>
+        {
+            return currencies_list.map(c => ({
+                value: c.key,
+                label: `${c.label} (${c.key})`
+            }));
+        })()
     }
 </script>
 

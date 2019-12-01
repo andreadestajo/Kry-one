@@ -137,7 +137,6 @@
                     'Are you sure you want to update your profile ?',
                     this.updateProfile
                 )
-
             },
             async updateProfile()
             {
@@ -169,7 +168,7 @@
         },
         mounted()
         {
-            // Initilize Data here
+            // Start initializing data
             const currency = this.$options.currency_options
                 .filter(c => c.value === this.$_current_user_data.currency)[0];
 
