@@ -60,7 +60,6 @@
 
     import PaUsersAccelerateModal  from './PAUsersAccelerateModal'
     import PaUsersIssueWalletModal from './PAUsersIssueWalletModal'
-    import PaUsersEditModal        from './PAUsersEditModal'
 
     import DB_USER   from '../../../models/DB_USER'
 
@@ -77,7 +76,7 @@
         ({
             search_text : '',
             filters     : ['pending', 'approved', 'rejected'],
-            users_wew   : [],
+            users       : [],
             users_data  : []
         }),
         methods:
@@ -133,20 +132,19 @@
                 }
 
                 await DB_USER.bindAllUsers(this, params);
+                this.$refs.kTableRef.hideLoading();
             }
         },
         async mounted()
         {
             this.$refs.kTableRef.showLoading();
-            await DB_USER.bindAllUsers(this, {name: 'users_wew'});
+            await DB_USER.bindAllUsers(this);
+            this.$refs.kTableRef.hideLoading();
         },
         watch:
         {
-            users_wew(users)
+            users(users)
             {
-                if(!users.length) {return 0}
-
-                this.$refs.kTableRef.showLoading();
                 const users_data = [];
 
                 users.forEach(u =>
@@ -164,7 +162,6 @@
                 });
 
                 this.users_data = users_data;
-                this.$refs.kTableRef.hideLoading();
             }
         },
         columns:
