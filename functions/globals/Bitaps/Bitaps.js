@@ -146,6 +146,20 @@ class Bitaps
             return null;
         }
     }
+
+    async checkAddress(address)
+    {
+        try
+        {
+            await axios.get(`${ this.api_url }/blockchain/address/state/${ address }`);
+            return true;
+        }
+        catch (e)
+        {
+            console.log(e.response.data);
+            return false;
+        }
+    }
 }
 
 module.exports = Bitaps;

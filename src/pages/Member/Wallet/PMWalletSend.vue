@@ -84,7 +84,7 @@
 
                     <div class="content-group q-pt-md">
                         <div class="label text-weight-medium">Charge</div>
-                        <div class="value">{{$_formatNumber(0, {currency: active_wallet.abb})}}</div>
+                        <div class="value">{{$_formatNumber(send_wallet_form.charge, {currency: active_wallet.abb})}}</div>
                         <div class="conversion">PHP 0.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 0.00</div>
                     </div>
 
@@ -161,10 +161,29 @@ export default
         send_wallet_form:
         {
             amount        : 0,
+            charge        : 0,
             send_to       : '',
             remarks       : ''
         }
     }),
+    watch: 
+    {
+        active_wallet(val)
+        {
+            if (val.abb === 'BTC')
+            {
+                this.send_wallet_form.charge = 0.00015;
+            }
+            else if (val.abb === 'ETH')
+            {
+                this.send_wallet_form.charge = 0.0015;
+            }
+            else
+            {
+                this.send_wallet_form.charge = 0;
+            }
+        }
+    },
     computed:
     {
         amountError()
@@ -180,7 +199,7 @@ export default
         {
             // To add service charge soon
             if(!this.send_wallet_form.amount && !this.active_wallet) {return 0}
-            return this.send_wallet_form.amount
+            return Number(this.send_wallet_form.amount) + Number(this.send_wallet_form.charge)
         }
     },
     methods: {
@@ -227,6 +246,7 @@ export default
         {
             let send_wallet            = {};
             send_wallet.amount         = this.send_wallet_form.amount;
+            send_wallet.charge         = this.send_wallet_form.charge;
             send_wallet.currency       = this.active_wallet.abb;
             send_wallet.remarks        = this.send_wallet_form.remarks;
             send_wallet.address        = this.send_wallet_form.send_to;
