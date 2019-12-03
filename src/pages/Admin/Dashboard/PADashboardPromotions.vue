@@ -3,7 +3,9 @@
         <span slot="content">
             <q-list separator>
                 <q-item class="text-center">
-                    <p>PROMOTIONS</p>
+                    <q-item-section>
+                        <span class="text-weight-bold">Promotions</span>
+                    </q-item-section>
                 </q-item>
 
                 <q-item class="q-pa-md"

@@ -12,17 +12,17 @@
                     </div>
 
                     <!--WALLET-->
-                    <k-card class="col q-ma-xs"
+                    <k-card class="col-md col-12 q-ma-xs"
                             v-for="wallet in walletDetails" :key="wallet.key">
                     <span slot="section">
                         <div class="q-mb-md text-center">
                             {{wallet.key}}
                         </div>
 
-                        <div class="col">
+                        <div class="col-md col-12">
                             <k-field label="Wallet Address">
                                 <q-input dense outlined readonly
-                                         :value="''"
+                                         :value="wallet.address"
                                          type="text"/>
                             </k-field>
 
@@ -96,8 +96,10 @@
                 // Get user details
                 this.user_details = await DB_USER.get(user_id);
 
-                // Get user wallet
-                this.user_wallet = await DB_USER_WALLET.getMany(user_id);
+                // Bind user wallet
+                this.user_wallet = await DB_USER_WALLET.bindUserWallet(this, user_id);
+
+                console.log(this.user_wallet);
 
                 this.$refs.kModalRef.hideLoading();
             },

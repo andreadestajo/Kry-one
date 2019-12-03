@@ -46,5 +46,10 @@ export default
     bindWalletById(_this, uid, id, name = 'wallet')
     {
         return _this.$bind(name, this.doc(uid, id))
+    },
+
+    bindUserWallet(_this, uid, name = 'user_wallet')
+    {
+        return _this.$bind(name, this.collection(uid))
     }
 }

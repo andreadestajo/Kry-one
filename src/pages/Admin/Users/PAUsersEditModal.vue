@@ -28,7 +28,7 @@
                     </k-field>
 
                     <!--E-MAIL-->
-                   <k-field class="col-6" label="E-mail Address">
+                   <k-field class="col-md-6 col-12" label="E-mail Address">
                         <q-input dense outlined
                                  v-model="form.email"
                                  type="text"
@@ -39,7 +39,7 @@
                     </k-field>
 
                     <!--CONTACT NUMBER-->
-                    <k-field class="col" label="Contact Number">
+                    <k-field class="col-md col-12" label="Contact Number">
                         <q-input dense outlined
                                  v-model="form.contact_number"
                                  type="text"
@@ -49,7 +49,7 @@
                     </k-field>
 
                     <!--COUNTRY-->
-                    <k-field class="col-6" label="Country">
+                    <k-field class="col-md-6 col-12" label="Country">
                           <q-select outlined
                                     class="input"
                                     dense
@@ -64,7 +64,7 @@
                     </k-field>
 
                     <!--CURRENCY-->
-                    <k-field class="col" label="Currency">
+                    <k-field class="col-md col-12" label="Currency">
                         <q-select outlined
                                   class="input"
                                   dense

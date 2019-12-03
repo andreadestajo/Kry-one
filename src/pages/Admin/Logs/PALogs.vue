@@ -5,7 +5,7 @@
         <k-table ref="kTableRef" :data="user_wallet_logs_data" :columns="$options.columns" class="text-center">
             <template slot="table_top">
                 <q-input dense
-                         placeholder="Search"
+                         placeholder="Search by Email"
                          v-model="filters.search_text">
                     <template v-slot:append>
                         <q-btn flat round color="primary" icon="search" @click="filterLogs" />
@@ -59,14 +59,19 @@
         {
             async filterLogs()
             {
+                this.$refs.kTableRef.showLoading();
+
                 if(!this.filters.search_text || !this.filters.currency) {return 0;}
 
                 // Split search here: temporarily search for email only
                 const user = await DB_USER.getUserByFilters({search_text: this.filters.search_text});
 
-                if(!user) {return 0}
+                if(user)
+                {
+                    await DB_USER_WALLET_LOG.bindUserWalletLogs(this, user.id, 'user_wallet_logs', this.filters.currency.label);
+                }
 
-                DB_USER_WALLET_LOG.bindUserWalletLogs(this, user.id, 'user_wallet_logs', this.filters.currency.label);
+                this.$refs.kTableRef.hideLoading();
             }
         },
         mounted()
@@ -88,10 +93,6 @@
         {
             user_wallet_logs(user_wallet_logs)
             {
-                if(!user_wallet_logs.length) {return 0}
-
-                this.$refs.kTableRef.showLoading();
-
                 const user_wallet_logs_data = [];
 
                 user_wallet_logs.forEach(k =>
@@ -107,7 +108,6 @@
                 });
 
                 this.user_wallet_logs_data = user_wallet_logs_data;
-                this.$refs.kTableRef.hideLoading();
             }
         },
         currency_options: (() => currency_refs.map(c => ({value: c.key, label: c.abb})))(),
