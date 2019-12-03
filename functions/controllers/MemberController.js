@@ -21,6 +21,9 @@ const {knightRegistrationTemplate} = require('../references/ref_enlist_knight_em
 const {generateAccessCode}           = require('../globals/HashHelper');
 const {sendMail}                   = require('../globals/EmailHelper');
 
+const Bitcoin = require('../globals/Bitaps/Bitcoin');
+const Ethereum = require('../globals/Bitaps/Ethereum');
+
 const sendRegistrationLink = async (email, name, link) =>
 {
     const mail_options = {
@@ -349,6 +352,27 @@ module.exports =
         {
             HTTPS_ERROR('failed-precondition', `Minimum amount is 0.0001.`);
         }
+        
+        if (data.currency === 'BTC')
+        {
+            const bitcoin = new Bitcoin();
+            const check_bitcoin_address = await bitcoin.checkAddress(data.address);
+
+            if (!check_bitcoin_address)
+            {
+                HTTPS_ERROR('failed-precondition', `Address is invalid.`);
+            }
+        }
+        else if (data.currency === 'ETH')
+        {
+            const ethereum = new Ethereum();
+            const check_ethereum_address = await ethereum.checkAddress(data.address);
+
+            if (!check_ethereum_address)
+            {
+                HTTPS_ERROR('failed-precondition', `Address is invalid.`);
+            }
+        }
 
         data.currency                   = data.currency.toLowerCase();
         let description, type           = "";
@@ -370,6 +394,7 @@ module.exports =
             /* list of request to admin */
             transfer_wallet                 = {};
             transfer_wallet.amount          = Number(data.amount);
+            transfer_wallet.charge          = Number(data.charge);
             transfer_wallet.issue_by_id     = logged_in_user.id;
             transfer_wallet.issue_by        = logged_in_user.full_name;
             transfer_wallet.currency        = data.currency;
@@ -384,7 +409,7 @@ module.exports =
             description                     = `You have requested to transfer <b>${scientificToDecimal(transfer_wallet.amount)} ${data.currency}</b> to <b>${data.address}</b>.`;
             type                            = "sent";
 
-            promise_list.push(WALLET.deduct(logged_in_user.id, transfer_wallet.currency, transfer_wallet.amount, type, description));
+            promise_list.push(WALLET.deduct(logged_in_user.id, transfer_wallet.currency, (transfer_wallet.amount + transfer_wallet.charge), type, description));
 
             await Promise.all(promise_list);
         }

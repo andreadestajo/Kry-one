@@ -2,35 +2,59 @@
     <q-page class="q-pa-lg">
         <k-header icon="people" detail="Lorem ipsum dolor sit amet">Transfer Request</k-header>
         <!--TODO Jln filters here-->
-
-        <div style="display: grid; grid-template-columns: auto auto auto; margin-bottom: 25px;">
-            <div style="text-align: center;">
-                <h4 style="margin: 0;">{{ btc ? btc.balance_amount / 100000000 : 0 }} BTC</h4>
-                <!-- <h6 style="margin: 0; color: #2097E6;">USD 30.00</h6> -->
-                <h6 style="margin: 0; opacity: 0.5;">Wallet Balance</h6>
-            </div>
-            <div style="text-align: center;">
-                <h4 style="margin: 0;">{{ btc ? btc.pending_received_amount / 100000000 : 0 }} BTC</h4>
-                <h6 style="margin: 0; opacity: 0.5;">Pending Receive</h6>
-            </div>
-            <div style="text-align: center;">
-                <h4 style="margin: 0;">{{ btc ? btc.pending_sent_amount / 100000000 : 0 }} BTC</h4>
-                <h6 style="margin: 0; opacity: 0.5;">Pending Send</h6>
-            </div>
+        
+        <div v-if="btc_loading || eth_loading" style="text-align: center; margin-bottom: 25px;">
+            <q-spinner size="50px" />
         </div>
-        <div style="display: grid; grid-template-columns: auto auto auto; margin-bottom: 25px;">
-            <div style="text-align: center;">
-                <h4 style="margin: 0;">{{ eth ? eth.balance_amount / 1000000000000000000 : 0 }} ETH</h4>
-                <!-- <h6 style="margin: 0; color: #2097E6;">USD 30.00</h6> -->
-                <h6 style="margin: 0; opacity: 0.5;">Wallet Balance</h6>
+
+        <div style="background-color: #fff; padding: 25px; margin-bottom: 25px; border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);" v-else>
+            <div style="display: grid; grid-template-columns: auto auto auto auto auto;">
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ btc ? btc.balance_amount / 100000000 : 0 }} <span style="font-size: 1rem; font-weight: 700">BTC</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Wallet Balance</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ btc ? btc.pending_received_amount / 100000000 : 0 }} <span style="font-size: 1rem; font-weight: 700">BTC</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Pending Receive</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ btc ? btc.pending_sent_amount / 100000000 : 0 }} <span style="font-size: 1rem; font-weight: 700">BTC</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Pending Send</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ btc_transaction_fee }} <span style="font-size: 1rem; font-weight: 700">BTC</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Transaction Fee</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ btc_total_payout }} <span style="font-size: 1rem; font-weight: 700">BTC</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Total Payout</h6>
+                </div>
             </div>
-            <div style="text-align: center;">
-                <h4 style="margin: 0;">{{ eth ? eth.pending_received_amount / 1000000000000000000 : 0 }} ETH</h4>
-                <h6 style="margin: 0; opacity: 0.5;">Pending Receive</h6>
-            </div>
-            <div style="text-align: center;">
-                <h4 style="margin: 0;">{{ eth ? eth.pending_sent_amount / 1000000000000000000 : 0 }} ETH</h4>
-                <h6 style="margin: 0; opacity: 0.5;">Pending Send</h6>
+
+            <q-separator style="margin: 25px 0;" />
+
+            <div style="display: grid; grid-template-columns: auto auto auto auto auto;">
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ eth ? eth.balance_amount / 1000000000000000000 : 0 }} <span style="font-size: 1rem; font-weight: 700">ETH</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Wallet Balance</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ eth ? eth.pending_received_amount / 1000000000000000000 : 0 }} <span style="font-size: 1rem; font-weight: 700">ETH</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Pending Receive</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ eth ? eth.pending_sent_amount / 1000000000000000000 : 0 }} <span style="font-size: 1rem; font-weight: 700">ETH</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Pending Send</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ eth_transaction_fee }} <span style="font-size: 1rem; font-weight: 700">ETH</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Transaction Fee</h6>
+                </div>
+                <div style="text-align: center;">
+                    <h4 style="margin: 0; font-weight: 300;">{{ eth_total_payout }} <span style="font-size: 1rem; font-weight: 700">ETH</span></h4>
+                    <h6 style="margin: 0; opacity: 0.5; font-weight: 400; line-height: 1rem;">Total Payout</h6>
+                </div>
             </div>
         </div>
 
@@ -44,13 +68,14 @@
                         <q-btn flat round color="primary" icon="search" @click="searchUser"/>
                     </template>
                 </q-input> -->
-                <q-btn @click="processAll()" label="Process Payout" style="width: 100%;" unelevated color="primary" />
+                <q-btn @click="processAll()" label="Process Payout (First 100 Requests)" style="width: 100%;" unelevated color="primary" />
             </template>
 
             <template slot="table_rows" slot-scope="user">
                 <q-td key="name">{{ user.data.name }}</q-td>
                 <q-td key="currency" style="text-transform: uppercase;">{{ user.data.currency }}</q-td>
                 <q-td key="amount">{{ scientificToDecimal(user.data.amount) }}</q-td>
+                <q-td key="fee">{{ scientificToDecimal(user.data.fee) }}</q-td>
                 <q-td key="remarks">{{ user.data.remarks }}</q-td>
                 <q-td key="status" style="text-transform: capitalize;">{{ user.data.status }}</q-td>
                 <q-td key="date_created">{{ secondsToDate(user.data.date_created.seconds) }}</q-td>
@@ -106,7 +131,13 @@ export default {
             users_wew   : [],
             users_data  : [],
             btc: null,
-            eth: null
+            eth: null,
+            btc_loading: true,
+            eth_loading: true,
+            btc_transaction_fee: 0,
+            btc_total_payout: 0,
+            eth_transaction_fee: 0,
+            eth_total_payout: 0
         }),
         methods:
         {
@@ -136,7 +167,28 @@ export default {
                 this.$unbind('users_wew');
                 this.users_wew = [];
                 this.users_data = [];
-                await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
+                this.btc_loading = true;
+                this.eth_loading = true;
+                this.btc_transaction_fee = 0;
+                this.btc_total_payout = 0;
+                this.eth_transaction_fee = 0;
+                this.eth_total_payout = 0;
+
+                const promise1 = DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
+
+                const promise2 = fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'btc' }).then(btc => 
+                {
+                    this.btc = btc.data;
+                    this.btc_loading = false;
+                });
+
+                const promise3 = fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'eth' }).then(eth => 
+                {
+                    this.eth = eth.data;
+                    this.eth_loading = false;
+                });
+
+                await Promise.all([promise1, promise2, promise3]);
             },
             scientificToDecimal(num) 
             {
@@ -193,8 +245,6 @@ export default {
                             {
                                 this.$q.notify({ message: err.message, color: 'red' });
                             }
-
-                            await this.reload();
                             
                             this.$q.loading.hide();
                         }
@@ -221,23 +271,29 @@ export default {
             this.$refs.kTableRef.showLoading();
             await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
             this.$refs.kTableRef.hideLoading();
-
             
             fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'btc' }).then(btc => 
             {
                 this.btc = btc.data;
+                this.btc_loading = false;
             });
 
             fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'eth' }).then(eth => 
             {
                 this.eth = eth.data;
+                this.eth_loading = false;
             });
         },
         watch:
         {
             users_wew(users)
             {
-                if(!users.length) {return 0}
+                this.btc_transaction_fee = 0;
+                this.btc_total_payout = 0;
+                this.eth_transaction_fee = 0;
+                this.eth_total_payout = 0;
+
+                if(!users.length) {this.users_data = []; return 0}
 
                 this.$refs.kTableRef.showLoading();
                 const users_data = [];
@@ -250,10 +306,22 @@ export default {
                         name           : u.issue_by,
                         currency       : u.currency,
                         amount         : u.amount,
+                        fee            : u.charge,
                         remarks        : u.remarks,
                         status         : u.status,
                         date_created   : u.date_created
-                    })
+                    });
+                    
+                    if (u.currency === 'btc')
+                    {
+                        this.btc_transaction_fee += u.charge;
+                        this.btc_total_payout += u.amount;
+                    }
+                    else if (u.currency === 'eth')
+                    {
+                        this.eth_transaction_fee += u.charge;
+                        this.eth_total_payout += u.amount;
+                    }
                 });
 
                 this.users_data = users_data;
@@ -265,6 +333,7 @@ export default {
             { name: 'name'         , label: 'Name'         , field: 'name'         , align: 'center', sortable: true},
             { name: 'currency'     , label: 'Currency'     , field: 'currency'     , align: 'center', sortable: true},
             { name: 'amount'       , label: 'Amount'       , field: 'amount'       , align: 'center', sortable: true},
+            { name: 'fee'          , label: 'Fee'          , field: 'fee'          , align: 'center', sortable: true},
             { name: 'remarks'      , label: 'Remarks'      , field: 'remarks'      , align: 'center', sortable: true},
             { name: 'status'       , label: 'Status'       , field: 'status'       , align: 'center', sortable: true},
             { name: 'date_created' , label: 'Date Created' , field: 'date_created' , align: 'center', sortable: true},

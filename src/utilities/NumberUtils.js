@@ -25,8 +25,10 @@ export const formatNumber = (number, options = {}) =>
                 ? null
                     : ['BTC','XAU', 'UNIQ'].includes(currency)
                 ? 8
-                    : ['PHP', 'USD', 'ETH'].includes(currency)
+                    : ['PHP', 'USD'].includes(currency)
                 ? 2
+                    : ['ETH'].includes(currency)
+                ? 18
                     : null;
 
             formatted_number = to_fixed_num ? formatted_number.toFixed(to_fixed_num) : formatted_number
