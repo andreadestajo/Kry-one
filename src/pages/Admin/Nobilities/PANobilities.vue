@@ -1,14 +1,19 @@
 <template>
     <q-page class="q-pa-lg">
-        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">Nobilities</k-header>
+        <k-header icon="fa fa-chess-knight" detail="Purchase for your friends">
+            <span>Nobilities</span>
+            <!--ADD BUTTON-->
+            <span slot="right">
+                <q-btn unelevated
+                       icon="add"
+                       label="Add New Nobility"
+                       type="submit"
+                       color="primary"
+                       class="q-mb-sm"
+                       @click="showAddNobilityModal"/>
+            </span>
 
-        <!--ADD BUTTON-->
-        <q-btn unelevated
-               label="Add New Nobility"
-               type="submit"
-               color="primary"
-               class="q-my-sm"
-               @click="showAddNobilityModal"/>
+        </k-header>
 
         <!--TABLE-->
         <k-table ref="kTableRef" :data="nobilities_data" :columns="$options.columns" class="text-center">

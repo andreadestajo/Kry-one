@@ -3,10 +3,9 @@
              :data="data"
              :columns="columns"
              row-key="name"
-             :pagination="{rowsPerPage: 0}"
-             hide-bottom
-             :loading="is_loading">
-
+             :loading="is_loading"
+             class="ktable"
+             >
 
         <template v-slot:top>
             <slot name="table_top"></slot>
@@ -19,6 +18,8 @@
 </template>
 
 <script>
+    import "./KTable.scss"
+
     export default {
         name: "KTable",
         props: {

@@ -10,14 +10,14 @@
         border: 1px solid #eee;
 
         padding: 8px 20px;
-        position: fixed;
         left: 0;
         right: 0;
-        top: 50px;
+        top: 30px;
         z-index: 1;
     }
+
     .spacer {
-        height: 64px;
+        height: 20px;
     }
 
     .back {
@@ -38,6 +38,11 @@
         &-sub {
             margin-top: -3px;
             color: $text-three;
+        }
+        &-right{
+            margin-top: -40px;
+            color: $text-three;
+            float: right;
         }
     }
 }

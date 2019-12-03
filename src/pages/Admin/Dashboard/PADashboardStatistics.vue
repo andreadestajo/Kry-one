@@ -1,7 +1,7 @@
 <template>
     <div class="row q-ma-md">
         <!--START NUMBER OF USERS-->
-        <k-card class="col q-ma-sm">
+        <k-card class="col-md col-12 q-ma-sm">
             <span slot="section">
                 <q-icon name="fas fa-users" color="primary" size="2.5em"/>
                 <div class="text-center q-pa-sm">
@@ -18,7 +18,7 @@
         <!--END NUMBER OF USERS-->
 
         <!--START NUMBER OF KYC Verified-->
-        <k-card class="col q-ma-sm">
+        <k-card class="col-md col-12 q-ma-sm">
             <span slot="section">
                 <q-icon name="verified_user" color="primary" size="2.5em"/>
                 <div class="text-center q-pa-sm">
@@ -35,7 +35,7 @@
         <!--END NUMBER OF KYC Verified-->
 
         <!--START NUMBER OF KYC Verified-->
-        <k-card class="col q-ma-sm">
+        <k-card class="col-md col-12 q-ma-sm">
             <span slot="section">
                 <q-icon name="verified_user" color="primary" size="2.5em"/>
                 <div class="text-center q-pa-sm">
@@ -52,7 +52,7 @@
         <!--END NUMBER OF KYC Verified-->
 
         <!--START NUMBER OF KYC Verified-->
-        <k-card class="col q-ma-sm">
+        <k-card class="col-md col-12 q-ma-sm">
             <span slot="section">
                 <q-icon name="verified_user" color="primary" size="2.5em"/>
                 <div class="text-center q-pa-sm">

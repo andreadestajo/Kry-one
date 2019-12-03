@@ -6,6 +6,9 @@
             <div class="title">
                 <div class="title-main"><slot></slot></div>
                 <div class="title-sub">{{ detail }}</div>
+                <div class="title-right">
+                    <slot name="right"></slot>
+                </div>
             </div>
         </div>
         <div class="spacer"></div>

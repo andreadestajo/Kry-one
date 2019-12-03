@@ -5,11 +5,11 @@
         <pa-dashboard-statistics class="dashboard__statistics"/>
 
         <div class="row q-ma-md">
-            <div class="col q-ma-sm">
+            <div class="col-md col-12 q-ma-sm">
                 <pa-dashboard-sales-breakdown />
             </div>
 
-            <div class="col q-ma-sm">
+            <div class="col-md col-12 q-ma-sm">
                 <pa-dashboard-promotions />
             </div>
         </div>

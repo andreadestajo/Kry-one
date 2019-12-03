@@ -6,7 +6,7 @@
         <k-table ref="kTableRef" :data="users_data" :columns="$options.columns" class="text-center">
             <template slot="table_top">
                 <q-input dense class="full-width"
-                         placeholder="Search by email"
+                         placeholder="Search by Email, Full name or Referral Code"
                          @keyup.enter="searchUser"
                          v-model="search_text">
                     <template v-slot:append>
