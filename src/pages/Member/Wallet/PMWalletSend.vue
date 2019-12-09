@@ -224,8 +224,13 @@ export default
         {
             this.$_showPageLoading();
 
-            // Get user details
-            const user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
+            // Try getting user by wallet address
+            let user = await DB_USER.getUserByWalletAddress(this.active_wallet.abb, this.send_wallet_form.send_to);
+
+            // Try getting user by email
+            if(!user) {
+                user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
+            }
 
             if (user)
             {
@@ -266,13 +271,11 @@ export default
         },
         async transferWallet()
         {
-            let send_wallet            = {};
-            send_wallet.amount         = this.send_wallet_form.amount;
-            send_wallet.send_to        = this.send_wallet_form.send_to_id;
-            send_wallet.currency       = this.active_wallet.abb;
-            send_wallet.remarks        = this.send_wallet_form.remarks;
-
-            console.log(send_wallet);
+            let send_wallet         = {};
+            send_wallet.amount      = this.send_wallet_form.amount;
+            send_wallet.send_to     = this.send_wallet_form.send_to_id;
+            send_wallet.currency    = this.active_wallet.abb;
+            send_wallet.remarks     = this.send_wallet_form.remarks;
 
             try
             {
