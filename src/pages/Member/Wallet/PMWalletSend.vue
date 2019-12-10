@@ -217,17 +217,27 @@ export default
         },
         async showConfirmDialog()
         {
-            this.internal_user_id = null;
             this.$_showPageLoading();
             this.$v.send_wallet_form.$touch();
             if(this.$v.send_wallet_form.$error) {return 0}
             
-            // Get user details
-            const user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
+            // Try getting user by wallet address
+            // Cinocomment ko muna nag eerror kasi ung transfer wallet kapag internal kase walang user id dito sa wallet data.
+            // let user = await DB_USER.getUserByWalletAddress(this.active_wallet.abb, this.send_wallet_form.send_to);
 
-            if (user)
+            let user = null; // temporary until fixed
+
+            // Try getting user by email
+            if(!user) 
             {
-                this.internal_user_id = user.id;
+                user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
+
+                // pass user_id to confirmationTransaction()
+                if (user)
+                {
+                    this.internal_user_id = null;
+                    this.internal_user_id = user.id;
+                }
             }
 
             this.is_external_send = !user;
@@ -278,13 +288,11 @@ export default
         },
         async transferWallet()
         {
-            let send_wallet            = {};
-            send_wallet.amount         = this.send_wallet_form.amount;
-            send_wallet.send_to        = this.send_wallet_form.send_to_id;
-            send_wallet.currency       = this.active_wallet.abb;
-            send_wallet.remarks        = this.send_wallet_form.remarks;
-
-            console.log(send_wallet);
+            let send_wallet         = {};
+            send_wallet.amount      = this.send_wallet_form.amount;
+            send_wallet.send_to     = this.send_wallet_form.send_to_id;
+            send_wallet.currency    = this.active_wallet.abb;
+            send_wallet.remarks     = this.send_wallet_form.remarks;
 
             try
             {

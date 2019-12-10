@@ -99,6 +99,7 @@
                 // Bind user wallet
                 this.user_wallet = await DB_USER_WALLET.bindUserWallet(this, user_id);
 
+
                 console.log(this.user_wallet);
 
                 this.$refs.kModalRef.hideLoading();

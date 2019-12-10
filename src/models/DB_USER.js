@@ -156,6 +156,24 @@ export default
             })
     },
 
+    getUserByWalletAddress(currency, wallet_address) {
+        console.log(currency, wallet_address)
+
+        let query = DB.collectionGroup('wallets')
+            .where("key", "==", currency.toUpperCase())
+            .where("address","==", wallet_address);
+
+        return query.get()
+            .then(user =>
+            {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error =>
+            {
+                return {error}
+            })
+    },
+
     /**
      *
      * @param _this
