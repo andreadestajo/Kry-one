@@ -82,7 +82,7 @@
                         <div class="value">{{send_wallet_form.send_to}}</div>
                     </div>
 
-                    <div class="content-group q-pt-md">
+                    <div v-if="is_external_send" class="content-group q-pt-md">
                         <div class="label text-weight-medium">Charge</div>
                         <div class="value">{{$_formatNumber(send_wallet_form.charge, {currency: active_wallet.abb})}}</div>
                         <div class="conversion">PHP 0.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 0.00</div>
@@ -164,7 +164,9 @@ export default
             charge        : 0,
             send_to       : '',
             remarks       : ''
-        }
+        },
+        is_external_send: false,
+        internal_user_id: null
     }),
     watch: 
     {
@@ -199,7 +201,7 @@ export default
         {
             // To add service charge soon
             if(!this.send_wallet_form.amount && !this.active_wallet) {return 0}
-            return Number(this.send_wallet_form.amount) + Number(this.send_wallet_form.charge)
+            return Number(this.send_wallet_form.amount) + (this.is_external_send ? Number(this.send_wallet_form.charge) : 0)
         }
     },
     methods: {
@@ -213,23 +215,33 @@ export default
 
             this.is_wallet_dialog_open  = false;
         },
-        showConfirmDialog()
+        async showConfirmDialog()
         {
+            this.internal_user_id = null;
+            this.$_showPageLoading();
             this.$v.send_wallet_form.$touch();
             if(this.$v.send_wallet_form.$error) {return 0}
-
-            this.is_confirmation_dialog_open = true;
-        },
-        async confirmTransaction()
-        {
-            this.$_showPageLoading();
-
+            
             // Get user details
             const user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
 
             if (user)
             {
-                this.send_wallet_form.send_to_id = user.id;
+                this.internal_user_id = user.id;
+            }
+
+            this.is_external_send = !user;
+            this.is_confirmation_dialog_open = true;
+            
+            this.$_hidePageLoading();
+        },
+        async confirmTransaction()
+        {
+            this.$_showPageLoading();
+
+            if (!this.is_external_send)
+            {
+                this.send_wallet_form.send_to_id = this.internal_user_id;
                 this.transferWallet();
             }
             else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH') // BTC AND ETH

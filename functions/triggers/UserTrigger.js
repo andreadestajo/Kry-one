@@ -6,6 +6,7 @@ const MDB_NOBILITY      = require('../models/MDB_NOBILITY');
 const EARNING           = require('../globals/Earning');
 const Bitcoin           = require('../globals/Bitaps/Bitcoin');
 const Ethereum          = require('../globals/Bitaps/Ethereum');
+const FieldValue        = require('firebase-admin').firestore.FieldValue;
 
 module.exports =
 {
@@ -102,6 +103,13 @@ module.exports =
                         initial_data.address = ethereum_wallet.address;
                         initial_data.info = ethereum_wallet;
                     }
+                }
+
+                if (initial_data.address)
+                {
+                    let update_user_data = {};
+                    update_user_data.filters = FieldValue.arrayUnion(initial_data.address);
+                    promise_list.push(MDB_USER.update(uid, update_user_data));
                 }
 
                 promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));
