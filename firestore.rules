@@ -52,5 +52,9 @@ service cloud.firestore
         {
             allow read;
         }
+        match /cryptoReport/{cryptoReportId}
+        {
+            allow read;
+        }
 	}
 }

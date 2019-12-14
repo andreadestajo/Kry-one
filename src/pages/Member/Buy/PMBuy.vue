@@ -135,6 +135,7 @@ export default
             nobility         : {label: '', value: null},
             amount           : 0
         },
+        matched_nobility: null,
         success_dialog: false,
         wallet_amount: 0,
 
@@ -210,6 +211,7 @@ export default
 
             if(!matched_nobilities.length)
             {
+                this.matched_nobility = null;
                 this.form.nobility = {label: '', value: null};
                 return 0;
             }
@@ -218,6 +220,8 @@ export default
             const computed_nobility = matched_nobilities[matched_nobilities.length - 1].rank_order <= this.$_current_user_data.nobility_info.rank_order
                 ? this.$_current_user_data.nobility_info
                 : matched_nobilities[matched_nobilities.length - 1];
+
+            this.matched_nobility = matched_nobilities[matched_nobilities.length - 1];
 
             this.form.nobility = {
                 label: computed_nobility.title,
@@ -234,10 +238,11 @@ export default
         async processPurchase()
         {
             this.$_showPageLoading();
+            this.computeNobility();
 
             const upgrade_account                 = {};
 
-            upgrade_account.target_nobility     = this.form.nobility.value;
+            upgrade_account.target_nobility     = this.matched_nobility.id;
             upgrade_account.amount              = parseFloat(this.form.amount);
             upgrade_account.payment_method      = this.form.payment_currency;
 

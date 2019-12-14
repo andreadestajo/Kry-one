@@ -105,6 +105,13 @@ module.exports =
 
             for (let currency of currency_list)
             {
+                const wallet = await MDB_USER_WALLET.get(uid, currency.id);
+                
+                if (wallet)
+                {
+                    continue;
+                }
+                
                 let initial_data = { key: currency.id, address: '', wallet: 0, log_count: 0 };
 
                 // generate btc wallet

@@ -5,13 +5,13 @@
             <div class="q-gutter-y-md">
                 <k-card>
                     <q-tabs class="wallet__tabs text-grey" v-model="tab" dense active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
-                        <q-tab class="tab" v-for="currency in $options.currency_options" :key="currency.key" :name="currency.key" :label="currency.label" />
+                        <q-tab class="tab" v-for="currency in currency_options" :key="currency.key" :name="currency.key" :label="currency.label" />
                     </q-tabs>
 
                     <q-separator />
 
                     <q-tab-panels class="wallet__panel" v-model="tab" animated>
-                        <q-tab-panel class="panel" v-for="currency in $options.currency_options" :key="currency.key" :name="currency.key">
+                        <q-tab-panel class="panel" v-for="currency in currency_options" :key="currency.key" :name="currency.key">
                             <div class="panel-container">
                                 <div class="label">{{ currency.label }}</div>
                                 <div class="amount">
@@ -58,14 +58,15 @@ export default
     filters: { },
     data:() =>(
     {
-		tab: 'uniq',
-        ready: false,
+		tab             : 'uniq',
+        ready           : false,
+        currency_options: []
     }),
     async mounted()
     {
-        this.$options.currency_options.forEach((currency) =>
+        this.currency_options = this.$options.ref_currencies.map((currency) =>
         {
-            currency.abb = currency.abb ==='UNIQ' ? 'XAU' : currency.abb;
+            return currency
         });
 
         this.ready = true;
@@ -87,7 +88,7 @@ export default
             return res;
         }
     },
-	currency_options: ref_currencies,
+	ref_currencies,
 	action_options:
 	[
 		{ key: 'send', label: 'Send', icon: 'fa fa-paper-plane', color: '#4DB6AC', route: 'member_send' },
