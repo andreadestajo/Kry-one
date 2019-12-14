@@ -190,6 +190,8 @@ export default
         confirmEnlist()
         {
             this.$v.form.$touch();
+            console.log(this.$v.form);
+
             if(this.$v.form.$error || this.$v.form.$pending) {return 0}
 
             this.confirm_dialog = true;
@@ -258,7 +260,6 @@ export default
             form:
             {
                 full_name: {required},
-                sponsor_name: {required},
                 email:
                 {
                     required,

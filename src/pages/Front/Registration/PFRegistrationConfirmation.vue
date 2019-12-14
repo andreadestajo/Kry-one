@@ -7,7 +7,10 @@
         </q-card-section>
 
         <q-card-section>
-            <div class="text-subtitle1">
+            <div class="text-subtitle1" v-if="has_valid_eid">
+                Thanks for signing up. You can now sign in using your email address and password.
+            </div>
+            <div class="text-subtitle1" v-else>
                 Thanks for signing up. Please confirm your e-mail address <b>({{email}})</b> to activate
                 your account. Check your inbox for the activation link.
             </div>
@@ -20,7 +23,7 @@
                    label="Sign In"
                    @click="$router.push('login')"/>
 
-            <div class="q-pt-md text-center">
+            <div class="q-pt-md text-center" v-if="!has_valid_eid">
                 Still waiting for the activation link ?
                 <q-btn @click="resendVerificationLink" color="primary" flat dense>Resend Activation Link</q-btn>
             </div>
@@ -36,8 +39,9 @@
         name: "PFRegistrationConfirmation",
         props:
         {
-            email     : {type: String},
-            full_name : {type: String}
+            email         : {type: String},
+            full_name     : {type: String},
+            has_valid_eid : {type: Boolean, default: false}
         },
         methods:
         {

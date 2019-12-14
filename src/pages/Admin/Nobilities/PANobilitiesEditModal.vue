@@ -45,6 +45,13 @@
                          v-model="nobility.override_bonus"/>
             </k-field>
 
+            <k-field label="Max Income Per Day">
+                <q-input dense
+                         outlined
+                         type="number"
+                         v-model="nobility.max_income"/>
+            </k-field>
+
             <k-field label="Perks">
                 <q-input dense
                          outlined
@@ -93,6 +100,7 @@
                 required_direct : 0,
                 required_rank   : 0,
                 override_bonus  : 0,
+                max_income      : 0,
                 perks           : '',
                 details         : '',
                 badge_color     : ''
@@ -143,6 +151,7 @@
                     nobility_data.rank_order      = Number(this.nobility.rank_order);
                     nobility_data.required_direct = Number(this.nobility.required_direct);
                     nobility_data.override_bonus  = Number(this.nobility.override_bonus);
+                    nobility_data.max_income      = Number(this.nobility.max_income);
 
                     // Prepare required_rank_id and required_rank_title
                     nobility_data.required_rank_id    = this.nobility.required_rank ? this.nobility.required_rank.value : null;

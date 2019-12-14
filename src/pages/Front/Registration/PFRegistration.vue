@@ -161,7 +161,8 @@
 
             <p-f-registration-confirmation v-if="isRegistered"
                                            :email="registration_form_data.email"
-                                           :full_name="registration_form_data.full_name"/>
+                                           :full_name="registration_form_data.full_name"
+                                           :has_valid_eid="has_valid_eid"/>
         </q-page>
     </q-page-container>
 </template>
@@ -263,19 +264,21 @@
                 this.$v.registration_form_data.$touch();
                 if(this.$v.registration_form_data.$error || this.$v.registration_form_data.$pending) {return 0}
 
-                const registration_form_data    = Object.assign({}, this.registration_form_data);
-                registration_form_data.currency    = this.registration_form_data.currency.value;
-                registration_form_data.knight_data = this.knight_data;
+                this.$_showPageLoading({message: 'Creating an account.'});
+
+                const registration_form_data     = Object.assign({}, this.registration_form_data);
+                registration_form_data.currency   = this.registration_form_data.currency.value;
 
                 // Do something if enlisted. Just in case u need, you can access knight_data,
                 if(this.has_valid_eid)
                 {
-                    registration_form_data.eid = this.$route.query.eid;
-                    registration_form_data.id  = this.$route.query.id;
+                    registration_form_data.knight_data = {
+                        id  : this.$route.query.id,
+                        eid : this.knight_data.eid,
+                    };
                 }
 
-                this.$_showPageLoading({message: 'Creating an account.'});
-                await fbCall(FN_REGISTER, {registration_form_data})
+                await fbCall(FN_REGISTER, {registration_form_data: JSON.stringify(registration_form_data)})
                 .then(data =>
                 {
                     this.$_hidePageLoading();
