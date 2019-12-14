@@ -132,16 +132,16 @@ module.exports =
         console.log(level, user_info.id, nobility_info.title, nobility_info.override_bonus);
 
         /* DIRECT REFERRAL */
-        if(level === 1)
-        {
-            let direct_referral_amount  = bitcoin_equivalent * 0.01;
-            description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
-            type                        = "earned";
-            promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
-            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
-            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
-            console.log(description);
-        }
+        // if(level === 1)
+        // {
+        //     let direct_referral_amount  = bitcoin_equivalent * 0.01;
+        //     description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
+        //     type                        = "earned";
+        //     promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
+        //     promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
+        //     promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+        //     console.log(description);
+        // }
 
         /* STAIRSTEP OVERRIDE */
         if(nobility_info.override_bonus > stairstep.current_percentage)
