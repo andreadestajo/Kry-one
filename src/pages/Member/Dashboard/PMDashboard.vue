@@ -48,7 +48,7 @@
         <div v-if="placement_message == true" class="dashboard__warning q-mt-md">
             <div class="message">
                 <div class="message-title">You are not yet placed.</div>
-                <div class="message-detail">You need to ask your upline to place you.</div>
+                <div class="message-detail">You need to ask your LORD and SPONSOR to place you.</div>
             </div>
         </div>
 
