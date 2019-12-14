@@ -23,7 +23,14 @@ export default
         },
         $_current_user_wallet()
         {
-            return this.$store.getters[GETTER_CURRENT_USER_WALLET];
+            const currency = this.$store.getters[GETTER_CURRENT_USER_WALLET];
+
+            if(currency.hasOwnProperty("XAU"))
+            {
+                currency.UNIQ = Object.assign({}, currency.XAU)
+            }
+            
+            return currency;
         },
     }
 }
