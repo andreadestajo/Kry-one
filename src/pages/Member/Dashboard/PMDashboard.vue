@@ -175,6 +175,7 @@ export default
     ],
     mounted()
     {
+        console.log(Object.assign({}, this.$_current_user_wallet));
         // Check Placement
         if(this.$_current_user_data.nobility_info.rank_order != 1)
         {

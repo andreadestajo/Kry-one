@@ -83,7 +83,14 @@
         {
             walletDetails()
             {
-                return this.user_wallet
+                return this.user_wallet.map(u => {
+                    if(u.key === "XAU")
+                    {
+                        u.key = "UNIQ"
+                    }
+
+                    return u
+                })
             }
         },
         methods:
@@ -99,8 +106,6 @@
                 // Bind user wallet
                 this.user_wallet = await DB_USER_WALLET.bindUserWallet(this, user_id);
 
-
-                console.log(this.user_wallet);
 
                 this.$refs.kModalRef.hideLoading();
             },

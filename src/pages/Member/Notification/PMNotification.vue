@@ -101,7 +101,9 @@ export default
                     }
                 } else {
                     this.$nextTick(function () {
-                        this.$refs.notificationRef.stop();
+                        if(this.$refs.notificationRef) {
+                            this.$refs.notificationRef.stop()
+                        }
                     });
                 }
 
