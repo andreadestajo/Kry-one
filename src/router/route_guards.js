@@ -1,12 +1,16 @@
 import DB_USER  from '../models/DB_USER'
 import {AUTH}   from "../boot/firebase";
 
-import {isAuthorized}  from '../globals/AuthenticationHelper'
-import Store from '../store/index'
+import {isAuthorized} from '../globals/AuthenticationHelper'
+import Store          from '../store/index'
+
 import {
     MUTATION_SET_CURRENT_AUTH_ID,
-    MUTATION_SET_CURRENT_USER_DATA
+    MUTATION_SET_CURRENT_USER_DATA,
+    MUTATION_SET_CURRENT_USER_WALLET
 } from "../store/user-module/mutations";
+
+import {MUTATION_SET_CURRENCY} from "../store/currency-module/mutations";
 
 export default
 {
@@ -39,6 +43,8 @@ export default
                     // Remove sessions
                     Store().commit(MUTATION_SET_CURRENT_AUTH_ID, null);
                     Store().commit(MUTATION_SET_CURRENT_USER_DATA, null);
+                    Store().commit(MUTATION_SET_CURRENCY, null);
+                    Store().commit(MUTATION_SET_CURRENT_USER_WALLET, null);
                     localStorage.removeItem('auth_id');
                 }
                 next();

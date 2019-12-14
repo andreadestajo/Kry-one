@@ -15,21 +15,25 @@
 
                 <!-- E-MAIL ADDRESS -->
                 <k-field label="E-mail Address">
-                    <q-input v-model.lazy="form.email"
+                    <q-input debounce="500"
+                             v-model.lazy="form.email"
                              :error="$v.form.email.$error"
                              :error-message="emailError"
                              @blur="$v.form.email.$touch()"
-                             debounce="500" dense placeholder="Enter e-mail of person you'll invite" class="input" outlined stack-label></q-input>
+                             :loading="$v.form.email.$pending"
+                             dense placeholder="Enter e-mail of person you'll invite" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- SPONSOR -->
                 <k-field label="Sponsor">
-                    <q-input v-model.lazy="form.sponsor"
+                    <q-input debounce="500"
+                             v-model.lazy="form.sponsor"
                              :error="$v.form.sponsor.$error"
-                             :error-message="sponsorError"
-                             :hint="sponsorError"
+                             :error-message="$v.form.sponsor.$pending ? '' : sponsorError"
+                             :hint="$v.form.sponsor.$pending ? '' : sponsorError"
                              @blur="$v.form.sponsor.$touch()"
-                             debounce="500" dense placeholder="M6U3V3" class="input" outlined stack-label></q-input>
+                             :loading="$v.form.sponsor.$pending"
+                             dense placeholder="M6U3V3" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- CHOOSE METHOD OF PAYMENT -->
@@ -68,9 +72,14 @@
                         </template>
                     </q-input>
                 </k-field>
+                <div class="conversion">
+                    <k-amount-conversion :amount="parseFloat(form.amount)" :coin="form.payment_method.abb"/>
+                </div>
 
-                <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
-                <q-btn outline label="VIEW PENDING ENLIST (0)" type="button" color="primary" class="full-width q-mt-sm"></q-btn>
+                <div class="q-pt-lg">
+                    <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
+                    <q-btn outline label="VIEW PENDING ENLIST (0)" type="button" color="primary" class="full-width q-mt-sm"></q-btn>
+                </div>
             </k-card>
         </q-form>
 
@@ -112,7 +121,7 @@ import {fbCall}           from "../../../utilities/Callables";
 import DB_NOBILITY from "../../../models/DB_NOBILITY";
 import DB_USER     from "../../../models/DB_USER"
 
-import {required, email, maxValue, minValue}  from "vuelidate/src/validators";
+import {required, email, maxValue, minValue, not, sameAs}  from "vuelidate/src/validators";
 
 export default
 {
@@ -181,6 +190,8 @@ export default
         confirmEnlist()
         {
             this.$v.form.$touch();
+            console.log(this.$v.form);
+
             if(this.$v.form.$error || this.$v.form.$pending) {return 0}
 
             this.confirm_dialog = true;
@@ -236,7 +247,7 @@ export default
         await DB_NOBILITY.bindNobilities(this);
         this.form.nobility = this.nobility_options[0];
 
-        this.$v.form.sponsor.$touch()
+        this.$v.form.sponsor.$touch();
 
         // Initial Computation
         this.computeTotalAmount();
@@ -253,36 +264,45 @@ export default
                 {
                     required,
                     email,
-                    async isUnique(email)
+                    isUnique(email)
                     {
-                        // Returns true if no user found, meaning the email is available.
-                        return await DB_USER.getUserByEmailAddress(email)
-                            .then(user => !user)
+                        if(email === '') {return true}
+
+                        return new Promise((resolve) => {
+                            setTimeout(() =>
+                            {
+                                DB_USER.getUserByEmailAddress(email)
+                                .then(user => {
+                                    resolve(!user)
+                                });
+                            }, 500)
+                        });
                     }
                 },
                 sponsor :
                 {
                     required,
-                    async doesExists(sponsor)
-                    {
-                        console.log('test');
-                        // Returns true if referral code belongs to an existing user.
-                        const does_exists = await DB_USER.getUserByReferralCode(sponsor).then(user =>
-                        {
-                            this.is_eligible = false;
+                    doesExists(sponsor) {
+                        if(sponsor === '') {return true}
 
-                            this.sponsor_name = user && !user.error ? user.full_name : null;
+                        return new Promise((resolve) => {
+                            setTimeout(() =>
+                            {
+                                DB_USER.getUserByReferralCode(sponsor).then(user =>
+                                {
+                                    // check if eligible
+                                    this.is_eligible  = user && !user.error ? user.nobility_info.rank_order > 1 : false;
+                                    this.sponsor_name = this.is_eligible ? user.full_name : null;
 
-                            // check if eligible
-                            this.is_eligible = user && !user.error ? user.nobility_info.rank_order > 1 : false;
-
-                            return !!user
-                        });
-
-                        return does_exists;
+                                    resolve(!!user)
+                                });
+                            }, 500)
+                        })
                     },
-                    async isEligible(referral_code)
-                    {
+                    isEligible(sponsor) {
+                        if(sponsor === '') {return true}
+                        if(this.$v.form.sponsor.doesExists.$pending) {return true}
+
                         return this.is_eligible
                     }
                 },

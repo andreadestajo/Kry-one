@@ -65,11 +65,14 @@
         }),
         methods:
         {
-             async goToRoute(route)
+             goToRoute(route)
              {
                  if(route === 'admin_logout')
                  {
-                     await DB_USER.signOut();
+                     DB_USER.signOut()
+                     .then(() => {
+                         this.$router.push({name: 'front_login'})
+                     });
                  }
                  else
                  {

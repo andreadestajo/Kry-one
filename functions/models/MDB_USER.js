@@ -24,12 +24,17 @@ module.exports =
     {
         if(position.toLowerCase() === 'left')
         {
-            this.doc(uid).update({ binary_points_left : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
+            await this.doc(uid).update({ binary_points_left : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
         }
         else
         {
-            this.doc(uid).update({ binary_points_right : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
+            await this.doc(uid).update({ binary_points_right : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
         } 
+    },
+    async deductBinaryPointLeftRight(uid, points)
+    {
+        let deduction = points * -1;
+        await this.doc(uid).update({ binary_points_left : FieldValue.increment(deduction), binary_points_right : FieldValue.increment(deduction) });
     },
     async add(data)
     {

@@ -48,7 +48,7 @@
         <div v-if="placement_message == true" class="dashboard__warning q-mt-md">
             <div class="message">
                 <div class="message-title">You are not yet placed.</div>
-                <div class="message-detail">You need to ask your upline to place you.</div>
+                <div class="message-detail">You need to ask your LORD and SPONSOR to place you.</div>
             </div>
         </div>
 
@@ -68,7 +68,7 @@
             <div class="icon"><q-icon name="info"></q-icon></div>
             <div class="message">
                 <div class="message-title">KYC Verification is being processed.</div>
-                <div class="message-detail">Your account verification is under confirmation, this usually takes around 2-3 business days. Thank you for your patience..</div>
+                <div class="message-detail">KYC Verification is being processed. Your account verification is under review. This process usually takes an average of around 2-3 business days. Thank you for your patience.</div>
             </div>
         </div>
 
@@ -169,7 +169,7 @@ export default
     },
     earning_breakdown:
     [
-        { label: 'Direct Referral' , key: 'direct'    , icon: 'fa fa-users'         },
+        // { label: 'Direct Referral' , key: 'direct'    , icon: 'fa fa-users'         },
         { label: 'Knight Match'    , key: 'binary'    , icon: 'fa fa-hands-helping' },
         { label: 'Team Override'   , key: 'stairstep' , icon: 'fa fa-layer-group'   },
     ],

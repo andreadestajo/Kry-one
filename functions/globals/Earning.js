@@ -132,16 +132,16 @@ module.exports =
         console.log(level, user_info.id, nobility_info.title, nobility_info.override_bonus);
 
         /* DIRECT REFERRAL */
-        if(level === 1)
-        {
-            let direct_referral_amount  = bitcoin_equivalent * 0.01;
-            description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
-            type                        = "earned";
-            promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
-            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
-            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
-            console.log(description);
-        }
+        // if(level === 1)
+        // {
+        //     let direct_referral_amount  = bitcoin_equivalent * 0.01;
+        //     description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
+        //     type                        = "earned";
+        //     promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
+        //     promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
+        //     promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+        //     console.log(description);
+        // }
 
         /* STAIRSTEP OVERRIDE */
         if(nobility_info.override_bonus > stairstep.current_percentage)
@@ -193,15 +193,51 @@ module.exports =
     },
     async binaryGoToUpline(user_info, level, points, promise_list, user_cause, downline_position)
     {
-        console.log(level, user_info.id, downline_position);
-
+        console.log(user_info.id, user_info.full_name);
         await MDB_USER.addBinaryPointLeftRight(user_info.id, downline_position, points);
 
-        let upline_info = await MDB_USER.get(user_info.placement_id || 0);
+        user_info               = await MDB_USER.get(user_info.id);
+        let point_deduction     = 0;
+        let point_left          = user_info.binary_points_left || 0;
+        let point_right         = user_info.binary_points_right || 0;
 
+        console.log(point_left, point_right)
+
+        //check points that will be deducted in left and right
+        if(point_left !== 0 && point_right !== 0)
+        {
+            if(point_left <= point_right)
+            {
+                point_deduction = point_left;
+            }
+            else
+            {
+                point_deduction = point_right;
+            }
+        }
+
+        //check if points deduction is not zero
+        if(point_deduction !== 0)
+        {
+            await MDB_USER.deductBinaryPointLeftRight(user_info.id, point_deduction);
+            let binary_amount           = point_deduction * 0.01;
+            description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from pairing on your left and right because <b>${user_cause.full_name}</b> has been placed.`;
+            type                        = "earned";
+            promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
+            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', binary_amount))
+            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+
+            console.log(description);
+        }
+
+        let upline_info = await MDB_USER.get(user_info.placement_id || 0);
+        
         if(upline_info)
         {
+            console.log("------ ** NEXT *** ------");
             await this.binaryGoToUpline(upline_info, level+1, points, promise_list, user_cause, user_info.placement_position);
         }
+
+        
     }
 };
