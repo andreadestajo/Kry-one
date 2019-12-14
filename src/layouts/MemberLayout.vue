@@ -73,7 +73,10 @@ export default
         {
             if(route === 'logout')
             {
-                DB_USER.signOut();
+                DB_USER.signOut()
+                .then(() => {
+                    this.$router.push({name: 'front_login'})
+                });
             }
             else
             {

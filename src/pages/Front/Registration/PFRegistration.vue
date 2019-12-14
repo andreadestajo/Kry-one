@@ -161,7 +161,8 @@
 
             <p-f-registration-confirmation v-if="isRegistered"
                                            :email="registration_form_data.email"
-                                           :full_name="registration_form_data.full_name"/>
+                                           :full_name="registration_form_data.full_name"
+                                           :has_valid_eid="has_valid_eid"/>
         </q-page>
     </q-page-container>
 </template>

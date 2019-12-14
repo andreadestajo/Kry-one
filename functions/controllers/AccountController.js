@@ -58,6 +58,8 @@ module.exports =
     {
         const user_info       = data.registration_form_data;
 
+        console.log(user_info)
+        return 0;
         // Check if sponsor is
         const is_eligible_sponsor = await MDB_USER.getUserByReferralCode(user_info.referral_code)
         .then(user =>
