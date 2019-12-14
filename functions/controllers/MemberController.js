@@ -153,6 +153,7 @@ module.exports =
         });
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
+        let btc_equivalent              = payment_conversions['BTC'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
 
         if(logged_in_user_wallet.wallet < data.amount)
@@ -207,7 +208,17 @@ module.exports =
             promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));
 
             /* UNILEVEL EARNING UPON UNIQ PURCHASE */
-            promise_list.push(MDB_USER.update(logged_in_user.id, { compute_unilevel: data.amount }));
+            let user_update_earning                 = {};
+            user_update_earning.compute_unilevel    = xau_equivalent;
+
+            /* ALSO COMPUTE BINARY IF ALREADY PLACED */
+            if(logged_in_user.hasOwnProperty('placement'))
+            {
+                user_update_earning.compute_binary  = btc_equivalent;
+            }
+
+            promise_list.push(MDB_USER.update(logged_in_user.id, user_update_earning));
+
             await Promise.all(promise_list);
         }
 

@@ -117,6 +117,32 @@
                 </div>  
             </div>
         </k-card>
+
+        <!-- BINARY POINTS -->
+        <k-card class="dashboard__breakdown member__card q-mt-md">
+            <div class="subtitle">Knight Match Points</div>
+            <div class="text-center q-pa-lg" v-if="!earning_breakdown">
+                <q-spinner color="primary" size="2em"/>
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-caret-left"></q-icon></div>
+                    <div class="breakdown-label">Points on Left </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(9) }}</div>
+                    </div>
+                </div>  
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-caret-right"></q-icon></div>
+                    <div class="breakdown-label">Points on Right </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ $_current_user_data.binary_points_right.toFixed(8) }}</div>
+                    </div>
+                </div>  
+            </div>
+        </k-card>
     </div>
 </template>
 
