@@ -1,4 +1,11 @@
 .enlist {
+
+    .conversion {
+        text-align: right;
+        margin-top: -30px;
+        color: $text-light;
+    }
+
     &__dialog {
         text-align: center; 
         color: $text-one;

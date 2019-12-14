@@ -72,9 +72,14 @@
                         </template>
                     </q-input>
                 </k-field>
+                <div class="conversion">
+                    <k-amount-conversion :amount="parseFloat(form.amount)" :coin="form.payment_method.abb"/>
+                </div>
 
-                <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
-                <q-btn outline label="VIEW PENDING ENLIST (0)" type="button" color="primary" class="full-width q-mt-sm"></q-btn>
+                <div class="q-pt-lg">
+                    <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
+                    <q-btn outline label="VIEW PENDING ENLIST (0)" type="button" color="primary" class="full-width q-mt-sm"></q-btn>
+                </div>
             </k-card>
         </q-form>
 
