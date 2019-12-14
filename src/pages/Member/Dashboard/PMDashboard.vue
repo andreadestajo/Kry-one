@@ -68,7 +68,7 @@
             <div class="icon"><q-icon name="info"></q-icon></div>
             <div class="message">
                 <div class="message-title">KYC Verification is being processed.</div>
-                <div class="message-detail">Your account verification is under confirmation, this usually takes around 2-3 business days. Thank you for your patience..</div>
+                <div class="message-detail">KYC Verification is being processed. Your account verification is under review. This process usually takes an average of around 2-3 business days. Thank you for your patience.</div>
             </div>
         </div>
 
