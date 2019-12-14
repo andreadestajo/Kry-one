@@ -272,17 +272,21 @@ export default
             this.registration_form_data.country         = {name: 'Afghanistan', code: 'AF'};
             this.registration_form_data.referral_code   = this.user_info ? this.user_info.referral_code : "3E1jmPok";
 
+            let res;
+
             try
             {
-                let res = await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data});
+                res = await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data});
             }
             catch(err)
             {
                 this.$q.notify({ message: err.message, color: 'red' });
             }
 
-            //this.last_id = res.data;
-            //this.bindUserInformation();
+            console.log(res.data);
+
+            this.last_id = res.data;
+            this.bindAndTurnToPledger();
             this.$_hidePageLoading();
             
         },

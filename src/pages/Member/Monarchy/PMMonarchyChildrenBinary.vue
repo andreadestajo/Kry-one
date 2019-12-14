@@ -5,9 +5,8 @@
                 <div class="image"><q-img spinner-size="5px" :src="data.photo_url ? data.photo_url : `../statics/boy.jpg`"></q-img></div>
                 <div class="name">{{ data.full_name }}</div>
                 <div class="rank">{{ data.nobility_info.title }}</div>
-                <div class="points">Point: {{ data.binary_point_value || 0.00000000 }}</div>
-                <div class="points">Left: {{ data.binary_points_left || 0.00000000 }}</div>
-                <div class="points">Right: {{ data.binary_points_right || 0.00000000 }}</div>
+                <div class="points">Left: {{ ((data.binary_points_left || 0) * 1000).toFixed(0)  }}</div>
+                <div class="points">Right: {{ ((data.binary_points_right || 0) * 1000).toFixed(0)  }}</div>
             </div>
             <div unelevated label="Back" type="reset" class="q-mt-sm full-width" value="hello" name="hello" @click="copyLink(data.id)">COPY ID</div>
         </a>
