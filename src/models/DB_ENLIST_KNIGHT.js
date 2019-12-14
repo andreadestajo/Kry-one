@@ -58,5 +58,14 @@ export default
     async remove(id)
     {
         return await this.doc(id).delete();
+    },
+    getPendingEnlistment(id, eid) {
+        return this.collection()
+            .where("id", "==", id)
+            .where("eid", "==", eid)
+            .where("status", "==", "pending")
+            .limit(1)
+            .get()
+            .then(doc => doc.empty ? null : Object.assign({}, doc.docs[0].data(), {id: doc.docs[id]}))
     }
 }

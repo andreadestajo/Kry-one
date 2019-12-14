@@ -302,10 +302,10 @@
             if(this.$route.query.hasOwnProperty('id') && this.$route.query.hasOwnProperty('eid'))
             {
                 this.$_showPageLoading();
+                const {id, eid} = this.$route.query;
 
                 // Validate eid and id
-                const knight_data = await DB_ENLIST_KNIGHT.doc(this.$route.query.id).get()
-                    .then(doc => doc.exists ? doc.data() : null);
+                const knight_data = await DB_ENLIST_KNIGHT.getPendingEnlistment(id, eid);
 
                 // Halt process if not valid
                 if(!knight_data)

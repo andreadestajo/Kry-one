@@ -29,7 +29,7 @@ export default
             {
                 currency.UNIQ = Object.assign({}, currency.XAU)
             }
-            
+
             return currency;
         },
     }

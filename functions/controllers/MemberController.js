@@ -255,11 +255,24 @@ module.exports =
         // generate enlistment id based on email
         knight_data.eid = generateAccessCode(knight_data.email);
 
+        // add new knight and update knight
         const add_new_knight = await MDB_ENLIST_KNIGHT.add(knight_data)
             .then(data => ({error: null, data}))
             .catch(error => ({error}));
 
         if(add_new_knight.error)
+        {
+            HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
+            return 0;
+        }
+
+        // update knight info
+        const update_created_knight = await MDB_ENLIST_KNIGHT
+            .update(add_new_knight.data, {id: add_new_knight.data})
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(update_created_knight.error)
         {
             HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
             return 0;
