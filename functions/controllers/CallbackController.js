@@ -111,7 +111,7 @@ module.exports =
                 postback.date_created   = new Date();
                 postback.status         = "pending";
                 
-                await MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash });
+                await MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash, currency: current_currency });
             }
             else if(postback.confirmations === required_confirmation && current_transaction.status === "pending")
             {
@@ -125,7 +125,7 @@ module.exports =
                 let transaction_detail = `You received <b>${ current_currency_name.toLowerCase() } (${ current_currency })</b> in your wallet.`;
 
                 Wallet.add(postback.uid, current_currency, (converted_amount), 'received', description, "", transaction_detail);
-                await MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash });
+                await MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash, currency: current_currency });
                 
                 // get user info
                 const user = await MDB_USER.get(postback.uid);
