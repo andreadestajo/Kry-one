@@ -45,6 +45,7 @@ exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onR
 
 // Triggers
 exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onCreate(user_trigger.create);
+exports.triggerUserUpdate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onWrite(user_trigger.update);
 
 // Callback
 exports.bitapsCallback          = FUNCTIONS_HTTPS.onRequest(callback_controller.bitaps);

@@ -276,7 +276,7 @@ export default
 
             try
             {
-                res = await fbCall(FN_REGISTER, {registration_form_data: this.registration_form_data});
+                res = await fbCall(FN_REGISTER, {registration_form_data: JSON.stringify(this.registration_form_data)});
             }
             catch(err)
             {

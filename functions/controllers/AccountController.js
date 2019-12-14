@@ -57,6 +57,7 @@ module.exports =
 
     async register (data, context)
     {
+        console.log(data.registration_form_data);
         const user_info       = JSON.parse(data.registration_form_data);
 
         // Check if sponsor is

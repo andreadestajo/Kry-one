@@ -10,6 +10,31 @@ const FieldValue        = require('firebase-admin').firestore.FieldValue;
 
 module.exports =
 {
+    async update(change, context)
+    {
+        const newValue = change.after.data();
+        const previousValue = change.before.data();
+
+        //unilevel computation triggers
+        if(newValue.hasOwnProperty('compute_unilevel'))
+        {
+            if(newValue.compute_unilevel !== 0)
+            {
+                await EARNING.unilevel(newValue, newValue.compute_unilevel);
+                await EARNING.updateRank(newValue.upline_id);
+            }
+        }
+
+        //binary computation triggers
+        if(newValue.hasOwnProperty('compute_binary'))
+        {
+            if(newValue.compute_binary !== 0)
+            {
+                await MDB_USER.update(newValue.id, { compute_binary: 0 });
+                await EARNING.binary(newValue, newValue.compute_binary);
+            }
+        }
+    },
     async create(snap, context)
     {
         await module.exports.createInitializeParameters(snap.id, snap.data());

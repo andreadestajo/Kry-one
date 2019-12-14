@@ -180,12 +180,11 @@ module.exports =
 
         return res;
     },
-    async binary(user_info)
+    async binary(user_info, points)
     {
         console.log("BINARY METHOD");
 
         let promise_list        = [];
-        let points              = user_info.binary_point_value;
         let upline_info         = await MDB_USER.get(user_info.placement_id);
 
         await this.binaryGoToUpline(upline_info, 1, points, promise_list, user_info, user_info.placement_position);
@@ -220,9 +219,11 @@ module.exports =
         if(point_deduction !== 0)
         {
             await MDB_USER.deductBinaryPointLeftRight(user_info.id, point_deduction);
+            
             let binary_amount           = point_deduction * 0.01;
             description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from pairing on your left and right because <b>${user_cause.full_name}</b> has been placed.`;
             type                        = "earned";
+
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
             promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', binary_amount))
             promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
@@ -231,7 +232,7 @@ module.exports =
         }
 
         let upline_info = await MDB_USER.get(user_info.placement_id || 0);
-        
+
         if(upline_info)
         {
             console.log("------ ** NEXT *** ------");
