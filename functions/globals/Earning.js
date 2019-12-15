@@ -128,9 +128,8 @@ module.exports =
     async unilevelGoToUpline(user_info, level, bitcoin_equivalent, promise_list, user_cause, stairstep)
     {
         let nobility_info = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
-
-        console.log(level, user_info.id, nobility_info.title, nobility_info.override_bonus);
-
+        console.log(level, user_info, nobility_info);
+        //console.log(level, user_info.id, nobility_info.title, nobility_info.override_bonus);
         /* DIRECT REFERRAL */
         // if(level === 1)
         // {
