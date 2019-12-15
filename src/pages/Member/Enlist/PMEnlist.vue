@@ -78,7 +78,9 @@
 
                 <div class="q-pt-lg">
                     <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
-                    <q-btn outline label="VIEW PENDING ENLIST (0)" type="button" color="primary" class="full-width q-mt-sm"></q-btn>
+                    <q-btn outline :label="`VIEW PENDING ENLIST (${pending_enlist_count})`"
+                           type="button" color="primary" class="full-width q-mt-sm"
+                           @click="viewPendingEnlist"></q-btn>
                 </div>
             </k-card>
         </q-form>
@@ -118,8 +120,9 @@ import KCard    from '../../../components/Member/KCard'
 import {FN_ENLIST_KNIGHT} from "../../../references/refs_functions";
 import {fbCall}           from "../../../utilities/Callables";
 
-import DB_NOBILITY from "../../../models/DB_NOBILITY";
-import DB_USER     from "../../../models/DB_USER"
+import DB_NOBILITY      from "../../../models/DB_NOBILITY";
+import DB_USER          from "../../../models/DB_USER"
+import DB_ENLIST_KNIGHT from "../../../models/DB_ENLIST_KNIGHT"
 
 import {required, email, maxValue, minValue, not, sameAs}  from "vuelidate/src/validators";
 
@@ -145,6 +148,7 @@ export default
             { label: 'Bitcoin'  , value: 'btc', abb: 'BTC' },
             { label: 'Ethereum' , value: 'eth', abb: 'ETH' },
         ],
+        pending_enlist_count: 0
     }),
     computed:
     {
@@ -183,7 +187,7 @@ export default
                 ? 'Insufficient balance'
                     : !this.$v.form.amount.minValue
                 ? 'Amount must be greater than 0' : ''
-        },
+        }
     },
     methods:
     {
@@ -236,6 +240,10 @@ export default
             this.form.full_name = '';
             this.form.email     = '';
             this.$v.form.$reset();
+        },
+        viewPendingEnlist()
+        {
+            this.$router.push({name: "member_enlist_pending"})
         }
     },
     async mounted()
@@ -252,6 +260,10 @@ export default
 
         // Initial Computation
         this.computeTotalAmount();
+
+        // Pending enlist count
+        const pending_enlists = await DB_ENLIST_KNIGHT.getPendingEnlistments(this.$_current_user_data.id);
+        this.pending_enlist_count = pending_enlists ? pending_enlists.length : 0;
 
         this.$_hidePageLoading();
     },

@@ -9,12 +9,23 @@
             grid-template-columns: auto 1fr;
             grid-gap: 20px;
 
-            .detail {
-                color: $text-one;
-                overflow-wrap: break-word;
+            &-badge {
+                .circle {
+                    background-color: #aaa;
+                    height: 50px;
+                    width: 50px;
+                    border-radius: 100%;
+                }
             }
-            .time {
-                color: $text-light;
+
+            &-detail {
+                .detail {
+                    color: $text-one;
+                    overflow-wrap: break-word;
+                }
+                .time {
+                    color: $text-light;
+                }
             }
         }
     }

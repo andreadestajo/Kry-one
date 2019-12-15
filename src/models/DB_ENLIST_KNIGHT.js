@@ -71,7 +71,6 @@ export default
     },
     bindPendingEnlistments(_this, uid, options = {})
     {
-        console.log(uid);
         const query = this.collection()
             .where("enlisted_by", "==", uid)
             .where("status", "==", "pending")
@@ -83,5 +82,12 @@ export default
         }
 
         return _this.$bind(options.name, query)
+    },
+    getPendingEnlistments(uid) {
+        return this.collection()
+            .where("enlisted_by", "==", uid)
+            .where("status", "==", "pending")
+            .get()
+            .then(doc => doc.empty ? [] : doc.docs.map(e => Object.assign({}, e.data(), {id: e.id})))
     }
 }

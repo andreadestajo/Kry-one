@@ -3,14 +3,13 @@
         <k-header detail="Lorem ipsum">PENDING ENLIST</k-header>
         <div class="enlistPending__list">
             <k-card v-for="enlistment in pendingEnlistments" :key="enlistment.id" class="item">
-                <div class="list-image">
-                    <q-avatar>
-                        <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
-                    </q-avatar>
+                <div class="item-badge">
+                    <div :style="`background-color: ${enlistment.nobility_badge_color}`" class="circle"></div>
                 </div>
-                <div class="list-detail">
+                <div class="item-detail">
                     <div class="detail"><b>{{enlistment.full_name}}</b></div>
                     <div class="detail">{{enlistment.email}}</div>
+                    <div class="detail">{{enlistment.nobility_title}}</div>
                     <div class="time">{{getRelativeTime(enlistment.created_at.toDate())}}</div>
                 </div>
             </k-card>
@@ -43,8 +42,6 @@
             this.$_showPageLoading();
             await DB_ENLIST_KNIGHT.bindPendingEnlistments(this, this.$_current_user_data.id);
             this.$_hidePageLoading();
-
-            console.log(this.pendingEnlistments);
         }
     }
 </script>
