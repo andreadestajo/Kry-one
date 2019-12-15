@@ -41,7 +41,9 @@
 
         <!-- PAGES -->
         <q-page-container>
-            <router-view />
+            <div class="page-wrapper">
+                <router-view />
+            </div>
         </q-page-container>
     </q-layout>
 </template>

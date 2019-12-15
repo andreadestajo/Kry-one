@@ -93,7 +93,6 @@ export default
 	[
 		{ key: 'send', label: 'Send', icon: 'fa fa-paper-plane', color: '#4DB6AC', route: 'member_send' },
 		{ key: 'receive', label: 'Receive', icon: 'fa fa-qrcode', color: '#1277A8', route: 'member_receive' },
-		{ key: 'convert', label: 'Convert', icon: 'fa fa-exchange-alt', color: '#D15400', route: 'member_convert' },
 		{ key: 'history', label: 'History', icon: 'fa fa-history', color: '#ea4848', route: 'member_history' },
 	],
 }

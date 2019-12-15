@@ -1,0 +1,11 @@
+
+@media only screen and (min-width: 992px) {
+    .nobility {
+        max-width: 600px;
+        margin: auto;
+
+        &__header {
+            background-color: transparent;
+        }
+    }
+}

@@ -224,7 +224,7 @@ module.exports =
             type                        = "earned";
 
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
-            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', binary_amount))
+            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'binary', binary_amount))
             promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
 
             console.log(description);

@@ -1,6 +1,6 @@
 <template>
     <q-pull-to-refresh @refresh="refreshNotifications">
-        <div class="notification" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
+        <div class="notification" ref="scrollTargetRef">
             <k-header detail="Get live information about events">Notifications</k-header>
             <k-card class="q-my-md">
                 <div v-if="is_notification_empty" class="notification__label">
@@ -10,8 +10,7 @@
                                    @load="fetchNotifications"
                                    ref="notificationRef"
                                    :scroll-target="$refs.scrollTargetRef">
-                    <div v-for="notif in notification_data"
-                         :class="`list ${notif.is_new ? 'new' : ''}`" @click="action(notif)">
+                    <div v-for="notif in notification_data" :class="`list ${notif.is_new ? 'new' : ''}`" @click="action(notif)">
                         <div class="list-image">
                             <q-avatar>
                                 <q-img spinner-size="0" :src="notif.image"></q-img>

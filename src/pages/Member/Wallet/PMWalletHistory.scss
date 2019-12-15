@@ -59,3 +59,11 @@
         text-align: center;
     }
 }
+
+
+@media only screen and (min-width: 992px) {
+    .wallethistory {
+        max-width: 600px;
+        margin: auto;
+    }
+}
