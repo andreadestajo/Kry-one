@@ -132,7 +132,7 @@
                     <div class="breakdown-icon"><q-icon name="fa fa-caret-left"></q-icon></div>
                     <div class="breakdown-label">Points on Left </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(9) }}</div>
+                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(8) }}</div>
                     </div>
                 </div>  
             </div>

@@ -14,9 +14,10 @@ module.exports =
 {
     async update(change, context)
     {
-        const newValue = change.after.data();
+        const newValue  = change.after.data();
         //const previousValue = change.before.data();
-        const uid = context.params.uid;
+        const uid       = context.params.uid;
+        newValue.id     = uid;
 
         //unilevel computation triggers
         if(newValue.hasOwnProperty('compute_unilevel'))
