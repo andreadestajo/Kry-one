@@ -84,9 +84,11 @@ module.exports =
                 };
 
                 // Update user nobility
-                await MDB_USER.update(createUser.data.uid, data);
-
+                return MDB_USER.update(createUser.data.uid, data);
+            })
+            .then(() => {
                 return res.status(200).send({message: "You have successfully initialized the data."})
+
             })
             .catch((error) => {
                 return res.status(500).send({error})
