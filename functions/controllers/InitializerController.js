@@ -22,11 +22,16 @@ module.exports =
         });
 
         //Delete all users
-        const users = await MDB_USER.getMany();
-        const deleteUsers = users.map(u => {
-            return ADMIN_AUTH.deleteUser(u.id)
-        });
+        const users = await ADMIN_AUTH.listUsers(1000)
+            .then(function(listUsersResult) {
+                return listUsersResult.users.map(function(userRecord) {
+                    return userRecord.toJSON().uid
+                });
+            });
 
+        const deleteUsers = users.map(uid => {
+            return ADMIN_AUTH.deleteUser(uid)
+        });
 
         // Initialize Account
         const account_data = account;
