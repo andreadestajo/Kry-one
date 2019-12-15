@@ -16,11 +16,11 @@
                                 <div class="label">{{ currency.label }}</div>
                                 <div class="amount">
                                     <div class="amount-value">
-                                        <div class="actual">{{ $_formatNumber($_current_user_wallet[currency.abb].wallet || 0, { decimal: currency.decimals }) }}</div>
+                                        <div class="actual">{{ $_formatNumber(checkWallet(currency.abb), { decimal: currency.decimals }) }}</div>
                                         <div class="currency">{{ currency.abb }}</div>
                                     </div>
                                     <div class="amount-conversion">
-                                        <k-amount-conversion :amount="parseFloat($_current_user_wallet[currency.abb].wallet)" :coin="currency.abb"/>
+                                        <k-amount-conversion :amount="parseFloat(checkWallet(currency.abb))" :coin="currency.abb"/>
                                     </div>
                                 </div>
                             </div>
@@ -86,6 +86,15 @@ export default
             });
 
             return res;
+        },
+        checkWallet(currency, prop = "wallet") {
+            // returns 0 if wallet is not available yet
+            const _default = prop === "wallet" ? 0 : '';
+
+            if(!this.$_current_user_wallet) {return _default}
+            if(!this.$_current_user_wallet.hasOwnProperty(currency)) {return _default}
+
+            return this.$_current_user_wallet[currency][prop];
         }
     },
 	ref_currencies,
