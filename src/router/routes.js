@@ -5,7 +5,7 @@ const routes = [
 		path: '/', component: () => import('layouts/FrontLayout.vue'),
 		children:
         [
-			{ name: 'front_home',               path: ''               , component: () => import('pages/Front/PFHome.vue') },
+			{ name: 'front_home',               path: ''               , component: () => import('pages/Front/Login/PFLogin.vue') },
 			{ name: 'front_login',              path: 'login'          , beforeEnter: RouteGuard.beforeEnterLogin, component: () => import('pages/Front/Login/PFLogin.vue') },
 			{ name: 'front_unverified',         path: 'unverified'     , component: () => import('pages/Front/Login/PFUnverifiedUser.vue') },
 			{ name: 'front_register',           path: 'register'       , component: () => import('pages/Front/Registration/PFRegistration.vue')},

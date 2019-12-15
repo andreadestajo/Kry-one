@@ -1,4 +1,5 @@
 .member__header {
+    position: relative;
     .fixer {
         display: grid;
         grid-template-columns: auto 1fr;
@@ -13,6 +14,7 @@
         position: fixed;
         left: 0;
         right: 0;
+        
         top: 50px;
         z-index: 1;
     }
@@ -40,6 +42,16 @@
         &-sub {
             margin-top: -3px;
             color: $text-three;
+        }
+    }
+}
+
+@media only screen and (min-width: 992px) {
+    .member__header {
+        margin-top: 10px;
+        .fixer {
+            position: absolute;
+            top: 0;
         }
     }
 }

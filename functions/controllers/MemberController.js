@@ -328,7 +328,7 @@ module.exports =
             update_user.placement.upline_id      = upline_info.id;
             update_user.placement.upline_name    = upline_info.full_name;
             update_user.placement.date_placed    = new Date();
-            update_user.compute_binary           = downline_to_place.binary_point_value;
+            update_user.compute_binary           = downline_to_place.binary_point_value || 0;
 
             await MDB_USER.update(downline_to_place.id, update_user);
             //await EARNING.binary(downline_to_place, downline_to_place.binary_point_value);

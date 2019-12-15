@@ -58,4 +58,11 @@ export default
             padding: 1rem;
         }
     }
+
+    @media only screen and (min-width: 992px) {
+        .receive {
+            max-width: 600px;
+            margin: auto;
+        }
+    }
 </style>

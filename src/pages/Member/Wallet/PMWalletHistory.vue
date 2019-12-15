@@ -1,5 +1,5 @@
 <template>
-    <div class="wallethistory" ref="scrollTargetRef" style="max-height: 700px; overflow: auto;">
+    <div class="wallethistory" ref="scrollTargetRef">
         <k-header detail="Bitcoin wallet transaction history">Transaction History</k-header>
 
         <k-card class="q-mt-md q-mb-md">

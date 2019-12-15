@@ -78,3 +78,14 @@
         }
     }
 }
+
+@media only screen and (min-width: 992px) {
+    .invite {
+        max-width: 600px;
+        margin: auto;
+
+        &__header {
+            background-color: transparent;
+        }
+    }
+}

@@ -21,9 +21,12 @@
                     <div class="group-label">Your next target</div>
                     <div class="group-value next">{{target_nobility}}</div>
                 </div>
-                <div class="detail">
+                <div v-if="target_nobility_info.required_direct !== 0" class="detail">
                     <div class="detail-requirements">You need <b>{{ target_nobility_info.required_direct }} {{ target_nobility_info.required_rank_title }}</b><br></div>
                     <div class="detail-target">In order for you to become a <b>{{ target_nobility }}</b></div>
+                </div>
+                <div v-if="target_nobility_info.required_direct == 0" class="detail">
+                    <div class="detail-requirements">The only way to become a pledger is to accelerate.</div>
                 </div>
                 <div class="action">
                     <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
@@ -129,7 +132,7 @@
                     <div class="breakdown-icon"><q-icon name="fa fa-caret-left"></q-icon></div>
                     <div class="breakdown-label">Points on Left </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(9) }}</div>
+                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(8) }}</div>
                     </div>
                 </div>  
             </div>
