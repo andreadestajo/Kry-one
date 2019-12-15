@@ -19,7 +19,20 @@ export default
                 },
                 kyc_status: ''
             };
-            return this.$store.getters[GETTER_CURRENT_USER_DATA] ? this.$store.getters[GETTER_CURRENT_USER_DATA] : default_data;
+
+            const user_data = this.$store.getters[GETTER_CURRENT_USER_DATA];
+
+            if(!user_data.hasOwnProperty("binary_points_left"))
+            {
+                user_data.binary_points_left = 0;
+            }
+
+            if(!user_data.hasOwnProperty("binary_points_right"))
+            {
+                user_data.binary_points_right = 0;
+            }
+
+            return user_data ? user_data : default_data;
         },
         $_current_user_wallet()
         {
