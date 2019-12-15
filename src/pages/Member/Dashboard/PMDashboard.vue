@@ -198,7 +198,11 @@ export default
         checkWallet(currency, prop = "wallet") {
             // returns 0 if wallet is not available yet
             const _default = prop === "wallet" ? 0 : '';
-            return this.$_current_user_wallet ? this.$_current_user_wallet[currency][prop] : _default
+
+            if(!this.$_current_user_wallet) {return _default}
+            if(!this.$_current_user_wallet.hasOwnProperty(currency)) {return _default}
+
+            return this.$_current_user_wallet[currency][prop];
         }
     },
     earning_breakdown:
