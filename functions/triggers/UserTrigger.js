@@ -45,10 +45,13 @@ module.exports =
     async create(snap, context)
     {
         await module.exports.createInitializeWallet(snap.id);
-        await module.exports.createInitializeParameters(snap.id, snap.data());
+        await module.exports.createInitializeParameters(snap.id);
     },
-    async createInitializeParameters(id, user_info)
+    async createInitializeParameters(id)
     {
+        /* get user info */
+        let user_info = await MDB_USER.get(id);
+
         /* initial nobility */
         const nobility_list = await MDB_NOBILITY.getMany({ order_by: 'rank' });
 
@@ -174,7 +177,7 @@ module.exports =
                 {
                     let update_user_data = {};
                     update_user_data.filters = FieldValue.arrayUnion(initial_data.address);
-                    await MDB_USER.update(uid, update_user_data);
+                    promise_list.push(MDB_USER.update(uid, update_user_data));
                 }
 
                 promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));
