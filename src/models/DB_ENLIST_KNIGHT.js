@@ -59,7 +59,8 @@ export default
     {
         return await this.doc(id).delete();
     },
-    getPendingEnlistment(id, eid) {
+    getPendingEnlistment(id, eid)
+    {
         return this.collection()
             .where("id", "==", id)
             .where("eid", "==", eid)
@@ -67,5 +68,20 @@ export default
             .limit(1)
             .get()
             .then(doc => doc.empty ? null : Object.assign({}, doc.docs[0].data(), {id: doc.docs[id]}))
+    },
+    bindPendingEnlistments(_this, uid, options = {})
+    {
+        console.log(uid);
+        const query = this.collection()
+            .where("enlisted_by", "==", uid)
+            .where("status", "==", "pending")
+            .orderBy("created_at", "desc");
+
+        if(!options.hasOwnProperty("name"))
+        {
+            options.name = "pendingEnlistments"
+        }
+
+        return _this.$bind(options.name, query)
     }
 }

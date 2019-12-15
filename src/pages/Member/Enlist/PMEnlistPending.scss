@@ -1,0 +1,21 @@
+.enlistPending {
+    &__list {
+        padding: 15px 0px;
+
+        .item {
+            margin-bottom: 10px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 20px;
+
+            .detail {
+                color: $text-one;
+                overflow-wrap: break-word;
+            }
+            .time {
+                color: $text-light;
+            }
+        }
+    }
+}

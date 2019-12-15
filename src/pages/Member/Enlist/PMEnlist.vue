@@ -152,7 +152,7 @@ export default
         {
             return this.nobilities
                 .filter(n => parseFloat(n.price) !== 0 && this.$_current_user_data.nobility_id !== n.id)
-                .map(n => ({label: n.title, value: n.id}))
+                .map(n => ({label: n.title, value: n.id, data: n}))
         },
         emailError()
         {
@@ -190,7 +190,6 @@ export default
         confirmEnlist()
         {
             this.$v.form.$touch();
-            console.log(this.$v.form);
 
             if(this.$v.form.$error || this.$v.form.$pending) {return 0}
 
@@ -201,9 +200,11 @@ export default
             this.$_showPageLoading();
 
             const data = Object.assign({}, this.form);
-            data.nobility       = this.form.nobility.value;
-            data.payment_method = this.form.payment_method.value;
-            data.created_at     = new Date();
+            data.nobility             = this.form.nobility.value;
+            data.nobility_title       = this.form.nobility.label;
+            data.nobility_badge_color = this.form.nobility.data.badge_color;
+            data.payment_method       = this.form.payment_method.value;
+            data.created_at           = new Date();
 
             await fbCall(FN_ENLIST_KNIGHT, JSON.stringify(data))
             .then(() =>
