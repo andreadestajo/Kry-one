@@ -112,7 +112,9 @@ export default
                     // warning. Change this too if you wanna change the default limit
                     if(notifications.length < 10)
                     {
-                        this.$refs.notificationRef.stop()
+                        if(this.$refs.notificationRef) {
+                            this.$refs.notificationRef.stop()
+                        }
                     }
                 } else {
                     this.$nextTick(function () {

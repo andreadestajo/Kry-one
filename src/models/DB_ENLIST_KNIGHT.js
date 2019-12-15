@@ -89,5 +89,18 @@ export default
             .where("status", "==", "pending")
             .get()
             .then(doc => doc.empty ? [] : doc.docs.map(e => Object.assign({}, e.data(), {id: e.id})))
-    }
+    },
+    getEnlistmentByEmailAddress(email)
+    {
+        return this.collection()
+            .where("email", "==", email)
+            .limit(1)
+            .get()
+            .then(user => {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error => {
+                return {error}
+            })
+    },
 }
