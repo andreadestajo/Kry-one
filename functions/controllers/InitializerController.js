@@ -60,7 +60,21 @@ module.exports =
             return res.status(500).send({error})
         }
 
+        // Initial nobility data
+        const nobility = await MDB_NOBILITY.getNobilityByRankOrder(2);
+
+        // Add user
         account_data.created_at = new Date();
+
+        // Assign nobility
+        account_data.nobility_id    = nobility.id;
+        account_data.nobility_info  =   {
+            id:             nobility.id,
+            title:          nobility.title,
+            rank_order:     nobility.rank_order,
+            badge_color:    nobility.badge_color,
+        };
+
         const addAccount = MDB_USER.doc(createUser.data.uid).set(account_data);
 
         // update currency
