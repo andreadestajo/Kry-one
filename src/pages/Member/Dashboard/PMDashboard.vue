@@ -74,9 +74,9 @@
 
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber($_current_user_wallet.BTC.wallet, {currency: 'BTC'})}}</div>
+            <div class="value">{{$_formatNumber(checkWallet('BTC'), {currency: 'BTC'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="$_current_user_wallet.BTC.wallet" coin="BTC"/>
+                <k-amount-conversion :amount="checkWallet('BTC')" coin="BTC"/>
             </div>
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
@@ -87,9 +87,9 @@
 
         <!-- UNIQ -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber($_current_user_wallet.XAU.wallet, {currency: 'XAU'})}}</div>
+            <div class="value">{{$_formatNumber(checkWallet('XAU'), {currency: 'XAU'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="$_current_user_wallet.XAU.wallet" coin="XAU"/>
+                <k-amount-conversion :amount="checkWallet('XAU')" coin="XAU"/>
             </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
@@ -191,6 +191,11 @@ export default
 
             // Bind earnings
             await this.$bind('user_earning', DB_USER_EARNING.collection(this.$_current_user_data.id));
+        },
+        checkWallet(currency, prop = "wallet") {
+            // returns 0 if wallet is not available yet
+            const _default = prop === "wallet" ? 0 : '';
+            return this.$_current_user_wallet ? this.$_current_user_wallet[currency][prop] : _default
         }
     },
     earning_breakdown:
