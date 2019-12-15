@@ -282,12 +282,12 @@ export default
                         if(email === '') {return true}
 
                         return new Promise((resolve) => {
-                            setTimeout(() =>
+                            setTimeout(async () =>
                             {
-                                DB_USER.getUserByEmailAddress(email)
-                                .then(user => {
-                                    resolve(!user)
-                                });
+                                const user = await DB_USER.getUserByEmailAddress(email);
+                                const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
+
+                                resolve(!user || !enlistKnight)
                             }, 500)
                         });
                     }
