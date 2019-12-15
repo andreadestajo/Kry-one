@@ -11,7 +11,7 @@
                                    ref="notificationRef"
                                    :scroll-target="$refs.scrollTargetRef">
                     <div v-for="notif in notification_data"
-                         :class="`list ${notif.is_new ? 'new' : ''}`">
+                         :class="`list ${notif.is_new ? 'new' : ''}`" @click="action(notif)">
                         <div class="list-image">
                             <q-avatar>
                                 <q-img spinner-size="0" :src="notif.image"></q-img>
@@ -58,6 +58,21 @@ export default
     }),
     methods: 
     {
+        action(data)
+        {
+            // crypto notification
+            if (data.others.tx_hash)
+            {
+                if (data.others.currency === 'ETH')
+                {
+                    window.open(`https://etherscan.io/tx/${ data.others.tx_hash }`);
+                }
+                else
+                {
+                    window.open(`https://blockchain.info/btc/tx/${ data.others.tx_hash }`);
+                }
+            }
+        },
         goToPage(route, params = null)
         {
             if(route)
@@ -119,7 +134,8 @@ export default
                         is_new          : data.new,
                         relative_time   : getRelativeTime(new Date(data.created_date.toDate())),
                         image           : data.image,
-                        id              : notification.id
+                        id              : notification.id,
+                        others          : data.options
                     };
 
                     this.notification_data.push(notification_data)
