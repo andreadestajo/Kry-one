@@ -21,6 +21,13 @@ module.exports =
            return MDB_NOBILITY.add(n)
         });
 
+        //Delete all users
+        const users = await MDB_USER.getMany();
+        const deleteUsers = users.map(u => {
+            return ADMIN_AUTH.deleteUser(u.id)
+        });
+
+
         // Initialize Account
         const account_data = account;
 
@@ -36,7 +43,7 @@ module.exports =
         const addAccount = MDB_USER.add(account_data);
 
         // update currency
-        Promise.all([...addNobilities, createUser, addAccount, ScheduleController.updateCurrency()])
+        Promise.all([...addNobilities, ...deleteUsers, createUser, addAccount, ScheduleController.updateCurrency()])
             .then(() => {
                 return res.status(200).send({message: "You have successfully initialized the data."})
             })
