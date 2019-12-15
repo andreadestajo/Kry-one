@@ -92,3 +92,10 @@
         }
     }
 }
+
+@media only screen and (min-width: 992px) {
+    .send {
+        max-width: 600px;
+        margin: auto;
+    }
+}

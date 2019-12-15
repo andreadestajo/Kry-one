@@ -47,3 +47,11 @@
         }
     }
 }
+
+@media only screen and (min-width: 992px) {
+    .registration {
+        max-width: 600px;
+        margin: auto;
+        background-color: #fff;
+    }
+}

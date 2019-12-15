@@ -15,10 +15,10 @@ class Bitaps
         this.callback_url = `https://asia-northeast1-krypto-one-live.cloudfunctions.net/bitapsCallback`;
 
         /* Staging */
-        this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
+        // this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
 
         /* Production */
-        // this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
+        this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
 
         this.api_create_wallet_url = `${ this.api_url }/create/wallet/payment/address`;
         this.api_send_wallet_url = `${ this.api_url }/wallet/send/payment/${ this.wallet_id }`;

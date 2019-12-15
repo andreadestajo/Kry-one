@@ -1,6 +1,4 @@
 .registration {
-    background-color: #f3f3f3;
-
     &__logo {
         width: 250px;
         height: 71px;
@@ -62,5 +60,14 @@
                 }
             }
         }
+    }
+}
+
+
+
+@media only screen and (min-width: 992px) {
+    .registration {
+        max-width: 600px;
+        margin: auto;
     }
 }

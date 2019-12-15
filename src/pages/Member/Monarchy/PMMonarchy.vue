@@ -2,8 +2,8 @@
     <div class="page-name monarchy">
         <div>
             <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
-                <q-tab name="unilevel_tree" label="Unilevel Tree" />
-                <q-tab name="binary_tree" label="Binary Tree" />
+                <q-tab name="unilevel_tree" label="Family Tree" />
+                <q-tab name="binary_tree" label="Knight Match Tree" />
             </q-tabs>
 
             <q-separator />

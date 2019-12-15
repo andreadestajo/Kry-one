@@ -153,6 +153,7 @@ module.exports =
         });
 
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
+        let btc_equivalent              = payment_conversions['BTC'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
 
         if(logged_in_user_wallet.wallet < data.amount)
@@ -165,7 +166,6 @@ module.exports =
         }
         else
         {
-
             /* ready record rank up promotions */
             let promotions                      = {};
             promotions.previous_nobility_id     = current_nobility.id;
@@ -208,9 +208,18 @@ module.exports =
             promise_list.push(WALLET.add(logged_in_user.id, 'xau', xau_equivalent, type, description, logged_in_user.id));
 
             /* UNILEVEL EARNING UPON UNIQ PURCHASE */
-            await EARNING.unilevel(logged_in_user, data.amount);
-            await Promise.all(promise_list);     
-            await EARNING.updateRank(logged_in_user.upline_id);
+            let user_update_earning                 = {};
+            user_update_earning.compute_unilevel    = xau_equivalent;
+
+            /* ALSO COMPUTE BINARY IF ALREADY PLACED */
+            if(logged_in_user.hasOwnProperty('placement'))
+            {
+                user_update_earning.compute_binary  = btc_equivalent;
+            }
+
+            promise_list.push(MDB_USER.update(logged_in_user.id, user_update_earning));
+
+            await Promise.all(promise_list);
         }
 
         return { status: "success", message: `I can do this!`};
@@ -255,11 +264,24 @@ module.exports =
         // generate enlistment id based on email
         knight_data.eid = generateAccessCode(knight_data.email);
 
+        // add new knight and update knight
         const add_new_knight = await MDB_ENLIST_KNIGHT.add(knight_data)
             .then(data => ({error: null, data}))
             .catch(error => ({error}));
 
         if(add_new_knight.error)
+        {
+            HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
+            return 0;
+        }
+
+        // update knight info
+        const update_created_knight = await MDB_ENLIST_KNIGHT
+            .update(add_new_knight.data, {id: add_new_knight.data})
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(update_created_knight.error)
         {
             HTTPS_ERROR('failed-precondition', add_new_knight.error.errorInfo.message);
             return 0;
@@ -306,11 +328,10 @@ module.exports =
             update_user.placement.upline_id      = upline_info.id;
             update_user.placement.upline_name    = upline_info.full_name;
             update_user.placement.date_placed    = new Date();
+            update_user.compute_binary           = downline_to_place.binary_point_value || 0;
 
             await MDB_USER.update(downline_to_place.id, update_user);
-            downline_to_place = await MDB_USER.get(data.user_id);
-            
-            await EARNING.binary(downline_to_place);
+            //await EARNING.binary(downline_to_place, downline_to_place.binary_point_value);
         }
 
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};

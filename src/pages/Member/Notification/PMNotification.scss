@@ -30,3 +30,12 @@
         text-align: center;
     }
 }
+
+
+
+@media only screen and (min-width: 992px) {
+    .notification {
+        max-width: 900px;
+        margin: auto;
+    }
+}

@@ -21,9 +21,12 @@
                     <div class="group-label">Your next target</div>
                     <div class="group-value next">{{target_nobility}}</div>
                 </div>
-                <div class="detail">
+                <div v-if="target_nobility_info.required_direct !== 0" class="detail">
                     <div class="detail-requirements">You need <b>{{ target_nobility_info.required_direct }} {{ target_nobility_info.required_rank_title }}</b><br></div>
                     <div class="detail-target">In order for you to become a <b>{{ target_nobility }}</b></div>
+                </div>
+                <div v-if="target_nobility_info.required_direct == 0" class="detail">
+                    <div class="detail-requirements">The only way to become a pledger is to accelerate.</div>
                 </div>
                 <div class="action">
                     <q-btn @click="$router.push({ name: 'member_nobilities' })" flat class="action-button"><q-icon name="info"></q-icon> &nbsp; Nobility</q-btn>
@@ -48,7 +51,7 @@
         <div v-if="placement_message == true" class="dashboard__warning q-mt-md">
             <div class="message">
                 <div class="message-title">You are not yet placed.</div>
-                <div class="message-detail">You need to ask your upline to place you.</div>
+                <div class="message-detail">You need to ask your LORD and SPONSOR to place you.</div>
             </div>
         </div>
 
@@ -68,15 +71,15 @@
             <div class="icon"><q-icon name="info"></q-icon></div>
             <div class="message">
                 <div class="message-title">KYC Verification is being processed.</div>
-                <div class="message-detail">Your account verification is under confirmation, this usually takes around 2-3 business days. Thank you for your patience..</div>
+                <div class="message-detail">KYC Verification is being processed. Your account verification is under review. This process usually takes an average of around 2-3 business days. Thank you for your patience.</div>
             </div>
         </div>
 
         <!-- BITCOIN -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber($_current_user_wallet.BTC.wallet, {currency: 'BTC'})}}</div>
+            <div class="value">{{$_formatNumber(checkWallet('BTC'), {currency: 'BTC'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="$_current_user_wallet.BTC.wallet" coin="BTC"/>
+                <k-amount-conversion :amount="checkWallet('BTC')" coin="BTC"/>
             </div>
             <div class="label">Bitcoin Wallet</div>
             <div class="action">
@@ -87,9 +90,9 @@
 
         <!-- UNIQ -->
         <k-card class="dashboard__wallet member__card q-mt-md">
-            <div class="value">{{$_formatNumber($_current_user_wallet.XAU.wallet, {currency: 'XAU'})}}</div>
+            <div class="value">{{$_formatNumber(checkWallet('XAU'), {currency: 'XAU'})}}</div>
             <div class="conversion">
-                <k-amount-conversion :amount="$_current_user_wallet.XAU.wallet" coin="XAU"/>
+                <k-amount-conversion :amount="checkWallet('XAU')" coin="XAU"/>
             </div>
             <div class="label">Uniq Wallet</div>
             <div class="action">
@@ -113,6 +116,32 @@
                         <div class="conversion">
                             <k-amount-conversion :amount="earning_breakdown[earning.key].total" coin="BTC"/>
                         </div>
+                    </div>
+                </div>  
+            </div>
+        </k-card>
+
+        <!-- BINARY POINTS -->
+        <k-card class="dashboard__breakdown member__card q-mt-md">
+            <div class="subtitle">Knight Match Points</div>
+            <div class="text-center q-pa-lg" v-if="!earning_breakdown">
+                <q-spinner color="primary" size="2em"/>
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-caret-left"></q-icon></div>
+                    <div class="breakdown-label">Points on Left </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(8) }}</div>
+                    </div>
+                </div>  
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-caret-right"></q-icon></div>
+                    <div class="breakdown-label">Points on Right </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ $_current_user_data.binary_points_right.toFixed(8) }}</div>
                     </div>
                 </div>  
             </div>
@@ -165,11 +194,20 @@ export default
 
             // Bind earnings
             await this.$bind('user_earning', DB_USER_EARNING.collection(this.$_current_user_data.id));
+        },
+        checkWallet(currency, prop = "wallet") {
+            // returns 0 if wallet is not available yet
+            const _default = prop === "wallet" ? 0 : '';
+
+            if(!this.$_current_user_wallet) {return _default}
+            if(!this.$_current_user_wallet.hasOwnProperty(currency)) {return _default}
+
+            return this.$_current_user_wallet[currency][prop];
         }
     },
     earning_breakdown:
     [
-        { label: 'Direct Referral' , key: 'direct'    , icon: 'fa fa-users'         },
+        // { label: 'Direct Referral' , key: 'direct'    , icon: 'fa fa-users'         },
         { label: 'Knight Match'    , key: 'binary'    , icon: 'fa fa-hands-helping' },
         { label: 'Team Override'   , key: 'stairstep' , icon: 'fa fa-layer-group'   },
     ],

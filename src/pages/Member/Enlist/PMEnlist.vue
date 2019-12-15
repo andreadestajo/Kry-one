@@ -15,21 +15,25 @@
 
                 <!-- E-MAIL ADDRESS -->
                 <k-field label="E-mail Address">
-                    <q-input v-model.lazy="form.email"
+                    <q-input debounce="500"
+                             v-model.lazy="form.email"
                              :error="$v.form.email.$error"
                              :error-message="emailError"
                              @blur="$v.form.email.$touch()"
-                             debounce="500" dense placeholder="Enter e-mail of person you'll invite" class="input" outlined stack-label></q-input>
+                             :loading="$v.form.email.$pending"
+                             dense placeholder="Enter e-mail of person you'll invite" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- SPONSOR -->
                 <k-field label="Sponsor">
-                    <q-input v-model.lazy="form.sponsor"
+                    <q-input debounce="500"
+                             v-model.lazy="form.sponsor"
                              :error="$v.form.sponsor.$error"
-                             :error-message="sponsorError"
-                             :hint="sponsorError"
+                             :error-message="$v.form.sponsor.$pending ? '' : sponsorError"
+                             :hint="$v.form.sponsor.$pending ? '' : sponsorError"
                              @blur="$v.form.sponsor.$touch()"
-                             debounce="500" dense placeholder="M6U3V3" class="input" outlined stack-label></q-input>
+                             :loading="$v.form.sponsor.$pending"
+                             dense placeholder="M6U3V3" class="input" outlined stack-label></q-input>
                 </k-field>
 
                 <!-- CHOOSE METHOD OF PAYMENT -->
@@ -68,9 +72,16 @@
                         </template>
                     </q-input>
                 </k-field>
+                <div class="conversion">
+                    <k-amount-conversion :amount="parseFloat(form.amount)" :coin="form.payment_method.abb"/>
+                </div>
 
-                <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
-                <q-btn outline label="VIEW PENDING ENLIST (0)" type="button" color="primary" class="full-width q-mt-sm"></q-btn>
+                <div class="q-pt-lg">
+                    <q-btn unelevated label="ENLIST KNIGHT" type="submit" color="primary" class="full-width"></q-btn>
+                    <q-btn outline :label="`VIEW PENDING ENLIST (${pending_enlist_count})`"
+                           type="button" color="primary" class="full-width q-mt-sm"
+                           @click="viewPendingEnlist"></q-btn>
+                </div>
             </k-card>
         </q-form>
 
@@ -109,10 +120,11 @@ import KCard    from '../../../components/Member/KCard'
 import {FN_ENLIST_KNIGHT} from "../../../references/refs_functions";
 import {fbCall}           from "../../../utilities/Callables";
 
-import DB_NOBILITY from "../../../models/DB_NOBILITY";
-import DB_USER     from "../../../models/DB_USER"
+import DB_NOBILITY      from "../../../models/DB_NOBILITY";
+import DB_USER          from "../../../models/DB_USER"
+import DB_ENLIST_KNIGHT from "../../../models/DB_ENLIST_KNIGHT"
 
-import {required, email, maxValue, minValue}  from "vuelidate/src/validators";
+import {required, email, maxValue, minValue, not, sameAs}  from "vuelidate/src/validators";
 
 export default
 {
@@ -136,6 +148,7 @@ export default
             { label: 'Bitcoin'  , value: 'btc', abb: 'BTC' },
             { label: 'Ethereum' , value: 'eth', abb: 'ETH' },
         ],
+        pending_enlist_count: 0
     }),
     computed:
     {
@@ -143,7 +156,7 @@ export default
         {
             return this.nobilities
                 .filter(n => parseFloat(n.price) !== 0 && this.$_current_user_data.nobility_id !== n.id)
-                .map(n => ({label: n.title, value: n.id}))
+                .map(n => ({label: n.title, value: n.id, data: n}))
         },
         emailError()
         {
@@ -174,13 +187,14 @@ export default
                 ? 'Insufficient balance'
                     : !this.$v.form.amount.minValue
                 ? 'Amount must be greater than 0' : ''
-        },
+        }
     },
     methods:
     {
         confirmEnlist()
         {
             this.$v.form.$touch();
+
             if(this.$v.form.$error || this.$v.form.$pending) {return 0}
 
             this.confirm_dialog = true;
@@ -190,9 +204,11 @@ export default
             this.$_showPageLoading();
 
             const data = Object.assign({}, this.form);
-            data.nobility       = this.form.nobility.value;
-            data.payment_method = this.form.payment_method.value;
-            data.created_at     = new Date();
+            data.nobility             = this.form.nobility.value;
+            data.nobility_title       = this.form.nobility.label;
+            data.nobility_badge_color = this.form.nobility.data.badge_color;
+            data.payment_method       = this.form.payment_method.value;
+            data.created_at           = new Date();
 
             await fbCall(FN_ENLIST_KNIGHT, JSON.stringify(data))
             .then(() =>
@@ -224,6 +240,10 @@ export default
             this.form.full_name = '';
             this.form.email     = '';
             this.$v.form.$reset();
+        },
+        viewPendingEnlist()
+        {
+            this.$router.push({name: "member_enlist_pending"})
         }
     },
     async mounted()
@@ -236,10 +256,14 @@ export default
         await DB_NOBILITY.bindNobilities(this);
         this.form.nobility = this.nobility_options[0];
 
-        this.$v.form.sponsor.$touch()
+        this.$v.form.sponsor.$touch();
 
         // Initial Computation
         this.computeTotalAmount();
+
+        // Pending enlist count
+        const pending_enlists = await DB_ENLIST_KNIGHT.getPendingEnlistments(this.$_current_user_data.id);
+        this.pending_enlist_count = pending_enlists ? pending_enlists.length : 0;
 
         this.$_hidePageLoading();
     },
@@ -253,36 +277,45 @@ export default
                 {
                     required,
                     email,
-                    async isUnique(email)
+                    isUnique(email)
                     {
-                        // Returns true if no user found, meaning the email is available.
-                        return await DB_USER.getUserByEmailAddress(email)
-                            .then(user => !user)
+                        if(email === '') {return true}
+
+                        return new Promise((resolve) => {
+                            setTimeout(async () =>
+                            {
+                                const user = await DB_USER.getUserByEmailAddress(email);
+                                const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
+
+                                resolve(!user || !enlistKnight)
+                            }, 500)
+                        });
                     }
                 },
                 sponsor :
                 {
                     required,
-                    async doesExists(sponsor)
-                    {
-                        console.log('test');
-                        // Returns true if referral code belongs to an existing user.
-                        const does_exists = await DB_USER.getUserByReferralCode(sponsor).then(user =>
-                        {
-                            this.is_eligible = false;
+                    doesExists(sponsor) {
+                        if(sponsor === '') {return true}
 
-                            this.sponsor_name = user && !user.error ? user.full_name : null;
+                        return new Promise((resolve) => {
+                            setTimeout(() =>
+                            {
+                                DB_USER.getUserByReferralCode(sponsor).then(user =>
+                                {
+                                    // check if eligible
+                                    this.is_eligible  = user && !user.error ? user.nobility_info.rank_order > 1 : false;
+                                    this.sponsor_name = this.is_eligible ? user.full_name : null;
 
-                            // check if eligible
-                            this.is_eligible = user && !user.error ? user.nobility_info.rank_order > 1 : false;
-
-                            return !!user
-                        });
-
-                        return does_exists;
+                                    resolve(!!user)
+                                });
+                            }, 500)
+                        })
                     },
-                    async isEligible(referral_code)
-                    {
+                    isEligible(sponsor) {
+                        if(sponsor === '') {return true}
+                        if(this.$v.form.sponsor.doesExists.$pending) {return true}
+
                         return this.is_eligible
                     }
                 },

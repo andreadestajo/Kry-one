@@ -60,11 +60,11 @@
                            @click="signInWithEmailAndPassword()"/>
 
                     <q-btn outline
-                           label="Back"
+                           label="Create Account"
                            type="reset"
                             color="primary"
                             class="q-mt-sm full-width"
-                           @click="$router.push('/')"/>
+                           @click="$router.push('/register')"/>
                 </div>
 
                 <div class="q-pt-md text-center">

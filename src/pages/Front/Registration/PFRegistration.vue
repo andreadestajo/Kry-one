@@ -58,6 +58,7 @@
                          v-model.lazy="registration_form_data.email"
                          :error="$v.registration_form_data.email.$error"
                          :error-message="emailError"
+                         :loading="$v.registration_form_data.email.$pending"
                          @blur="$v.registration_form_data.email.$touch()"/>
 
                 <div class="label">
@@ -122,8 +123,9 @@
                          :readonly="has_valid_eid"
                          v-model="registration_form_data.referral_code"
                          :error="$v.registration_form_data.referral_code.$error"
-                         :error-message="referralCodeError"
-                         :hint="referralCodeError"
+                         :error-message="$v.registration_form_data.referral_code.$pending ? '' : referralCodeError"
+                         :hint="$v.registration_form_data.referral_code.$pending ? '' : referralCodeError"
+                         :loading="$v.registration_form_data.referral_code.$pending"
                          @blur="$v.registration_form_data.referral_code.$touch()"/>
 
 
@@ -159,7 +161,8 @@
 
             <p-f-registration-confirmation v-if="isRegistered"
                                            :email="registration_form_data.email"
-                                           :full_name="registration_form_data.full_name"/>
+                                           :full_name="registration_form_data.full_name"
+                                           :has_valid_eid="has_valid_eid"/>
         </q-page>
     </q-page-container>
 </template>
@@ -261,22 +264,23 @@
                 this.$v.registration_form_data.$touch();
                 if(this.$v.registration_form_data.$error || this.$v.registration_form_data.$pending) {return 0}
 
-                const registration_form_data    = Object.assign({}, this.registration_form_data);
-                registration_form_data.currency    = this.registration_form_data.currency.value;
-                registration_form_data.knight_data = this.knight_data;
+                this.$_showPageLoading({message: 'Creating an account.'});
+
+                const registration_form_data     = Object.assign({}, this.registration_form_data);
+                registration_form_data.currency   = this.registration_form_data.currency.value;
 
                 // Do something if enlisted. Just in case u need, you can access knight_data,
                 if(this.has_valid_eid)
                 {
-                    registration_form_data.eid = this.$route.query.eid;
-                    registration_form_data.id  = this.$route.query.id;
+                    registration_form_data.knight_data = {
+                        id  : this.$route.query.id,
+                        eid : this.knight_data.eid,
+                    };
                 }
 
-                this.$_showPageLoading({message: 'Creating an account.'});
-                await fbCall(FN_REGISTER, {registration_form_data})
+                await fbCall(FN_REGISTER, {registration_form_data: JSON.stringify(registration_form_data)})
                 .then(data =>
                 {
-                    console.log(data);
                     this.$_hidePageLoading();
                     this.isRegistered = true;
                 })
@@ -298,10 +302,10 @@
             if(this.$route.query.hasOwnProperty('id') && this.$route.query.hasOwnProperty('eid'))
             {
                 this.$_showPageLoading();
+                const {id, eid} = this.$route.query;
 
                 // Validate eid and id
-                const knight_data = await DB_ENLIST_KNIGHT.doc(this.$route.query.id).get()
-                    .then(doc => doc.exists ? doc.data() : null);
+                const knight_data = await DB_ENLIST_KNIGHT.getPendingEnlistment(id, eid);
 
                 // Halt process if not valid
                 if(!knight_data)
@@ -334,39 +338,52 @@
                     currency       : {required},
                     email          :
                     {
-                            required,
-                            email,
-                            async isUnique(email)
-                            {
-                                // Returns true if no user found, meaning the email is available.
-                                return await DB_USER.getUserByEmailAddress(email)
-                                    .then(user => !user)
-                            }
-                        },
+                        required,
+                        email,
+                        isUnique(email)
+                        {
+                            if(email === '') {return true}
+
+                            // Returns true if no user found, meaning the email is available.
+                            return new Promise((resolve) => {
+                                setTimeout(async () =>
+                                {
+                                    const user = await DB_USER.getUserByEmailAddress(email);
+                                    const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
+
+                                    resolve(!user || !enlistKnight)
+                                }, 500)
+                            });
+                        }
+                    },
                     referral_code :
                     {
-                            required,
-                            async doesExists(referral_code)
-                            {
-                                // Returns true if referral code belongs to an existing user.
-                                const does_exist = await DB_USER.getUserByReferralCode(referral_code).then(user =>
+                        required,
+                        doesExists(referral_code)
+                        {
+                            if(referral_code === '') {return true}
+
+                            // Returns true if referral code belongs to an existing user.
+                            return new Promise((resolve) => {
+                                setTimeout(() =>
                                 {
-                                    this.is_eligible = false;
+                                    DB_USER.getUserByReferralCode(referral_code).then(user =>
+                                    {
+                                        // check if eligible
+                                        this.is_eligible  = user && !user.error ? user.nobility_info.rank_order > 1 : false;
+                                        this.referral_name = this.is_eligible ? user.full_name : null;
+                                        resolve(!!user)
+                                    });
+                                }, 500)
+                            })
+                        },
+                        isEligible(referral_code) {
+                            if(referral_code === '') {return true}
+                            if(this.$v.registration_form_data.referral_code.doesExists.$pending) {return true}
 
-                                    this.referral_name = user && !user.error ? user.full_name : null;
-
-                                    // check if eligible
-                                    this.is_eligible = user && !user.error ? user.nobility_info.rank_order > 1 : false;
-                                    return !!user
-                                });
-
-                                return Promise.resolve(does_exist)
-                            },
-                            async isEligible()
-                            {
-                                return this.is_eligible
-                            }
+                            return this.is_eligible
                         }
+                    }
                 }
             }
         },

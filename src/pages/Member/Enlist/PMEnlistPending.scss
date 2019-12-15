@@ -1,0 +1,40 @@
+.enlistPending {
+    &__list {
+        padding: 15px 0px;
+
+        .item {
+            margin-bottom: 10px;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 20px;
+
+            &-badge {
+                .circle {
+                    background-color: #aaa;
+                    height: 50px;
+                    width: 50px;
+                    border-radius: 100%;
+                }
+            }
+
+            &-detail {
+                .detail {
+                    color: $text-one;
+                    overflow-wrap: break-word;
+                }
+                .time {
+                    color: $text-light;
+                }
+            }
+        }
+    }
+}
+
+
+@media only screen and (min-width: 992px) {
+    .enlistPending {
+        max-width: 600px;
+        margin: auto;
+    }
+}

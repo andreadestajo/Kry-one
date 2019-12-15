@@ -1,6 +1,8 @@
 const MDB_BTC_ADDRESS = require('../models/MDB_BTC_ADDRESS');
 const MDB_ETH_ADDRESS = require('../models/MDB_ETH_ADDRESS');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
+const MDB_USER = require('../models/MDB_USER');
+const MDB_CRYPTO_REPORT = require('../models/MDB_CRYPTO_REPORT');
 const Wallet = require('../globals/Wallet');
 
 module.exports =
@@ -109,8 +111,7 @@ module.exports =
                 postback.date_created   = new Date();
                 postback.status         = "pending";
                 
-                MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash });
-                
+                await MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash, currency: current_currency });
             }
             else if(postback.confirmations === required_confirmation && current_transaction.status === "pending")
             {
@@ -124,7 +125,25 @@ module.exports =
                 let transaction_detail = `You received <b>${ current_currency_name.toLowerCase() } (${ current_currency })</b> in your wallet.`;
 
                 Wallet.add(postback.uid, current_currency, (converted_amount), 'received', description, "", transaction_detail);
-                MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash });
+                await MDB_USER_NOTIFICATION.addNew(postback.uid, transaction_notification, image_notification, { tx_hash: postback.tx_hash, currency: current_currency });
+                
+                // get user info
+                const user = await MDB_USER.get(postback.uid);
+
+                // insert logs for report (insert)
+                let insert_crypto_report = {};
+                
+                insert_crypto_report.currency = current_currency;
+                insert_crypto_report.amount = converted_amount;
+                insert_crypto_report.address = address;
+                insert_crypto_report.transaction_number = postback.transaction_number;
+                insert_crypto_report.charge = 0;
+                insert_crypto_report.action = 'received';
+                insert_crypto_report.user_id = postback.uid;
+                insert_crypto_report.user_name = user ? user.full_name : 'No User Found';
+                insert_crypto_report.date_created = new Date();
+
+                await MDB_CRYPTO_REPORT.add(insert_crypto_report);
             }
 
             if (is_btc)

@@ -19,11 +19,35 @@ export default
                 },
                 kyc_status: ''
             };
-            return this.$store.getters[GETTER_CURRENT_USER_DATA] ? this.$store.getters[GETTER_CURRENT_USER_DATA] : default_data;
+
+            const user_data = this.$store.getters[GETTER_CURRENT_USER_DATA];
+
+            if(!user_data) {return null}
+
+            if(!user_data.hasOwnProperty("binary_points_left"))
+            {
+                user_data.binary_points_left = 0;
+            }
+
+            if(!user_data.hasOwnProperty("binary_points_right"))
+            {
+                user_data.binary_points_right = 0;
+            }
+
+            return user_data ? user_data : default_data;
         },
         $_current_user_wallet()
         {
-            return this.$store.getters[GETTER_CURRENT_USER_WALLET];
+            const currency = this.$store.getters[GETTER_CURRENT_USER_WALLET];
+
+            if(!currency) {return null}
+
+            if(currency.hasOwnProperty("XAU"))
+            {
+                currency.UNIQ = Object.assign({}, currency.XAU)
+            }
+
+            return currency;
         },
     }
 }

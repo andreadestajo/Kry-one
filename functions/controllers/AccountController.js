@@ -3,6 +3,7 @@ const momentTZ = moment.tz('Asia/Manila');
 
 const {ADMIN_AUTH, HTTPS_ERROR}   = require('../plugin/firebase');
 const MDB_USER                    = require('../models/MDB_USER');
+const MDB_ENLIST_KNIGHT           = require('../models/MDB_ENLIST_KNIGHT');
 
 const {sendMail}                  = require('../globals/EmailHelper');
 const {generateHashedId}          = require('../globals/HashHelper');
@@ -56,7 +57,8 @@ module.exports =
 
     async register (data, context)
     {
-        const user_info       = data.registration_form_data;
+        console.log(data.registration_form_data);
+        const user_info       = JSON.parse(data.registration_form_data);
 
         // Check if sponsor is
         const is_eligible_sponsor = await MDB_USER.getUserByReferralCode(user_info.referral_code)
@@ -75,14 +77,16 @@ module.exports =
         {
             /* UNILEVEL EARNING UPON UNIQ PURCHASE */
             //await EARNING.unilevel(logged_in_user, data.amount);
+            console.log('awitttt')
         }
 
         // Create new user and return result
         const create_user = await ADMIN_AUTH.createUser
         ({
-            email       : user_info.email,
-            password    : user_info.password,
-            phoneNumber : user_info.contact_number
+            email         : user_info.email,
+            password      : user_info.password,
+            phoneNumber   : user_info.contact_number,
+            emailVerified : !!user_info.hasOwnProperty('knight_data') // false if not enlisted
         })
         .then(function(userRecord)
         {
@@ -136,7 +140,17 @@ module.exports =
             return {error: add_user_info.error}
         }
 
-        await sendEmailVerificationLink(user_info.email, user_info.full_name);
+        // Change enlistment status
+        if(user_info.hasOwnProperty('knight_data')) {
+            //STOPPED HERE
+            // Change enlistment status
+            MDB_ENLIST_KNIGHT.update(user_info.knight_data.id ,{
+                status          : "registered",
+                date_registered : new Date()
+            });
+        } else {
+            await sendEmailVerificationLink(user_info.email, user_info.full_name);
+        }
 
         return user_record.uid;
     },

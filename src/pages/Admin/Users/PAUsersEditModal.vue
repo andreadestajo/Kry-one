@@ -1,7 +1,7 @@
 <template>
     <k-modal ref="kModalRef"
              card_width="800px"
-             card_section_height="70vh"
+             card_section_height="100vh"
              title="Edit User"
              @close="hideUsersEditModal">
 

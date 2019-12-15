@@ -58,5 +58,49 @@ export default
     async remove(id)
     {
         return await this.doc(id).delete();
-    }
+    },
+    getPendingEnlistment(id, eid)
+    {
+        return this.collection()
+            .where("id", "==", id)
+            .where("eid", "==", eid)
+            .where("status", "==", "pending")
+            .limit(1)
+            .get()
+            .then(doc => doc.empty ? null : Object.assign({}, doc.docs[0].data(), {id: doc.docs[id]}))
+    },
+    bindPendingEnlistments(_this, uid, options = {})
+    {
+        const query = this.collection()
+            .where("enlisted_by", "==", uid)
+            .where("status", "==", "pending")
+            .orderBy("created_at", "desc");
+
+        if(!options.hasOwnProperty("name"))
+        {
+            options.name = "pendingEnlistments"
+        }
+
+        return _this.$bind(options.name, query)
+    },
+    getPendingEnlistments(uid) {
+        return this.collection()
+            .where("enlisted_by", "==", uid)
+            .where("status", "==", "pending")
+            .get()
+            .then(doc => doc.empty ? [] : doc.docs.map(e => Object.assign({}, e.data(), {id: e.id})))
+    },
+    getEnlistmentByEmailAddress(email)
+    {
+        return this.collection()
+            .where("email", "==", email)
+            .limit(1)
+            .get()
+            .then(user => {
+                return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
+            })
+            .catch(error => {
+                return {error}
+            })
+    },
 }

@@ -52,7 +52,7 @@
                 </q-toolbar>
 
                 <div class="content">
-                    <div v-for="currency in $options.currency_options" :key="currency.key" class="content-group" @click="chooseWallet(currency)">
+                    <div v-for="currency in currency_options" :key="currency.key" class="content-group" @click="chooseWallet(currency)">
                         <div class="left">{{ currency.abb }}</div>
                         <div class="right">
                             <div class="right-value">{{ currency.amount }}</div>
@@ -166,7 +166,8 @@ export default
             remarks       : ''
         },
         is_external_send: false,
-        internal_user_id: null
+        internal_user_id: null,
+        currency_options: []
     }),
     watch: 
     {
@@ -217,7 +218,6 @@ export default
         },
         async showConfirmDialog()
         {
-            this.$_showPageLoading();
             this.$v.send_wallet_form.$touch();
             if(this.$v.send_wallet_form.$error) {return 0}
             
@@ -318,13 +318,13 @@ export default
         const user_wallet_arr = await DB_USER_WALLET.getMany(this.$_current_user_data.id);
         const user_wallet_obj = !!user_wallet_arr.length ? arrayToObject(user_wallet_arr, 'key') : null;
 
-        //add random value for now (temporary)
-        this.$options.currency_options.forEach((currency) =>
+        this.currency_options = this.$options.ref_currencies.map((currency) =>
         {
+            currency.abb  = currency.abb === 'XAU' ? 'UNIQ' : currency.abb;
             const key = currency.abb === 'UNIQ' ? 'XAU' : currency.abb;
             currency.amount = this.$_formatNumber(user_wallet_obj[key].wallet || 0, { decimal: currency.decimals })
 
-            // Set active wallet
+            // Set active wallets
             if(this.$route.params.currency === currency.key)
             {
                 this.active_wallet =
@@ -334,6 +334,8 @@ export default
                     display_amount  : currency.amount
                 };
             }
+
+            return currency
         });
     },
     validations()
@@ -351,6 +353,6 @@ export default
             }
         }
     },
-    currency_options: ref_currencies,
+    ref_currencies
 }
 </script>

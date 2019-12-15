@@ -28,10 +28,18 @@ module.exports =
     },
     async get(uid, id)
     {
-        let res     = await this.doc(uid, id).get();
-        let data    = res.data();
-        data.id     = res.id;
-        return data;
+        let res = await this.doc(uid, id).get();
+        let data = res.data();
+
+        if (data)
+        {
+            data.id = res.id;
+            return data;   
+        }
+        else
+        {
+            return null;
+        }
     },
     async getMany(uid, order_by = null)
     {
