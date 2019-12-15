@@ -15,6 +15,7 @@ const member_controller         = require('./controllers/MemberController');
 const schedule_controller       = require('./controllers/ScheduleController');
 const callback_controller       = require('./controllers/CallbackController');
 const user_trigger              = require('./triggers/UserTrigger');
+const initialize_controller     = require('./controllers/InitializerController');
 
 // Member
 exports.submitKyc               = FUNCTIONS_HTTPS.onCall(member_controller.submitKyc);
@@ -53,3 +54,6 @@ exports.bitapsCallback          = FUNCTIONS_HTTPS.onRequest(callback_controller.
 //Test Calls
 exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);
 exports.testIssueBitcoin        = FUNCTIONS_HTTPS.onCall(user_trigger.testIssueBitcoin);
+
+// Initializer
+exports.initialize = FUNCTIONS_HTTPS.onRequest(initialize_controller.initialize);

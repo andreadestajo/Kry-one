@@ -8,10 +8,19 @@
                     </q-card-section>
                 </q-card>
             </q-expansion-item>
+
             <q-expansion-item expand-separator label="Enlist Knights Collection">
                 <q-card>
                     <q-card-section>
                         <q-btn flat color="primary" @click="updateEnlistKnights">ADD COLOR AND TITLE</q-btn>
+                    </q-card-section>
+                </q-card>
+            </q-expansion-item>
+
+            <q-expansion-item expand-separator label="Nobilities Collection">
+                <q-card>
+                    <q-card-section>
+                        <q-btn flat color="primary" @click="listNobilities">List</q-btn>
                     </q-card-section>
                 </q-card>
             </q-expansion-item>
@@ -71,7 +80,14 @@
                     this.$_notify({message: 'Successfully updated knights.'});
                     this.$_hidePageLoading();
                 })
+            },
+            async listNobilities()
+            {
+                const nobilities = await DB_NOBILITY.getMany();
+                console.log(JSON.stringify(nobilities));
 
+                const user = await DB_USER.get("nSJPzaeYqJTChO57Kj4b3oPpXD43");
+                console.log(JSON.stringify(user));
             }
         }
     }
