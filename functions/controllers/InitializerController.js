@@ -36,19 +36,35 @@ module.exports =
         // Initialize Account
         const account_data = account;
 
-        const createUser = ADMIN_AUTH.createUser
+        const createUser = await ADMIN_AUTH.createUser
         ({
             email         : account_data.email,
             password      : process.env.ACC_PASSWORD,
             phoneNumber   : account_data.contact_number,
             emailVerified : true
+        })
+        .then(function(userRecord)
+        {
+            return {
+                data : userRecord.toJSON(),
+                error: null
+            }
+        })
+        .catch(function (error)
+        {
+            return {error}
         });
 
+        if(createUser.error)
+        {
+            return res.status(500).send({error})
+        }
+
         account_data.created_at = new Date();
-        const addAccount = MDB_USER.add(account_data);
+        const addAccount = MDB_USER.doc(createUser.data.uid).set(account_data);
 
         // update currency
-        Promise.all([...addNobilities, ...deleteUsers, createUser, addAccount, ScheduleController.updateCurrency()])
+        Promise.all([...addNobilities, ...deleteUsers, addAccount, ScheduleController.updateCurrency()])
             .then(() => {
                 return res.status(200).send({message: "You have successfully initialized the data."})
             })
