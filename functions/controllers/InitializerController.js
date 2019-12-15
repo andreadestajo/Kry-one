@@ -60,26 +60,32 @@ module.exports =
             return res.status(500).send({error})
         }
 
-        // Initial nobility data
-        const nobility = await MDB_NOBILITY.getNobilityByRankOrder(2);
-
         // Add user
         account_data.created_at = new Date();
-
-        // Assign nobility
-        account_data.nobility_id    = nobility.id;
-        account_data.nobility_info  =   {
-            id:             nobility.id,
-            title:          nobility.title,
-            rank_order:     nobility.rank_order,
-            badge_color:    nobility.badge_color,
-        };
 
         const addAccount = MDB_USER.doc(createUser.data.uid).set(account_data);
 
         // update currency
         Promise.all([...addNobilities, ...deleteUsers, addAccount, ScheduleController.updateCurrency()])
-            .then(() => {
+            .then(async () => {
+                // Initial nobility data
+                const nobility = await MDB_NOBILITY.getNobilityByRankOrder(2);
+
+                // Assign nobility
+                const data = {
+                    nobility_id   : nobility.id,
+                    nobility_info :
+                    {
+                        id:             nobility.id,
+                        title:          nobility.title,
+                        rank_order:     nobility.rank_order,
+                        badge_color:    nobility.badge_color,
+                    }
+                };
+
+                // Update user nobility
+                await MDB_USER.update(createUser.data.uid, data);
+
                 return res.status(200).send({message: "You have successfully initialized the data."})
             })
             .catch((error) => {
