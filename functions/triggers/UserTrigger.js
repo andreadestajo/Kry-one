@@ -25,7 +25,7 @@ module.exports =
             {
                 console.log("unilevel compute triggered", uid, newValue);
                 await MDB_USER.update(uid, { compute_unilevel: 0 });
-                await EARNIsNG.unilevel(newValue, newValue.compute_unilevel);
+                await EARNING.unilevel(newValue, newValue.compute_unilevel);
                 await EARNING.updateRank(newValue.upline_id);
             }
         }
@@ -108,19 +108,19 @@ module.exports =
             await MDB_PROMOTION.add(promotions);
 
             /* update rank of user */
-            let enlist_update  = {};
-            enlist_update.update_nobility       =   {   nobility_id: target_nobility.id,
-                                                        nobility_info:  {   badge_color: target_nobility.badge_color,
-                                                                            id: target_nobility.id,
-                                                                            rank_order: target_nobility.rank_order,
-                                                                            title: target_nobility.title }
-                                                    };
-
+            let enlist_update                   = {};
+            enlist_update.nobility_id           = target_nobility.id;
+            enlist_update.nobility_info         = {     badge_color: target_nobility.badge_color,
+                                                        id: target_nobility.id,
+                                                        rank_order: target_nobility.rank_order,
+                                                        title: target_nobility.title };
             /* compute unilevel */
-            console.log("COMPUTE UNILEVEL INCOME!!! PAK PAK! HAHA");
             let payment_conversions             = await MDB_CURRENCY.get(enlist.payment_method.toUpperCase());
             let xau_equivalent                  = payment_conversions['XAU'] * enlist.amount;
             enlist_update.compute_unilevel      = xau_equivalent;
+
+
+            console.log("enlist_update", enlist_update);
 
             await MDB_USER.update(id, enlist_update);
         }
