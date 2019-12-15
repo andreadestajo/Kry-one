@@ -109,7 +109,7 @@ module.exports =
                 {
                     let update_user_data = {};
                     update_user_data.filters = FieldValue.arrayUnion(initial_data.address);
-                    promise_list.push(MDB_USER.update(uid, update_user_data));
+                    await MDB_USER.update(uid, update_user_data);
                 }
 
                 promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));
