@@ -42,7 +42,7 @@
             <div class="icon"><q-icon name="warning"></q-icon></div>
             <div class="message">
                 <div class="message-title">Please verify your account</div>
-                <div class="message-detail">This warning is shown because your account is not yet verified.</div>
+                <div class="message-detail">This warning is shown because you have not yet submitted the requirements for verification.</div>
             </div>
         </div>
 
@@ -59,7 +59,7 @@
         <div @click="$router.push({ name: 'member_monarchy', query: { tab: 'binary_tree' } })" v-if="this.unplaced_downline.length > 0" class="dashboard__warning q-mt-md">
             <div class="icon"><q-icon name="warning"></q-icon></div>
             <div class="message">
-                <div class="message-title">Place your downline!</div>
+                <div class="message-title">Place your knight mate!</div>
                 <div class="message-detail">There {{ this.unplaced_downline.length == 1 ? 'is' : 'are' }} <b>{{ this.unplaced_downline.length }} {{ this.unplaced_downline.length == 1 ? 'person' : 'people' }}</b> you need to place! Click here in order to place {{ this.unplaced_downline.length == 1 ? 'that' : 'those' }} {{ this.unplaced_downline.length == 1 ? 'downline' : 'downlines' }}.</div>
             </div>
         </div>
