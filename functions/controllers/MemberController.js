@@ -7,6 +7,7 @@ const FORMAT                 = require('../globals/FormatHelper');
 
 const MDB_USER_WALLET        = require('../models/MDB_USER_WALLET');
 const MDB_USER               = require('../models/MDB_USER');
+const MDB_USER_COMPUTE       = require('../models/MDB_USER_COMPUTE');
 const MDB_NOBILITY           = require('../models/MDB_NOBILITY');
 const MDB_CURRENCY           = require('../models/MDB_CURRENCY');
 const MDB_PROMOTION          = require('../models/MDB_PROMOTION');
@@ -217,7 +218,7 @@ module.exports =
                 user_update_earning.compute_binary  = btc_equivalent;
             }
 
-            promise_list.push(MDB_USER.update(logged_in_user.id, user_update_earning));
+            promise_list.push(MDB_USER_COMPUTE.update(logged_in_user.id, "compute", user_update_earning));
 
             await Promise.all(promise_list);
         }
@@ -328,10 +329,9 @@ module.exports =
             update_user.placement.upline_id      = upline_info.id;
             update_user.placement.upline_name    = upline_info.full_name;
             update_user.placement.date_placed    = new Date();
-            update_user.compute_binary           = downline_to_place.binary_point_value || 0;
 
             await MDB_USER.update(downline_to_place.id, update_user);
-            //await EARNING.binary(downline_to_place, downline_to_place.binary_point_value);
+            await MDB_USER_COMPUTE.update(downline_to_place.id, 'compute', { compute_binary: downline_to_place.binary_point_value || 0 })
         }
 
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};

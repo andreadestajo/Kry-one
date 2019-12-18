@@ -126,7 +126,7 @@ export default
     {
         return this.collection()
             .where("referral_code", "==", referral_code)
-            .limit(1)
+            .limit(10)
             .get()
             .then(user => {
                 return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
