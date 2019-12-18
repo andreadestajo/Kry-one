@@ -13,7 +13,7 @@
         </a>
         <a v-if="!data" href="javascript:" style="background-color: #aaa" @click="placementConfirmation()">
             <div>
-                + Place Downline
+                + Place Your Knight Mate
             </div>
         </a>
 
@@ -26,7 +26,7 @@
         <q-dialog class="placement-dialog" v-model="placement_dialog">
             <q-card v-if="unplaced_downline.length > 0" class="q-pa-md" style="width: 400px;">
                 <div class="placement-dialog__form">
-                    <div class="label">Choose Downline to Place</div>
+                    <div class="label">Choose Knight Mate to Place</div>
                     <q-select outlined class="input"
                             v-model="downline_to_place"
                             dense
@@ -47,7 +47,7 @@
 
             <q-card v-if="unplaced_downline.length == 0" class="q-pa-md" style="width: 400px;">
                 <div>
-                    <div style="text-align: center; ">You don't have any pending downline to place.</div>
+                    <div style="text-align: center; ">You don't have any pending knight mate to place.</div>
                 </div>
             </q-card>
         </q-dialog>
