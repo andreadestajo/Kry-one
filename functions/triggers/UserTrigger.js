@@ -13,12 +13,14 @@ const FieldValue        = require('firebase-admin').firestore.FieldValue;
 
 module.exports =
 {
+    //computation trigger
     async compute(change, context)
     {
         const newValue  = change.after.data();
         //const previousValue = change.before.data();
         const uid       = context.params.uid;
-        newValue.id     = uid;
+
+        let newValue    = await MDB_USER.get(uid);        
 
         //unilevel computation triggers
         if(newValue.hasOwnProperty('compute_unilevel'))
