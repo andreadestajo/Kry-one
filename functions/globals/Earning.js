@@ -12,6 +12,8 @@ module.exports =
     earning_currency: 'BTC',
     async updateRank(user_id)
     {
+        console.log("updateRank", user_id);
+
         let user_info       = MDB_USER.get(user_id);
         let downline_list   = MDB_USER.getDownline(user_id);
         
@@ -28,6 +30,8 @@ module.exports =
         }
 
         let next_nobility           = await MDB_NOBILITY.getNextTargetNobilityByRankOrder(user_info.nobility_info.rank_order);
+
+        console.log("next nobility target", next_nobility);
 
         if(next_nobility.required_direct > 0)
         {
@@ -108,7 +112,7 @@ module.exports =
     },
     async unilevel(user_info, uniq_amount_purchase)
     {
-        console.log("UNILEVEL METHOD");
+        console.log("unilevel", user_info, uniq_amount_purchase);
 
         let promise_list        = [];
         let conversion_rates    = await MDB_CURRENCY.get('XAU');

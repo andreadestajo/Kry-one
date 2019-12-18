@@ -16,32 +16,32 @@ module.exports =
     //computation trigger
     async compute(change, context)
     {
-        const newValue  = change.after.data();
+        const compute_value  = change.after.data();
         //const previousValue = change.before.data();
         const uid       = context.params.uid;
 
-        let newValue    = await MDB_USER.get(uid);        
+        newValue    = await MDB_USER.get(uid);        
 
         //unilevel computation triggers
-        if(newValue.hasOwnProperty('compute_unilevel'))
+        if(compute_value.hasOwnProperty('compute_unilevel'))
         {
-            if(newValue.compute_unilevel !== 0)
+            if(compute_value.compute_unilevel !== 0)
             {
                 console.log("unilevel compute triggered", uid, newValue);
                 await MDB_USER_COMPUTE.update(uid, "compute", { compute_unilevel: 0 });
-                await EARNING.unilevel(newValue, newValue.compute_unilevel);
+                await EARNING.unilevel(newValue, compute_value.compute_unilevel);
                 await EARNING.updateRank(newValue.upline_id);
             }
         }
 
         //binary computation triggers
-        if(newValue.hasOwnProperty('compute_binary'))
+        if(compute_value.hasOwnProperty('compute_binary'))
         {
-            if(newValue.compute_binary !== 0)
+            if(compute_value.compute_binary !== 0)
             {
                 console.log("binary compute triggered", uid, newValue);
                 await MDB_USER_COMPUTE.update(uid, "compute", { compute_binary: 0 });
-                await EARNING.binary(newValue, newValue.compute_binary);
+                await EARNING.binary(newValue, compute_value.compute_binary);
             }
         }
     },
