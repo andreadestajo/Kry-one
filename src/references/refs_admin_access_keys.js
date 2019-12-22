@@ -7,4 +7,5 @@ export const access_keys = [
     {label: "Commissions"      , key: "commissions"},
     {label: "Nobilities"       , key: "nobilities"},
     {label: "Monarchy View"    , key: "monarchy_view"},
+    {label: "Role Management"  , key: "role_management"},
 ];

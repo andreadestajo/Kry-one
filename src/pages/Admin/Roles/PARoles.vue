@@ -24,10 +24,10 @@
         </k-header>
 
         <!--TABLE-->
-        <k-table ref="kTableRef" :data="[{}, {}]" :columns="$options.columns" class="text-center">
-            <template slot="table_rows" slot-scope="nobilities">
+        <k-table ref="kTableRef" :data="roles_data" :columns="$options.columns" class="text-center">
+            <template slot="table_rows" slot-scope="roles">
                 <q-td>
-                    "hey"
+                    {{roles.data.role}}
                 </q-td>
 
                 <q-td key="action">
@@ -36,7 +36,7 @@
                            label="EDIT"
                            type="submit"
                            color="primary"
-                           @click=""></q-btn>
+                           @click="showRolesModal(roles.data)"></q-btn>
                     <q-btn unelevated
                            class="q-ma-xs"
                            label="DELETE"
@@ -57,6 +57,7 @@
     import KTable           from '../../../components/Admin/KTable'
 
     import PaRolesModal     from './PARolesModal'
+    import DB_ROLE          from '../../../models/DB_ROLE'
 
     export default {
         name: "PANobilities",
@@ -65,14 +66,43 @@
             KTable,
             PaRolesModal
         },
+        data: () => ({
+           roles      : [],
+           roles_data : []
+        }),
         methods: {
-            showRolesModal() {
-                this.$refs.rolesModalRef.showRolesModal();
+            showRolesModal(data) {
+                this.$refs.rolesModalRef.showRolesModal(data);
+            }
+        },
+        async mounted()
+        {
+            // Bind nobilities here
+            this.$refs.kTableRef.showLoading();
+            await DB_ROLE.bindRoles(this);
+            console.log(this.roles);
+        },
+        watch:
+        {
+            roles(roles)
+            {
+                if(!roles.length) {return 0}
+
+                this.$refs.kTableRef.showLoading();
+
+                const roles_data = roles.map(n => ({
+                    id     : n.id,
+                    role   : n.role,
+                    access : n.access
+                }));
+
+                this.roles_data = roles_data;
+                this.$refs.kTableRef.hideLoading();
             }
         },
         columns:
         [
-            { name: 'Role'     , label: 'Role'    , field: 'title'   , align: 'center', sortable: true},
+            { name: 'Role'     , label: 'Role'    , field: 'role'   , align: 'center', sortable: true},
             { name: 'Actions'  , label: 'Actions' , field: 'actions' , align: 'center', sortable: true}
         ]
     }
