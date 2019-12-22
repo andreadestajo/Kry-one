@@ -18,7 +18,7 @@ module.exports =
         // Initialize Nobilities
         const addNobilities = nobilities.map(n => {
             delete n.__index;
-           return MDB_NOBILITY.add(n)
+            return MDB_NOBILITY.doc(n.id).set(n)
         });
 
         //Delete all users
@@ -63,29 +63,23 @@ module.exports =
         // Add user
         account_data.created_at = new Date();
 
+        // Add nobility data
+        const index = nobilities.findIndex(n => n.rank_order === 2);
+        const nobility = nobilities[index];
+
+        account_data.nobility_id     = nobility.id;
+        account_data. nobility_info  =
+        {
+            id:          nobility.id,
+            title:       nobility.title,
+            rank_order:  nobility.rank_order,
+            badge_color: nobility.badge_color,
+        };
+
         const addAccount = MDB_USER.doc(createUser.data.uid).set(account_data);
 
         // update currency
         Promise.all([...addNobilities, ...deleteUsers, addAccount, ScheduleController.updateCurrency()])
-            .then(async () => {
-                // Initial nobility data
-                const nobility = await MDB_NOBILITY.getNobilityByRankOrder(2);
-
-                // Assign nobility
-                const data = {
-                    nobility_id   : nobility.id,
-                    nobility_info :
-                    {
-                        id:             nobility.id,
-                        title:          nobility.title,
-                        rank_order:     nobility.rank_order,
-                        badge_color:    nobility.badge_color,
-                    }
-                };
-
-                // Update user nobility
-                return MDB_USER.update(createUser.data.uid, data);
-            })
             .then(() => {
                 return res.status(200).send({message: "You have successfully initialized the data."})
 
