@@ -52,7 +52,8 @@ const routes = [
                 path     : 'logs',
                 component: () => import('pages/Admin/Logs/PALogs.vue')
             },
-			{ name: 'admin_monarchy'         , path: 'monarchy'        , component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') },
+			{ name: 'admin_roles'            , path: 'roles'        , component: () => import('pages/Admin/Roles/PARoles.vue') },
+			{ name: 'admin_monarchy'         , path: 'monarchy'     , component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') },
             {
                 name: 'admin_users',
                 path: 'users',
