@@ -10,7 +10,7 @@
                        type="submit"
                        color="primary"
                        class="q-mb-sm"
-                       @click="showRolesModal"/>
+                       @click="showRolesModal()"/>
 
                 <q-btn unelevated
                        icon="add"
@@ -18,7 +18,7 @@
                        type="submit"
                        color="primary"
                        class="q-mb-sm q-ml-sm"
-                       @click=""/>
+                       @click="showAdminsModal()"/>
             </span>
 
         </k-header>
@@ -49,6 +49,7 @@
 
         <!--MODALS-->
         <pa-roles-modal ref="rolesModalRef"></pa-roles-modal>
+        <pa-admins-modal ref="adminsModalRef"></pa-admins-modal>
     </q-page>
 </template>
 
@@ -57,6 +58,7 @@
     import KTable           from '../../../components/Admin/KTable'
 
     import PaRolesModal     from './PARolesModal'
+    import PaAdminsModal    from './PAAdminsModal'
     import DB_ROLE          from '../../../models/DB_ROLE'
 
     export default {
@@ -64,15 +66,19 @@
         components: {
             KHeader,
             KTable,
-            PaRolesModal
+            PaRolesModal,
+            PaAdminsModal
         },
         data: () => ({
            roles      : [],
-           roles_data : []
+           roles_data : [],
         }),
         methods: {
             showRolesModal(data) {
                 this.$refs.rolesModalRef.showRolesModal(data);
+            },
+            showAdminsModal(data) {
+                this.$refs.adminsModalRef.showAdminsModal(data);
             }
         },
         async mounted()

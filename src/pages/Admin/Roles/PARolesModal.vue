@@ -1,13 +1,13 @@
 <template>
     <k-modal ref="kModalRef"
              card_section_height="80vh"
-             :title="`${role_id ? 'Edit' : 'Add new'} Role`"
+             :title="`${is_edit ? 'Edit' : 'Add new'} Role`"
              @close="$refs.kModalRef.hideModal()">
         <div slot="modal-content">
             <k-field label="Role Name">
                 <q-input dense
                          outlined
-                         type="text"q
+                         type="text"
                          v-model="role"/>
             </k-field>
 
@@ -37,12 +37,16 @@
         data: () => ({
             role    : "",
             access  : [],
-            role_id : null
+            role_id : null,
+            is_edit : null
         }),
         methods: {
             showRolesModal(data) {
+                this.resetData();
+
                 if(data)
                 {
+                    this.is_edit = !!data.id;
                     this.role_id = data.id;
                     this.access  = data.access;
                     this.role    = data.role;
@@ -60,17 +64,24 @@
                     access        : this.access
                 };
 
-                const query = this.role_id ? DB_ROLE.update(this.role_id, data) : DB_ROLE.add(data);
+                const query = this.is_edit ? DB_ROLE.update(this.role_id, data) : DB_ROLE.add(data);
 
                 query
                 .then(() => {
-                    this.$_notify({message: `Successfully ${this.role_id ? "updated a" : "added new"} role.`, mode: "positive"});
+                    this.$_notify({message: `Successfully ${this.is_edit ? "updated a" : "added new"} role.`, mode: "positive"});
                     this.$_hidePageLoading();
+                    this.$refs.kModalRef.hideModal();
                 })
                 .catch(error => {
                     this.$_notify({message: error.message, mode: "negative"});
                     this.$_hidePageLoading();
                 })
+            },
+            resetData() {
+                this.role    = "";
+                this.access  = [];
+                this.role_id = null;
+                this.is_edit = null;
             }
         },
         validations: {
