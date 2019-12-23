@@ -74,6 +74,7 @@
                     if(this.current_user_data && this.current_user_data.hasOwnProperty("roles")) {
                         // Get merge access based on user roles
                         const access = await DB_ROLE.getAccessByRoles(this.current_user_data.roles);
+                        console.log(access);
                         const merged_access = [...new Set(access.reduce((acc, val) => (acc.concat(val.access)), []))];
 
                         this.$store.commit(MUTATION_SET_CURRENT_ADMIN_ACCESS, merged_access)

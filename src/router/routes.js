@@ -41,22 +41,23 @@ const routes = [
 		children:
         [
 			{ name: 'admin_dashboard'        , path: ''                , component: () => import('pages/Admin/Dashboard/PADashboard.vue') },
-			{ name: 'admin_promotions'       , path: 'promotions'      , component: () => import('pages/Admin/Promotions/PAPromotions.vue') },
-			{ name: 'admin_kyc_submits'      , path: 'kycsubmits'      , beforeEnter: RouteGuard.beforeEnterAdminPage("kyc_submits"), component: () => import('pages/Admin/KycSubmits/PAKycSubmits.vue') },
-			{ name: 'admin_cashout_requests' , path: 'cashoutrequests' , component: () => import('pages/Admin/CashoutRequests/PACashoutRequests.vue') },
-			{ name: 'admin_transfer_requests', path: 'transferrequests', component: () => import('pages/Admin/TransferRequests/PATransferRequests.vue') },
-			{ name: 'admin_commissions'      , path: 'commissions'     , component: () => import('pages/Admin/Commissions/PACommissions.vue') },
-			{ name: 'admin_nobilities'       , path: 'nobilities'      , component: () => import('pages/Admin/Nobilities/PANobilities.vue') },
+			{ name: 'admin_promotions'       , path: 'promotions'      , beforeEnter: RouteGuard.beforeEnterAdminPage("promotions")       , component: () => import('pages/Admin/Promotions/PAPromotions.vue') },
+			{ name: 'admin_kyc_submits'      , path: 'kycsubmits'      , beforeEnter: RouteGuard.beforeEnterAdminPage("kyc_submits")      , component: () => import('pages/Admin/KycSubmits/PAKycSubmits.vue') },
+			{ name: 'admin_cashout_requests' , path: 'cashoutrequests' , beforeEnter: RouteGuard.beforeEnterAdminPage("cashout_requests") , component: () => import('pages/Admin/CashoutRequests/PACashoutRequests.vue') },
+			{ name: 'admin_transfer_requests', path: 'transferrequests', beforeEnter: RouteGuard.beforeEnterAdminPage("central_wallet")   , component: () => import('pages/Admin/TransferRequests/PATransferRequests.vue') },
+			{ name: 'admin_commissions'      , path: 'commissions'     , beforeEnter: RouteGuard.beforeEnterAdminPage("commissions")      , component: () => import('pages/Admin/Commissions/PACommissions.vue') },
+			{ name: 'admin_nobilities'       , path: 'nobilities'      , beforeEnter: RouteGuard.beforeEnterAdminPage("nobilities")       , component: () => import('pages/Admin/Nobilities/PANobilities.vue') },
             {
                 name     : 'admin_logs',
                 path     : 'logs',
                 component: () => import('pages/Admin/Logs/PALogs.vue')
             },
-			{ name: 'admin_roles'            , path: 'roles'        , component: () => import('pages/Admin/Roles/PARoles.vue') },
-			{ name: 'admin_monarchy'         , path: 'monarchy'     , component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') },
+			{ name: 'admin_roles'            , path: 'roles'        , beforeEnter: RouteGuard.beforeEnterAdminPage("role_management"), component: () => import('pages/Admin/Roles/PARoles.vue') },
+			{ name: 'admin_monarchy'         , path: 'monarchy'     , beforeEnter: RouteGuard.beforeEnterAdminPage("monarchy_view"  ), component: () => import('pages/Admin/Monarchy/PAMonarchy.vue') },
             {
                 name: 'admin_users',
                 path: 'users',
+                beforeEnter: RouteGuard.beforeEnterAdminPage("users"),
                 component: () => import('pages/Admin/Users/PAUsers.vue'),
                 children:
                 [

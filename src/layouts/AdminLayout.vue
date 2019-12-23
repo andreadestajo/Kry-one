@@ -93,10 +93,11 @@
             {label: 'Promotions'      , icon: 'people'                  , side: '', access_key: 'promotions'       , route: 'admin_promotions'},
             {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', access_key: 'kyc_submits'      , route: 'admin_kyc_submits'},
             {label: 'Cashout Request' , icon: 'account_balance'         , side: '', access_key: 'cashout_requests' , route: 'admin_cashout_requests'},
-            {label: 'Central Wallet'  , icon: 'sync_alt'                , side: '', access_key: 'central_walllet'  , route: 'admin_transfer_requests'},
+            {label: 'Central Wallet'  , icon: 'sync_alt'                , side: '', access_key: 'central_wallet'   , route: 'admin_transfer_requests'},
             {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', access_key: 'commissions'      , route: 'admin_commissions'},
             {label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', access_key: 'nobilities'       , route: 'admin_nobilities' },
             {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', access_key: 'monarchy_view'    , route: 'admin_monarchy'},
+            {label: 'Roles'           , icon: 'people'                  , side: '', access_key: 'role_management'  , route: 'admin_roles'},
             {label: 'Logout'          , icon: 'logout'                  , side: '', access_key: ''                 , route: 'admin_logout'},
         ],
         hasAccessTo

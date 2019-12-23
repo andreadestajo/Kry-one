@@ -66,6 +66,6 @@ export default
         return this.collection()
             .where("role", "in", roles)
             .get()
-            .then(doc => doc.empty ? null : doc.docs.map(a => Object.assign({}, a.data())))
+            .then(doc => doc.empty ? [] : doc.docs.map(a => Object.assign({}, a.data())))
     }
 }

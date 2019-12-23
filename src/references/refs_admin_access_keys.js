@@ -3,7 +3,7 @@ export const access_keys = [
     {label: "Promotions"       , key: "promotions"},
     {label: "KYC Submits"      , key: "kyc_submits"},
     {label: "Cashout Requests" , key: "cashout_requests"},
-    {label: "Central Wallet"   , key: "central_walllet"},
+    {label: "Central Wallet"   , key: "central_wallet"},
     {label: "Commissions"      , key: "commissions"},
     {label: "Nobilities"       , key: "nobilities"},
     {label: "Monarchy View"    , key: "monarchy_view"},

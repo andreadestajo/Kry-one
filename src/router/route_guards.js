@@ -1,7 +1,10 @@
 import DB_USER  from '../models/DB_USER'
 import {AUTH}   from "../boot/firebase";
 
-import {isAuthorized} from '../globals/AuthenticationHelper'
+import {
+    isAuthorized,
+    hasAccessTo
+} from '../globals/AuthenticationHelper'
 import Store          from '../store/index'
 
 import {
@@ -137,12 +140,12 @@ export default
     },
 
     beforeEnterAdminPage: (access_key) => (to, from, next) => {
-        if(!access_key)
+        if(!access_key || hasAccessTo(access_key))
         {
-            next()
+            next();
+            return 0;
         }
 
-        console.log(access_key);
-        next()
+        next("/error404")
     }
 }
