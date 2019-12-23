@@ -35,3 +35,11 @@ export const isAuthorized = (allowed_roles = null) =>
     })
 };
 
+export const hasAccess = (accessKey = null) =>
+{
+
+};
+
+
+
+

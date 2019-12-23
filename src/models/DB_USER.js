@@ -213,5 +213,17 @@ export default
         return _this.$bind(options.name, this.collection()
             .where("referred_by", "==", referral_code)
             .orderBy("full_name"))
+    },
+
+    bindAllAdmins(_this, options = {})
+    {
+        // Set default name
+        if(!options.hasOwnProperty('name'))
+        {
+            options.name =  "admins"
+        }
+
+        return _this.$bind(options.name, this.collection()
+            .where('roles', 'array-contains', 'admin'))
     }
 }
