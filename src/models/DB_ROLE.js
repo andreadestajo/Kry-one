@@ -59,4 +59,13 @@ export default
         return _this.$bind(options.name, this.collection())
     },
 
+    getAccessByRoles(roles = [])
+    {
+        roles.push("none");
+
+        return this.collection()
+            .where("role", "in", roles)
+            .get()
+            .then(doc => doc.empty ? null : doc.docs.map(a => Object.assign({}, a.data())))
+    }
 }

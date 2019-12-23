@@ -32,13 +32,18 @@
                     <span class="profile-email">{{$_current_user_data ? $_current_user_data.full_name : ''}}</span>
                 </q-item>
 
-                <q-item class="nav" :class="item.route === $route.name ? 'active' : ''" clickable v-ripple v-for="item in $options.navigations" @click="goToRoute(item.route)" :key="item.label">
-                    <q-item-section avatar>
-                        <q-icon class="nav-icon" :name="item.icon" ></q-icon>
-                    </q-item-section>
-                    <q-item-section class="nav-label">{{ item.label }}</q-item-section>
-                    <q-item-section side><!--You can put badge here--></q-item-section>
-                </q-item>
+                <div v-for="item in $options.navigations"
+                     :key="item.label">
+                    <q-item v-if="$options.hasAccessTo(item.access_key)"
+                            class="nav" :class="item.route   === $route.name ? 'active' : ''" clickable v-ripple
+                            @click="goToRoute(item.route)">
+                        <q-item-section avatar>
+                            <q-icon class="nav-icon" :name="item.icon" ></q-icon>
+                        </q-item-section>
+                        <q-item-section class="nav-label">{{ item.label }}</q-item-section>
+                        <q-item-section side><!--You can put badge here--></q-item-section>
+                    </q-item>
+                </div>
             </q-list>
         </q-drawer>
 
@@ -55,6 +60,7 @@
 <script>
     import './AdminLayout.scss';
     import DB_USER from '../models/DB_USER';
+    import {hasAccessTo} from "../globals/AuthenticationHelper";
 
     export default
     {
@@ -82,16 +88,17 @@
         },
         navigations:
         [
-            {label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'admin_dashboard'},
-            {label: 'Users'           , icon: 'people'                  , side: '', route: 'admin_users'},
-            {label: 'Promotions'      , icon: 'people'                  , side: '', route: 'admin_promotions'},
-            {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', route: 'admin_kyc_submits'},
-            {label: 'Cashout Request' , icon: 'account_balance'         , side: '', route: 'admin_cashout_requests'},
-            {label: 'Central Wallet'  , icon: 'sync_alt'                , side: '', route: 'admin_transfer_requests'},
-            {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', route: 'admin_commissions'},
-            {label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', route: 'admin_nobilities' },
-            {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', route: 'admin_monarchy'},
-            {label: 'Logout'          , icon: 'logout'                  , side: '', route: 'admin_logout'},
-        ]
+            {label: 'Dashboard'       , icon: 'dashboard'               , side: '', access_key: ''                 , route: 'admin_dashboard'},
+            {label: 'Users'           , icon: 'people'                  , side: '', access_key: 'users'            , route: 'admin_users'},
+            {label: 'Promotions'      , icon: 'people'                  , side: '', access_key: 'promotions'       , route: 'admin_promotions'},
+            {label: 'KYC Submits'     , icon: 'verified_user'           , side: '', access_key: 'kyc_submits'      , route: 'admin_kyc_submits'},
+            {label: 'Cashout Request' , icon: 'account_balance'         , side: '', access_key: 'cashout_requests' , route: 'admin_cashout_requests'},
+            {label: 'Central Wallet'  , icon: 'sync_alt'                , side: '', access_key: 'central_walllet'  , route: 'admin_transfer_requests'},
+            {label: 'Commissions'     , icon: 'fas fa-street-view'      , side: '', access_key: 'commissions'      , route: 'admin_commissions'},
+            {label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', access_key: 'nobilities'       , route: 'admin_nobilities' },
+            {label: 'Monarchy View'   , icon: 'fas fa-piggy-bank'       , side: '', access_key: 'monarchy_view'    , route: 'admin_monarchy'},
+            {label: 'Logout'          , icon: 'logout'                  , side: '', access_key: ''                 , route: 'admin_logout'},
+        ],
+        hasAccessTo
     }
 </script>

@@ -134,5 +134,15 @@ export default
             console.log('seriously ?');
             next();
         }
+    },
+
+    beforeEnterAdminPage: (access_key) => (to, from, next) => {
+        if(!access_key)
+        {
+            next()
+        }
+
+        console.log(access_key);
+        next()
     }
 }

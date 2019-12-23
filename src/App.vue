@@ -21,10 +21,12 @@
         MUTATION_SET_CURRENT_USER_DATA,
         MUTATION_SET_CURRENT_AUTH_ID,
         MUTATION_SET_CURRENT_USER_WALLET,
+        MUTATION_SET_CURRENT_ADMIN_ACCESS
     } from "./store/user-module/mutations";
 
     import {MUTATION_SET_CURRENCY} from "./store/currency-module/mutations";
     import {arrayToObject} from "./utilities/ObjectUtils";
+    import DB_ROLE from "./models/DB_ROLE";
 
     export default
     {
@@ -67,7 +69,17 @@
                 {
                     await this.$bind('current_user_wallet' , DB_USER_WALLET.collection(authId));
                     await this.$bind('current_user_data'   , DB_USER.doc(authId));
-                    await this.$bind('currency_data'       , DB_CURRENCY.collection());
+
+
+                    if(this.current_user_data && this.current_user_data.hasOwnProperty("roles")) {
+                        // Get merge access based on user roles
+                        const access = await DB_ROLE.getAccessByRoles(this.current_user_data.roles);
+                        const merged_access = [...new Set(access.reduce((acc, val) => (acc.concat(val.access)), []))];
+
+                        this.$store.commit(MUTATION_SET_CURRENT_ADMIN_ACCESS, merged_access)
+                    }
+
+                    await this.$bind('currency_data', DB_CURRENCY.collection());
                 } else {
                     //this.$router.push({name: 'front_login'})
                 }
