@@ -1,7 +1,16 @@
 const ADMIN     = require('firebase-admin');
 const FUNCTIONS = require('firebase-functions');
+let service_account;
 
-const service_account = require("../service-accounts/krypto-one-live-a484cd2c7b48.json");
+if(process.env.GCLOUD_PROJECT === 'krypto-one-test')
+{
+    service_account = require("../service-accounts/krypto-one-test-firebase-adminsdk-fnbb5-1c31cd1e2a.json");
+}
+else
+{
+    service_account = require("../service-accounts/krypto-one-live-a484cd2c7b48.json");
+}
+
 
 ADMIN.initializeApp({
     credential  : ADMIN.credential.cert(service_account),

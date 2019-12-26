@@ -198,8 +198,8 @@ export default
 
             if(!nobility) {return 0}
 
-            // Set amount
-            this.form.amount = this.$_convertRate(nobility.price, 'XAU', this.form.payment_currency);
+            let converted_amount = this.$_convertRate(nobility.price, 'XAU', this.form.payment_currency);
+            this.form.amount = parseFloat(converted_amount).toFixed(8);
             this.$v.form.amount.$touch();
         },
         computeNobility()
