@@ -1,5 +1,6 @@
 const MDB_USER          = require('../models/MDB_USER');
 const MDB_USER_WALLET   = require('../models/MDB_USER_WALLET');
+const MDB_USER_COMPUTE  = require('../models/MDB_USER_COMPUTE');
 const MDB_USER_EARNING  = require('../models/MDB_USER_EARNING');
 const MDB_ENLIST_KNIGHT = require('../models/MDB_ENLIST_KNIGHT');
 const MDB_CURRENCY      = require('../models/MDB_CURRENCY');
@@ -12,33 +13,35 @@ const FieldValue        = require('firebase-admin').firestore.FieldValue;
 
 module.exports =
 {
-    async update(change, context)
+    //computation trigger
+    async compute(change, context)
     {
-        const newValue  = change.after.data();
+        const compute_value  = change.after.data();
         //const previousValue = change.before.data();
         const uid       = context.params.uid;
-        newValue.id     = uid;
+
+        newValue    = await MDB_USER.get(uid);        
 
         //unilevel computation triggers
-        if(newValue.hasOwnProperty('compute_unilevel'))
+        if(compute_value.hasOwnProperty('compute_unilevel'))
         {
-            if(newValue.compute_unilevel !== 0)
+            if(compute_value.compute_unilevel !== 0)
             {
                 console.log("unilevel compute triggered", uid, newValue);
-                await MDB_USER.update(uid, { compute_unilevel: 0 });
-                await EARNING.unilevel(newValue, newValue.compute_unilevel);
+                await MDB_USER_COMPUTE.update(uid, "compute", { compute_unilevel: 0 });
+                await EARNING.unilevel(newValue, compute_value.compute_unilevel);
                 await EARNING.updateRank(newValue.upline_id);
             }
         }
 
         //binary computation triggers
-        if(newValue.hasOwnProperty('compute_binary'))
+        if(compute_value.hasOwnProperty('compute_binary'))
         {
-            if(newValue.compute_binary !== 0)
+            if(compute_value.compute_binary !== 0)
             {
                 console.log("binary compute triggered", uid, newValue);
-                await MDB_USER.update(uid, { compute_binary: 0 });
-                await EARNING.binary(newValue, newValue.compute_binary);
+                await MDB_USER_COMPUTE.update(uid, "compute", { compute_binary: 0 });
+                await EARNING.binary(newValue, compute_value.compute_binary);
             }
         }
     },
@@ -121,12 +124,9 @@ module.exports =
             /* compute unilevel */
             let payment_conversions             = await MDB_CURRENCY.get(enlist.payment_method.toUpperCase());
             let xau_equivalent                  = payment_conversions['XAU'] * enlist.amount;
-            enlist_update.compute_unilevel      = xau_equivalent;
-
-
-            console.log("enlist_update", enlist_update);
 
             await MDB_USER.update(id, enlist_update);
+            await MDB_USER_COMPUTE.update(id, 'compute', {compute_unilevel: xau_equivalent});
         }
     },
     async createInitializeWallet(uid)

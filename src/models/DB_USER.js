@@ -126,7 +126,7 @@ export default
     {
         return this.collection()
             .where("referral_code", "==", referral_code)
-            .limit(1)
+            .limit(10)
             .get()
             .then(user => {
                 return user.empty ? null : Object.assign(user.docs[0].data(), {id: user.docs[0].id})
@@ -213,5 +213,17 @@ export default
         return _this.$bind(options.name, this.collection()
             .where("referred_by", "==", referral_code)
             .orderBy("full_name"))
+    },
+
+    bindAllAdmins(_this, options = {})
+    {
+        // Set default name
+        if(!options.hasOwnProperty('name'))
+        {
+            options.name =  "admins"
+        }
+
+        return _this.$bind(options.name, this.collection()
+            .where('roles', 'array-contains', 'admin'))
     }
 }

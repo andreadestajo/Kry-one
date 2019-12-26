@@ -1,5 +1,10 @@
 import Store from '../store'
-import {GETTER_CURRENT_USER_DATA} from "../store/user-module/getters";
+
+import {
+    GETTER_CURRENT_ADMIN_ACCESS,
+    GETTER_CURRENT_USER_DATA
+} from "../store/user-module/getters";
+
 
 /**
  *
@@ -34,4 +39,32 @@ export const isAuthorized = (allowed_roles = null) =>
         return allowed_roles.includes(role)
     })
 };
+
+
+export const hasAccessTo = (access_key) => {
+    if(!access_key)
+    {
+        return true;
+    }
+
+    const user_data = Store().getters[GETTER_CURRENT_USER_DATA];
+
+    let user_roles = [];
+
+    // Check user roles
+    if(user_data.hasOwnProperty('roles') && user_data)
+    {
+        user_roles = user_data.roles;
+    }
+
+    if(user_roles.includes("developer"))
+    {
+        return true;
+    }
+
+    const admin_access = Store().getters[GETTER_CURRENT_ADMIN_ACCESS];
+    return admin_access.includes(access_key)
+};
+
+
 

@@ -21,6 +21,7 @@
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('btc')">Issue Bitcoin</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('eth')">Issue Ethereum</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('xau')">Issue Uniq</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="updateCurrency()">Update Currency</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="transferWallet('btc')">Transfer Bitcoin</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="clear()">Clear</q-btn>
@@ -110,7 +111,7 @@ import DB_USER                      from "../../models/DB_USER";
 import DB_NOBILITY                  from "../../models/DB_NOBILITY";
 import DB_USER_WALLET               from "../../models/DB_USER_WALLET";
 import DB_USER_WALLET_LOG           from "../../models/DB_USER_WALLET_LOG";
-import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET, FN_UPGRADE_ACCOUNT } from "../../references/refs_functions";
+import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET, FN_UPGRADE_ACCOUNT, FN_UPDATE_CURRENCY } from "../../references/refs_functions";
 
 export default
 {
@@ -400,7 +401,22 @@ export default
 		{
 			let employee_list 			= await DB_EMPLOYEES.getMany('birthday');
 			console.log(employee_list);
-		}
+		},
+        async updateCurrency()
+        {
+            this.$_showPageLoading();
+
+            try
+            {
+                res = await fbCall(FN_UPDATE_CURRENCY);
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
+        }
 	}
 }
 </script>

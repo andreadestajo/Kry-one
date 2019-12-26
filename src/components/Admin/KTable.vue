@@ -4,8 +4,7 @@
              :columns="columns"
              row-key="name"
              :loading="is_loading"
-             class="ktable"
-             >
+             class="ktable">
 
         <template v-slot:top>
             <slot name="table_top"></slot>

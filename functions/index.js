@@ -43,10 +43,12 @@ exports.updateUserDetails       = FUNCTIONS_HTTPS.onCall(admin_controller.update
 
 // Schedules
 exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onRun(schedule_controller.updateCurrency);
+exports.updateCurrency2         = FUNCTIONS_HTTPS.onCall(schedule_controller.updateCurrency);
 
 // Triggers
 exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onCreate(user_trigger.create);
-exports.triggerUserUpdate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onWrite(user_trigger.update);
+//exports.triggerUserUpdate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onWrite(user_trigger.update);
+exports.triggerUserCompute      = FUNCTIONS_FIRESTORE.document('/users/{uid}/compute/compute').onWrite(user_trigger.compute);
 
 // Callback
 exports.bitapsCallback          = FUNCTIONS_HTTPS.onRequest(callback_controller.bitaps);
@@ -56,4 +58,4 @@ exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate
 exports.testIssueBitcoin        = FUNCTIONS_HTTPS.onCall(user_trigger.testIssueBitcoin);
 
 // Initializer
-exports.initialize = FUNCTIONS_HTTPS.onRequest(initialize_controller.initialize);
+exports.initialize              = FUNCTIONS_HTTPS.onRequest(initialize_controller.initialize);

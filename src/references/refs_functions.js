@@ -25,4 +25,5 @@ FN_CHECK_CENTRAL_WALLET = `checkCentralWallet`,
 FN_UPDATE_USER_DETAILS  = `updateUserDetails`;
 
 export const
-FN_ISSUE_WALLET        = `issueWallet`;
+FN_ISSUE_WALLET        = `issueWallet`,
+FN_UPDATE_CURRENCY     = `updateCurrency2`;
