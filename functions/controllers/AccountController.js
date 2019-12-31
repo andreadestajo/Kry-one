@@ -85,7 +85,6 @@ module.exports =
         ({
             email         : user_info.email,
             password      : user_info.password,
-            phoneNumber   : user_info.contact_number,
             emailVerified : !!user_info.hasOwnProperty('knight_data') // false if not enlisted
         })
         .then(function(userRecord)
@@ -122,8 +121,7 @@ module.exports =
         ({
             email_verified : user_record.emailVerified ? user_record.emailVerified : null,
             photo_url      : user_record.photoURL      ? user_record.photoURL      : null,
-            phone_number   : user_record.phoneNumber   ? user_record.phoneNumber   : null,
-            ...user_info,
+            ...user_info
         })
         .then((res) =>
         {

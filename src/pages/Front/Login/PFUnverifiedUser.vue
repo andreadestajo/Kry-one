@@ -57,8 +57,10 @@
         {
             signOut()
             {
-                DB_USER.signOut();
-                this.$router.push('login');
+                DB_USER.signOut()
+                .then(() => {
+                    this.$router.push({name: 'front_login'})
+                });
             },
             async resendVerificationLink()
             {
