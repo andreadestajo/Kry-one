@@ -88,6 +88,8 @@
                 this.$_showConfirmDialog(message, this.saveAdmin);
             },
             saveAdmin() {
+                this.$_showPageLoading();
+
                 // Update user roles
                 const roles = [...this.roles];
                 roles.push("admin");
@@ -95,11 +97,14 @@
                 DB_USER.update(this.user_details.id, {roles})
                 .then(() =>
                 {
-                    this.$_notify({message: "Successfully saved changes.", mode: "positive"})
+                    this.$_notify({message: "Successfully saved changes.", mode: "positive"});
+                    this.$_hidePageLoading();
+                    this.$refs.kModalRef.hideModal();
                 })
                 .catch( error =>
                 {
-                    this.$_notify({message: error.message, mode: "negative"})
+                    this.$_notify({message: error.message, mode: "negative"});
+                    this.$_hidePageLoading();
                 })
             },
             resetData()

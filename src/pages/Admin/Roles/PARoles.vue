@@ -96,7 +96,7 @@
                                    type="submit"
                                    color="red"
                                    size="sm"
-                                   @click=""></q-btn>
+                                   @click="confirmRemoveAdmin(admins.data)"></q-btn>
                         </q-td>
                     </template>
                 </k-table>
@@ -119,6 +119,7 @@
     import PaAdminsModal    from './PAAdminsModal'
     import DB_ROLE          from '../../../models/DB_ROLE'
     import DB_USER          from '../../../models/DB_USER'
+    import {FIELD_VALUE}    from "../../../boot/firebase";
 
     export default {
         components: {
@@ -147,6 +148,31 @@
             chipColor(role)
             {
                 return role === 'developer' ? 'primary' : ''
+            },
+            confirmRemoveAdmin(data)
+            {
+                const message = `Are you sure you want to remove ${data.name} as admin ?`;
+
+                const callback = () => {
+                    this.$_showPageLoading();
+
+                    DB_USER.update(data.id,
+                    {
+                        roles: FIELD_VALUE.delete()
+                    })
+                    .then(() =>
+                    {
+                        this.$_notify({message: `Successfully removed an admin.`, mode: "positive"});
+                        this.$_hidePageLoading();
+                    })
+                    .catch(error =>
+                    {
+                        this.$_notify({message: error.message, mode: "negative"});
+                        this.$_hidePageLoading();
+                    })
+                };
+
+                this.$_showConfirmDialog(message, callback);
             }
         },
         async mounted() {
