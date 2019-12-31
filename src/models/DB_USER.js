@@ -174,6 +174,26 @@ export default
             })
     },
 
+    getUsersByRole(role, options = {})
+    {
+        let query = this.collection().where("roles", "array-contains", role);
+
+        if(options.hasOwnProperty('limit'))
+        {
+            query = query.limit(options.limit)
+        }
+
+        return query
+        .get()
+        .then(user =>
+        {
+            return user.empty ? [] : user.docs.map(u => Object.assign({}, u.data(), {id: u.id}))
+        })
+        .catch(error =>
+        {
+            return {error}
+        })
+    },
     /**
      *
      * @param _this

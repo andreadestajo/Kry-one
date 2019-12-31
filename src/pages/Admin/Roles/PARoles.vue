@@ -61,7 +61,7 @@
                                    type="submit"
                                    color="red"
                                    size="sm"
-                                   @click=""></q-btn>
+                                   @click="confirmDeleteRole(roles.data)"></q-btn>
                         </q-td>
                     </template>
                 </k-table>
@@ -163,6 +163,44 @@
                     .then(() =>
                     {
                         this.$_notify({message: `Successfully removed an admin.`, mode: "positive"});
+                        this.$_hidePageLoading();
+                    })
+                    .catch(error =>
+                    {
+                        this.$_notify({message: error.message, mode: "negative"});
+                        this.$_hidePageLoading();
+                    })
+                };
+
+                this.$_showConfirmDialog(message, callback);
+            },
+            confirmDeleteRole(data)
+            {
+                const message = `Are you sure you want to delete ${data.role} ?`;
+
+                const callback = async () => {
+                    this.$_showPageLoading();
+
+                    const user = await DB_USER.getUsersByRole(data.role, {limit: 1});
+
+                    if(user.hasOwnProperty("error"))
+                    {
+                        this.$_notify({message: error.message, mode: "negative"});
+                        this.$_hidePageLoading();
+                        return 0;
+                    }
+
+                    if(user.length)
+                    {
+                        this.$_notify({message: "Unable to delete role. Please make sure that no user is assigned to this role.", mode: "negative"});
+                        this.$_hidePageLoading();
+                        return 0;
+                    }
+
+                    DB_ROLE.remove(data.id)
+                    .then(() =>
+                    {
+                        this.$_notify({message: `Successfully deleted a role.`, mode: "positive"});
                         this.$_hidePageLoading();
                     })
                     .catch(error =>
