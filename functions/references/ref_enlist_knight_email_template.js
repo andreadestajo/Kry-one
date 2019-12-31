@@ -1,5 +1,5 @@
 
-exports.knightRegistrationTemplate = (name, link) =>
+exports.knightRegistrationTemplate = (user_full_name, name, link) =>
 `
   <table border="0" cellpadding="0" cellspacing="0" width="100%"> 
         <tr>
@@ -20,14 +20,14 @@ exports.knightRegistrationTemplate = (name, link) =>
                                 </tr>
                                 <tr>
                                     <td style="padding: 20px 0 30px 0; color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px;">
-                                        Someone invited you to be a Knight at <b>Kryptoone</b>. To complete your registration, please click the button below.
+                                        <b>${user_full_name}</b> invited you to be a Knight at <b>Kryptoone</b>. To complete your registration, please click the button below.
 
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="text-align: center;">
                                         <a href="${link}" style="background-color: #2097e6; border: none; color: white; padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer; font-family: Arial">
-                                            Accept Inivitation
+                                            Accept Invitation
                                         </a>
                                     </td>
                                 </tr>
@@ -39,8 +39,8 @@ exports.knightRegistrationTemplate = (name, link) =>
                             <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                 <tr>
                                     <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;" width="75%">
-                                        Kryptoone&#153; 2019<br/>
-                                        Think Ahead!
+                                        KryptoOne AI&#153; 2019<br/>
+                                        Secure Your Future
                                     </td>
                                 </tr>
                             </table>
