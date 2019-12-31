@@ -155,8 +155,8 @@ export default
         nobility_options()
         {
             return this.nobilities
-                .filter(n => parseFloat(n.price) !== 0 && this.$_current_user_data.nobility_id !== n.id)
-                .map(n => ({label: n.title, value: n.id, data: n}))
+            .filter(n => parseFloat(n.price) !== 0)
+            .map(n => ({label: n.title, value: n.id, data: n}))
         },
         emailError()
         {
