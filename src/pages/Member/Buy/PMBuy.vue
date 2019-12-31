@@ -198,7 +198,6 @@ export default
 
             if(!nobility) {return 0}
 
-            // Set amount
             this.form.amount = this.$_convertRate(nobility.price, 'XAU', this.form.payment_currency);
             this.$v.form.amount.$touch();
         },
@@ -207,7 +206,6 @@ export default
             const matched_nobilities = this.nobilities.filter(n => {
                 return parseFloat(n.price) <= this.uniqAmount && parseFloat(n.price) !== 0
             });
-
 
             if(!matched_nobilities.length)
             {
@@ -243,7 +241,7 @@ export default
             const upgrade_account                 = {};
 
             upgrade_account.target_nobility     = this.matched_nobility.id;
-            upgrade_account.amount              = parseFloat(this.form.amount);
+            upgrade_account.amount              = parseFloat(this.form.amount).toFixed(8);
             upgrade_account.payment_method      = this.form.payment_currency;
 
             try

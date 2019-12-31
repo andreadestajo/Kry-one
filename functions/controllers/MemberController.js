@@ -157,6 +157,8 @@ module.exports =
         let btc_equivalent              = payment_conversions['BTC'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
 
+        console.log(data.amount, "<", required_price.toFixed(8));
+
         if(logged_in_user_wallet.wallet < data.amount)
         {
             HTTPS_ERROR('failed-precondition', `You don't have enough ${data.payment_method.toUpperCase()} balance to proceed on this transaction.`);
