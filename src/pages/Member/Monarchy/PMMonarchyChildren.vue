@@ -16,7 +16,7 @@
             <template v-else>
                 <li style="width: 100%;">
                     <a href="javascript:" style="background-color: #aaa;">
-                        <div class="no-downline">No Downline</div>
+                        <div class="no-downline">No Knightmate</div>
                     </a>
                 </li>
             </template>
