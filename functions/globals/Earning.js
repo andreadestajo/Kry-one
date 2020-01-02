@@ -224,7 +224,7 @@ module.exports =
             await MDB_USER.deductBinaryPointLeftRight(user_info.id, point_deduction);
             
             let binary_amount           = point_deduction * 0.01;
-            description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from pairing on your left and right because <b>${user_cause.full_name}</b> has been placed.`;
+            description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
             type                        = "earned";
 
             promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
