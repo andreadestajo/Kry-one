@@ -31,14 +31,16 @@
     import DB_ROLE       from "../../../models/DB_ROLE.js"
     import {access_keys} from "../../../references/refs_admin_access_keys";
     import {required}    from "vuelidate/lib/validators";
+    import DB_USER from "../../../models/DB_USER";
 
     export default {
         components : {KModal, KField},
         data: () => ({
-            role    : "",
-            access  : [],
-            role_id : null,
-            is_edit : null
+            role         : "",
+            access       : [],
+            role_id      : null,
+            is_edit      : null,
+            current_role : ""
         }),
         methods: {
             showRolesModal(data) {
@@ -46,10 +48,11 @@
 
                 if(data)
                 {
-                    this.is_edit = !!data.id;
-                    this.role_id = data.id;
-                    this.access  = data.access;
-                    this.role    = data.role;
+                    this.is_edit      = !!data.id;
+                    this.role_id      = data.id;
+                    this.access       = data.access;
+                    this.role         = data.role;
+                    this.current_role = data.role;
                 }
 
                 this.$refs.kModalRef.showModal();
@@ -67,6 +70,24 @@
                 const query = this.is_edit ? DB_ROLE.update(this.role_id, data) : DB_ROLE.add(data);
 
                 query
+                .then(async () => {
+                    const users = await DB_USER.getUsersByRole(this.current_role);
+
+                    if(this.is_edit && this.current_role.toLowerCase() !== this.role.trim().toLowerCase())
+                    {
+                        return Promise.all(users.map(user => {
+                            const roles  = user.roles;
+                            const index  = roles.findIndex(r => r === this.current_role);
+                            roles[index] = this.role.trim();
+
+                            return DB_USER.update(user.id, {roles})
+                        }))
+                    }
+                    else
+                    {
+                        return Promise.resolve()
+                    }
+                })
                 .then(() => {
                     this.$_notify({message: `Successfully ${this.is_edit ? "updated a" : "added new"} role.`, mode: "positive"});
                     this.$_hidePageLoading();

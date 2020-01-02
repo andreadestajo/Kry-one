@@ -34,10 +34,11 @@ else
 	FUNCTIONS  = Firebase.app().functions('asia-northeast1');
 }
 
-const DB         = Firebase.firestore();
-const AUTH       = Firebase.auth();
-const STORAGE    = Firebase.storage;
-const STORAGEREF = Firebase.storage().ref();
+const DB          = Firebase.firestore();
+const AUTH        = Firebase.auth();
+const STORAGE     = Firebase.storage;
+const STORAGEREF  = Firebase.storage().ref();
+const FIELD_VALUE = Firebase.firestore.FieldValue;
 
 export {
   DB,
@@ -45,4 +46,5 @@ export {
   FUNCTIONS,
   STORAGE,
   STORAGEREF,
+  FIELD_VALUE
 }

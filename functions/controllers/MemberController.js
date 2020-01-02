@@ -25,14 +25,14 @@ const {sendMail}                   = require('../globals/EmailHelper');
 const Bitcoin = require('../globals/Bitaps/Bitcoin');
 const Ethereum = require('../globals/Bitaps/Ethereum');
 
-const sendRegistrationLink = async (email, name, link) =>
+const sendRegistrationLink = async (user_full_name, email, name, link) =>
 {
     const mail_options = {
             to      : email,
             from    : 'no-reply@kryptoone.com',
             subject : 'Invitation',
-            text    : knightRegistrationTemplate(name, link),
-            html    : knightRegistrationTemplate(name, link)
+            text    : knightRegistrationTemplate(user_full_name, name, link),
+            html    : knightRegistrationTemplate(user_full_name, name, link)
         };
 
     return sendMail(mail_options);
@@ -43,7 +43,7 @@ module.exports =
 {
     async submitKyc(data, context)
     {
-        // Variable declations
+        // Variable declarations
         const PENDING = 'pending';
         const USER_ID = context.auth.uid;
 
@@ -156,6 +156,8 @@ module.exports =
         let xau_equivalent              = payment_conversions['XAU'] * data.amount;
         let btc_equivalent              = payment_conversions['BTC'] * data.amount;
         let required_price              = conversion_rates[data.payment_method.toUpperCase()] * target_nobility.price;
+
+        console.log(data.amount, "<", required_price.toFixed(8));
 
         if(logged_in_user_wallet.wallet < data.amount)
         {
@@ -296,7 +298,7 @@ module.exports =
         // structure link
         const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
 
-        return sendRegistrationLink(knight_data.email, knight_data.full_name, registration_link);
+        return sendRegistrationLink(logged_in_user.full_name, knight_data.email, knight_data.full_name, registration_link);
     },
     async placeDownline(data, context)
     {

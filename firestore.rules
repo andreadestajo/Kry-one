@@ -8,9 +8,8 @@ service cloud.firestore
 			allow read, write;
 		}
 		match /users/{userID}
-        {
-            allow read, write;
-
+    {
+        allow read, write;
             match /wallets/{walletID}
             {
                 allow read;
@@ -55,6 +54,10 @@ service cloud.firestore
         match /cryptoReport/{cryptoReportId}
         {
             allow read;
+        }
+        match /roles/{cryptoReportId}
+        {
+            allow read, write;
         }
 	}
 }
