@@ -24,6 +24,11 @@
                             <ul>
                                 <!-- LEFT & RIGHT -->
                                 <Children :data="children" :key="key" v-for="(children, key) of childrens" />
+                                <li v-if="childrens && childrens.length === 0">
+                                    <a href="javascript:" style="background-color: #aaa">
+                                        <div>No Team Yet</div>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
