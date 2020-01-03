@@ -35,15 +35,22 @@ export default
             const currency = this.$route.params.currency ? this.$route.params.currency.toUpperCase() : null;
             if(!currency) {return null}
 
-            const wallet_address = this.$_current_user_wallet.hasOwnProperty(currency)
-                ? this.$_current_user_wallet[currency] : null;
-
-            if(!wallet_address)
+            if (currency === 'UNIQ')
             {
-                this.$_notify({message: 'Wallet address not found.'})
+                return this.$_current_user_data.referral_code;
             }
+            else
+            {
+                const wallet_address = this.$_current_user_wallet.hasOwnProperty(currency)
+                    ? this.$_current_user_wallet[currency] : null;
 
-            return wallet_address.address
+                if(!wallet_address)
+                {
+                    this.$_notify({message: 'Wallet address not found.'})
+                }
+
+                return wallet_address.address
+            }
         }
     },
     methods: { }
