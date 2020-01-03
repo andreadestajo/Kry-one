@@ -48,10 +48,13 @@ module.exports =
     async create(snap, context)
     {
         await module.exports.createInitializeWallet(snap.id);
-        await module.exports.createInitializeParameters(snap.id, snap.data());
+        await module.exports.createInitializeParameters(snap.id);
     },
-    async createInitializeParameters(id, user_info)
+    async createInitializeParameters(id)
     {
+        /* get user info */
+        let user_info = await MDB_USER.get(id);
+
         /* initial nobility */
         const nobility_list = await MDB_NOBILITY.getMany({ order_by: 'rank' });
 
@@ -122,6 +125,11 @@ module.exports =
             let payment_conversions             = await MDB_CURRENCY.get(enlist.payment_method.toUpperCase());
             let xau_equivalent                  = payment_conversions['XAU'] * enlist.amount;
 
+            /**/
+            description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}</b> because you were enlisted.</b>.`;
+            type                                = "enlisted";
+            
+            await WALLET.add(id, 'xau', xau_equivalent, type, description, id);
             await MDB_USER.update(id, enlist_update);
             await MDB_USER_COMPUTE.update(id, 'compute', {compute_unilevel: xau_equivalent});
         }
@@ -174,7 +182,7 @@ module.exports =
                 {
                     let update_user_data = {};
                     update_user_data.filters = FieldValue.arrayUnion(initial_data.address);
-                    await MDB_USER.update(uid, update_user_data);
+                    promise_list.push(MDB_USER.update(uid, update_user_data));
                 }
 
                 promise_list.push(MDB_USER_WALLET.update(uid, currency.id, initial_data));

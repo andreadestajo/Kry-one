@@ -219,25 +219,17 @@ export default
         async showConfirmDialog()
         {
             this.$v.send_wallet_form.$touch();
-            if(this.$v.send_wallet_form.$error) {return 0}
+
+            if (this.$v.send_wallet_form.$error) {return 0}
             
-            // Try getting user by wallet address
-            // Cinocomment ko muna nag eerror kasi ung transfer wallet kapag internal kase walang user id dito sa wallet data.
-            // let user = await DB_USER.getUserByWalletAddress(this.active_wallet.abb, this.send_wallet_form.send_to);
+            this.$_showPageLoading();
 
-            let user = null; // temporary until fixed
+            let user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
 
-            // Try getting user by email
-            if(!user) 
+            if (user)
             {
-                user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
-
-                // pass user_id to confirmationTransaction()
-                if (user)
-                {
-                    this.internal_user_id = null;
-                    this.internal_user_id = user.id;
-                }
+                this.internal_user_id = null;
+                this.internal_user_id = user.id;
             }
 
             this.is_external_send = !user;
@@ -249,9 +241,8 @@ export default
         {
             this.$_showPageLoading();
 
-            if (!this.is_external_send)
+            if (!this.is_external_send || this.active_wallet.abb === 'UNIQ')
             {
-                this.send_wallet_form.send_to_id = this.internal_user_id;
                 this.transferWallet();
             }
             else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH') // BTC AND ETH
@@ -290,10 +281,11 @@ export default
         {
             let send_wallet         = {};
             send_wallet.amount      = this.send_wallet_form.amount;
-            send_wallet.send_to     = this.send_wallet_form.send_to_id;
+            send_wallet.send_to     = this.internal_user_id;
             send_wallet.currency    = this.active_wallet.abb;
+            send_wallet.address     = this.send_wallet_form.send_to;
             send_wallet.remarks     = this.send_wallet_form.remarks;
-
+            
             try
             {
                 let res = await fbCall(FN_TRANSFER_WALLET, send_wallet);

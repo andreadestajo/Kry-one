@@ -72,12 +72,14 @@ module.exports =
         data.amount                     = parseFloat(data.amount);
         data.currency                   = data.currency.toLowerCase();
         data.currency                   = data.currency === 'uniq' ? 'xau' : data.currency;
+
         let description, type           = "";
         let promise_list                = [];
         let logged_in_user              = await AUTH.member_only(context);
         let recipient                   = MDB_USER.get(data.send_to || "none");
         let logged_in_user_wallet       = MDB_USER_WALLET.get(logged_in_user.id, data.currency.toUpperCase());
-        let transfer_wallet             = {};
+        let transfer_wallet             = null;
+        let uniq_recipient              = null;
 
         await Promise.all([recipient, logged_in_user_wallet]).then(async (res) =>
         {
@@ -88,12 +90,32 @@ module.exports =
             {
                 HTTPS_ERROR('failed-precondition', `You don't have enough balance to proceed on this transaction.`);
             }
-            else if(logged_in_user.id == recipient.id)
+            else if(recipient && logged_in_user.id == recipient.id)
             {
                 HTTPS_ERROR('failed-precondition', `Sending money to self is not allowed.`);
             }
             else
             {
+                if (data.currency === 'xau')
+                {
+                    uniq_recipient = await WALLET.add_uniq(data.amount, data.address);
+                    
+                    if (uniq_recipient)
+                    {
+                        /* deduct wallet to sender */
+                        description = `You have sent <b>${data.amount} ${data.currency}</b> to the account of <b>${uniq_recipient.full_name}</b>.`;
+                        type        = "sent";
+
+                        await WALLET.deduct(logged_in_user.id, data.currency, data.amount, type, description, '');
+                        return true;
+                    }
+                }
+
+                if (!recipient)
+                {
+                    HTTPS_ERROR('failed-precondition', `Recipient not found.`);
+                }
+
                 /* record transfer wallet transaction for admin recordings for list of issued wallet */
                 transfer_wallet                 = {};
                 transfer_wallet.amount          = data.amount;
@@ -120,7 +142,14 @@ module.exports =
             }
         });
 
-        return { status: "success", message: `${logged_in_user.full_name} transferred ${transfer_wallet.amount} ${transfer_wallet.currency.toUpperCase()} to the account of ${recipient.full_name}.` };
+        if (transfer_wallet)
+        {
+            return { status: "success", message: `${logged_in_user.full_name} transferred ${transfer_wallet.amount} ${transfer_wallet.currency.toUpperCase()} to the account of ${recipient.full_name}.` };
+        }
+        else
+        {
+            return { status: "success", message: `${logged_in_user.full_name} transferred ${data.amount} ${data.currency.toUpperCase()} to the account of ${uniq_recipient.full_name} on (https://uniqx.co).` };
+        }
     },
     async upgradeAccount(data, context)
     {
@@ -180,7 +209,7 @@ module.exports =
             promotions.user_id                  = logged_in_user.id;
             promotions.payment_method           = data.payment_method.toUpperCase();
             promotions.amount                   = data.amount;
-            promotions.required_price           = required_price;  
+            promotions.required_price           = required_price;
             promotions.created_date             = new Date();
 
             /* deduct wallet to account of user who is upgrading */
