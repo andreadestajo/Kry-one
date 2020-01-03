@@ -10,6 +10,7 @@ const EARNING           = require('../globals/Earning');
 const Bitcoin           = require('../globals/Bitaps/Bitcoin');
 const Ethereum          = require('../globals/Bitaps/Ethereum');
 const FieldValue        = require('firebase-admin').firestore.FieldValue;
+const FORMAT            = require('../globals/FormatHelper');
 
 module.exports =
 {
@@ -128,7 +129,7 @@ module.exports =
             /**/
             description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}</b> because you were enlisted.</b>.`;
             type                                = "enlisted";
-            
+
             await WALLET.add(id, 'xau', xau_equivalent, type, description, id);
             await MDB_USER.update(id, enlist_update);
             await MDB_USER_COMPUTE.update(id, 'compute', {compute_unilevel: xau_equivalent});
