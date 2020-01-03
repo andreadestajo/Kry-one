@@ -20,7 +20,7 @@ module.exports =
     async add(uid, currency, amount, type, description, triggered_by = "", remark)
     {
         currency     = currency.toLowerCase();
-        let allowed_type = ['received', 'issued', 'earned', 'purchased'];
+        let allowed_type = ['received', 'issued', 'earned', 'purchased', 'enlisted'];
         let add_promise  = [];
 
         amount = parseFloat(amount);

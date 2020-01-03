@@ -125,6 +125,11 @@ module.exports =
             let payment_conversions             = await MDB_CURRENCY.get(enlist.payment_method.toUpperCase());
             let xau_equivalent                  = payment_conversions['XAU'] * enlist.amount;
 
+            /**/
+            description                         = `You earned <b>${FORMAT.numberFormat(xau_equivalent, { decimal: 8, currency: 'UNIQ' })}</b> because you were enlisted.</b>.`;
+            type                                = "enlisted";
+            
+            await WALLET.add(id, 'xau', xau_equivalent, type, description, id);
             await MDB_USER.update(id, enlist_update);
             await MDB_USER_COMPUTE.update(id, 'compute', {compute_unilevel: xau_equivalent});
         }

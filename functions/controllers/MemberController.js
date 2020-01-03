@@ -209,7 +209,7 @@ module.exports =
             promotions.user_id                  = logged_in_user.id;
             promotions.payment_method           = data.payment_method.toUpperCase();
             promotions.amount                   = data.amount;
-            promotions.required_price           = required_price;  
+            promotions.required_price           = required_price;
             promotions.created_date             = new Date();
 
             /* deduct wallet to account of user who is upgrading */
