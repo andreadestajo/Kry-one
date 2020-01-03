@@ -11,6 +11,7 @@ const Bitcoin           = require('../globals/Bitaps/Bitcoin');
 const Ethereum          = require('../globals/Bitaps/Ethereum');
 const FieldValue        = require('firebase-admin').firestore.FieldValue;
 const FORMAT            = require('../globals/FormatHelper');
+const WALLET            = require('../globals/Wallet');
 
 module.exports =
 {

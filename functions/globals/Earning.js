@@ -120,7 +120,7 @@ module.exports =
         let upline_info         = await MDB_USER.get(user_info.upline_id);
         let nobilities          = await MDB_NOBILITY.getMany();
 
-        promise_list.push(MDB_USER.addBinaryPointValue(user_info.id, uniq_amount_purchase));
+        promise_list.push(MDB_USER.addBinaryPointValue(user_info.id, bitcoin_equivalent));
 
         if(upline_info)
         {
