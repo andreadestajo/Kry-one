@@ -1,6 +1,6 @@
 <template>
     <li>
-        <a v-if="data" href="javascript:">
+        <a v-if="data" href="javascript:" :style="`background-color: #${data.nobility_info.badge_color}`">
             <div @click="checkChildren()">
                 <div class="image"><q-img spinner-size="5px" :src="data.photo_url ? data.photo_url : `../statics/boy.jpg`"></q-img></div>
                 <div class="name">{{ data.full_name }}</div>

@@ -223,7 +223,7 @@ module.exports =
         {
             await MDB_USER.deductBinaryPointLeftRight(user_info.id, point_deduction);
             
-            let binary_amount           = point_deduction * 0.01;
+            let binary_amount           = point_deduction * 0.1;
             description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
             type                        = "earned";
 
