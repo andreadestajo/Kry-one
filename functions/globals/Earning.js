@@ -167,7 +167,7 @@ module.exports =
         let upline_info = await MDB_USER.get(user_info.upline_id);
 
         /* NOTIFY AS NEW PART OF GROUP */
-        let group_description = `<b>${user_cause.full_name}</b> purchased ${FORMAT.numberFormat(stairstep_amount, { decimal: 8, currency: this.earning_currency })} UNIQ from level ${level} of your group.`;
+        let group_description = `<b>${user_cause.full_name}</b> purchased UNIQ worth ${FORMAT.numberFormat(bitcoin_equivalent, { decimal: 8, currency: this.earning_currency })} BTC from level ${level} of your group.`;
         promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, group_description, user_cause.photo_url));
 
         if(upline_info)
