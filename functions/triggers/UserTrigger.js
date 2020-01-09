@@ -203,6 +203,9 @@ module.exports =
         const previousValue     = change.before.data();
         let uid                 = context.params.uid;
 
+        console.log("previousValue", previousValue);
+        console.log("newValue", newValue);
+
         if(newValue.nobility_info.rank_order === 0 && previousValue.nobility_info.rank_order !== 0)
         {
             console.log(`${uid} is now a paid account.`);
