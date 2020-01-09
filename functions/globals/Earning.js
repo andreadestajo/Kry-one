@@ -136,7 +136,7 @@ module.exports =
         let nobility_info           = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
         let compute_info            = await MDB_USER_COMPUTE.get(user_info.id, "compute");
         let update_compute          = {};
-        update_compute.group_count  = FieldValue.increment(1);
+        update_compute.group_sale   = FieldValue.increment(bitcoin_equivalent);
 
         console.log(level, user_info, nobility_info);
         console.log(compute_info);
@@ -144,7 +144,7 @@ module.exports =
         /* DIRECT REFERRAL */
         if(level === 1)
         {
-            update_compute.personal_count = FieldValue.increment(1);
+            update_compute.direct_sale = FieldValue.increment(bitcoin_equivalent);
         }
 
         await MDB_USER_COMPUTE.update(user_info.id, "compute", update_compute);
@@ -167,7 +167,7 @@ module.exports =
         let upline_info = await MDB_USER.get(user_info.upline_id);
 
         /* NOTIFY AS NEW PART OF GROUP */
-        let group_description = `<b>${user_cause.full_name}</b> purchased UNIQ worth ${FORMAT.numberFormat(bitcoin_equivalent, { decimal: 8, currency: this.earning_currency })} BTC from level ${level} of your group.`;
+        let group_description = `<b>${user_cause.full_name}</b> purchased UNIQ worth <b>${FORMAT.numberFormat(bitcoin_equivalent, { decimal: 8, currency: this.earning_currency })}</b> from <b>level ${level}</b> of your group.`;
         promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, group_description, user_cause.photo_url));
 
         if(upline_info)
