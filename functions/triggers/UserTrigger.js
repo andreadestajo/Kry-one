@@ -22,7 +22,7 @@ module.exports =
         //const previousValue = change.before.data();
         const uid       = context.params.uid;
 
-        newValue    = await MDB_USER.get(uid);        
+        newValue    = await MDB_USER.get(uid);
 
         //unilevel computation triggers
         if(compute_value.hasOwnProperty('compute_unilevel'))
@@ -195,6 +195,20 @@ module.exports =
         {
             return "done!";
         });
+    },
+
+    async update(change, context)
+    {
+        const newValue          = change.after.data();
+        const previousValue     = change.before.data();
+        let uid                 = context.params.uid;
+
+        if(newValue.nobility_info.rank_order === 0 && previousValue.nobility_info.rank_order !== 0)
+        {
+            console.log(`${uid} is now a paid account.`);
+        }
+
+        // perform desired operations ...
     },
 
 
