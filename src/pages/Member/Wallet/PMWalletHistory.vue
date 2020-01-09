@@ -139,10 +139,10 @@ export default
                         description   : data.description,
                         remark        : data.remark === "No Remarks" ? '' : data.remark,
                         amount        : this.$_formatNumber(data.amount, {currency: currency.toUpperCase()}),
-                        balance_after : data.balance_after,
+                        balance_after : this.$_formatNumber(data.balance_after, {currency: currency.toUpperCase()}),
                         time          : moment(data.date_created.toDate()).startOf('hour').fromNow(),
                         date          : data.date_created.toDate(),
-                        method        : 'add'
+                        method        : data.method,
                     };
 
                     this.wallet_history_data.push(history_data)
