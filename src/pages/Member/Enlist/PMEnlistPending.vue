@@ -1,6 +1,6 @@
 <template>
     <div class="enlistPending">
-        <k-header detail="Lorem ipsum">PENDING ENLIST</k-header>
+        <k-header detail="List of pending invitations">PENDING ENLIST</k-header>
         <div class="enlistPending__list">
             <k-card v-for="enlistment in pendingEnlistments" :key="enlistment.id" class="item">
                 <div class="item-badge">

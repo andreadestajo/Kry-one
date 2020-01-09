@@ -2,6 +2,7 @@ const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
+const MDB_USER_COMPUTE      = require('../models/MDB_USER_COMPUTE');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
@@ -131,20 +132,21 @@ module.exports =
     },
     async unilevelGoToUpline(user_info, level, bitcoin_equivalent, promise_list, user_cause, stairstep)
     {
-        let nobility_info = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
+        let nobility_info           = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
+        let compute_info            = await MDB_USER_COMPUTE.get(user_info.id, "compute");
+        let update_compute          = {};
+        update_compute.group_count  = FieldValue.increment(1);
+
         console.log(level, user_info, nobility_info);
-        //console.log(level, user_info.id, nobility_info.title, nobility_info.override_bonus);
+        console.log(compute_info);
+
         /* DIRECT REFERRAL */
-        // if(level === 1)
-        // {
-        //     let direct_referral_amount  = bitcoin_equivalent * 0.01;
-        //     description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
-        //     type                        = "earned";
-        //     promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
-        //     promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
-        //     promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
-        //     console.log(description);
-        // }
+        if(level === 1)
+        {
+            update_compute.personal_count = FieldValue.increment(1);
+        }
+
+        await MDB_USER_COMPUTE.update(user_info.id, "compute", update_compute);
 
         /* STAIRSTEP OVERRIDE */
         if(nobility_info.override_bonus > stairstep.current_percentage)
