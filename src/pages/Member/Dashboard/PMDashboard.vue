@@ -155,7 +155,7 @@
             </div>
             <div class="breakdown" v-if="earning_breakdown">
                 <div class="breakdown-list">
-                    <div class="breakdown-icon"><q-icon name="fa fa-heart"></q-icon></div>
+                    <div class="breakdown-icon"><q-icon name="fa fa-street-view"></q-icon></div>
                     <div class="breakdown-label">Direct Count </div>
                     <div class="breakdown-value">
                         <div class="amount">{{ compute_options.direct_count }}</div>
@@ -164,7 +164,7 @@
             </div>
             <div class="breakdown" v-if="earning_breakdown">
                 <div class="breakdown-list">
-                    <div class="breakdown-icon"><q-icon name="fa fa-heart"></q-icon></div>
+                    <div class="breakdown-icon"><q-icon name="fa fa-sitemap"></q-icon></div>
                     <div class="breakdown-label">Group Count</div>
                     <div class="breakdown-value">
                         <div class="amount">{{ compute_options.group_count }}</div>
@@ -173,19 +173,25 @@
             </div>
             <div class="breakdown" v-if="earning_breakdown">
                 <div class="breakdown-list">
-                    <div class="breakdown-icon"><q-icon name="fa fa-heart"></q-icon></div>
+                    <div class="breakdown-icon"><q-icon name="fa fa-dollar-sign"></q-icon></div>
                     <div class="breakdown-label">Direct Sale </div>
                     <div class="breakdown-value">
                         <div class="amount">{{ $_formatNumber(compute_options.direct_sale, {currency: 'BTC'}) }}</div>
+                        <div class="conversion">
+                            <k-amount-conversion :amount="compute_options.direct_sale" coin="BTC"/>
+                        </div>
                     </div>
                 </div>  
             </div>
             <div class="breakdown" v-if="earning_breakdown">
                 <div class="breakdown-list">
-                    <div class="breakdown-icon"><q-icon name="fa fa-heart"></q-icon></div>
+                    <div class="breakdown-icon"><q-icon name="fa fa-hand-holding-usd"></q-icon></div>
                     <div class="breakdown-label">Group Sale</div>
                     <div class="breakdown-value">
                         <div class="amount">{{ $_formatNumber(compute_options.group_sale, {currency: 'BTC'}) }}</div>
+                        <div class="conversion">
+                            <k-amount-conversion :amount="compute_options.group_sale" coin="BTC"/>
+                        </div>
                     </div>
                 </div>  
             </div>
@@ -201,8 +207,8 @@ import DB_NOBILITY      from "../../../models/DB_NOBILITY";
 import DB_USER_WALLET   from '../../../models/DB_USER_WALLET';
 import DB_USER          from '../../../models/DB_USER';
 import DB_USER_EARNING  from '../../../models/DB_USER_EARNING';
-import DB_USER_COMPUTE  from '../../../models/DB_USER_COMPUTE';
-import {arrayToObject} from "../../../utilities/ObjectUtils";
+import DB_USER_COUNT    from '../../../models/DB_USER_COUNT';
+import {arrayToObject}  from "../../../utilities/ObjectUtils";
 
 export default
 {
@@ -233,9 +239,8 @@ export default
         {
             // Get people to place
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
-            await this.$bind('group_status', DB_USER_COMPUTE.doc(this.$_current_user_data.id, "compute"));
+            await this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
 
-            console.log(this.group_status);
             this.compute_options =  { 
                                         group_count: this.group_status.group_count || 0,
                                         direct_count: this.group_status.direct_count || 0,

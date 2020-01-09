@@ -2,7 +2,7 @@ const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
-const MDB_USER_COMPUTE      = require('../models/MDB_USER_COMPUTE');
+const MDB_USER_COUNT        = require('../models/MDB_USER_COUNT');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
@@ -134,7 +134,7 @@ module.exports =
     async unilevelGoToUpline(user_info, level, bitcoin_equivalent, promise_list, user_cause, stairstep)
     {
         let nobility_info           = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
-        let compute_info            = await MDB_USER_COMPUTE.get(user_info.id, "compute");
+        let compute_info            = await MDB_USER_COUNT.get(user_info.id, "compute");
         let update_compute          = {};
         update_compute.group_sale   = FieldValue.increment(bitcoin_equivalent);
 
@@ -147,7 +147,7 @@ module.exports =
             update_compute.direct_sale = FieldValue.increment(bitcoin_equivalent);
         }
 
-        await MDB_USER_COMPUTE.update(user_info.id, "compute", update_compute);
+        await MDB_USER_COUNT.update(user_info.id, "compute", update_compute);
 
         /* STAIRSTEP OVERRIDE */
         if(nobility_info.override_bonus > stairstep.current_percentage)
