@@ -7,6 +7,7 @@ const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
+const FieldValue            = require("firebase-admin").firestore.FieldValue;
 
 module.exports =
 {
