@@ -163,6 +163,10 @@ module.exports =
 
         let upline_info = await MDB_USER.get(user_info.upline_id);
 
+        /* NOTIFY AS NEW PART OF GROUP */
+        let group_description = `<b>${user_cause.full_name}</b> purchased ${FORMAT.numberFormat(stairstep_amount, { decimal: 8, currency: this.earning_currency })} UNIQ from level ${level} of your group.`;
+        promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, group_description, user_cause.photo_url));
+
         if(upline_info)
         {
             await this.unilevelGoToUpline(upline_info, level+1, bitcoin_equivalent, promise_list, user_cause, stairstep);
@@ -241,7 +245,5 @@ module.exports =
             console.log("------ ** NEXT *** ------");
             await this.binaryGoToUpline(upline_info, level+1, points, promise_list, user_cause, user_info.placement_position);
         }
-
-        
     }
 };
