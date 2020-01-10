@@ -241,13 +241,6 @@ export default
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
             await this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
 
-            this.compute_options =  { 
-                                        group_count: this.group_status.group_count || 0,
-                                        direct_count: this.group_status.direct_count || 0,
-                                        group_sale: this.group_status.group_sale || 0,
-                                        direct_sale: this.group_status.direct_sale || 0
-                                    };
-
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
@@ -287,6 +280,15 @@ export default
     },
     watch:
     {
+        group_status()
+        {
+            this.compute_options =  { 
+                                        group_count: this.group_status.group_count || 0,
+                                        direct_count: this.group_status.direct_count || 0,
+                                        group_sale: this.group_status.group_sale || 0,
+                                        direct_sale: this.group_status.direct_sale || 0
+                                    };
+        },
         user_earning(user_earning)
         {
             const default_data = {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}};

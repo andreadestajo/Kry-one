@@ -1,6 +1,7 @@
 const MDB_USER          = require('../models/MDB_USER');
 const MDB_USER_WALLET   = require('../models/MDB_USER_WALLET');
 const MDB_USER_COMPUTE  = require('../models/MDB_USER_COMPUTE');
+const MDB_USER_COUNT    = require('../models/MDB_USER_COUNT');
 const MDB_USER_EARNING  = require('../models/MDB_USER_EARNING');
 const MDB_ENLIST_KNIGHT = require('../models/MDB_ENLIST_KNIGHT');
 const MDB_CURRENCY      = require('../models/MDB_CURRENCY');
@@ -203,15 +204,59 @@ module.exports =
         const previousValue     = change.before.data();
         let uid                 = context.params.uid;
 
-        console.log("previousValue", previousValue);
-        console.log("newValue", newValue);
-
-        if(newValue.nobility_info.rank_order === 0 && previousValue.nobility_info.rank_order !== 0)
+        if(previousValue)
         {
-            console.log(`${uid} is now a paid account.`);
+            if(previousValue.nobility_info)
+            {
+                if(previousValue.nobility_info.rank_order === 1 && newValue.nobility_info.rank_order !== 1)
+                {
+                    console.log(newValue.full_name + " is now a paid account");
+
+                    //get info of user
+                    let user_info           = newValue;
+                    user_info.id            = uid;
+                    let upline_info         = null;
+
+                    //check if there is an upline
+                    if(user_info)
+                    {
+                        if(user_info.upline_id)
+                        {
+                            upline_info     = await MDB_USER.get(user_info.upline_id);
+                        }
+                    }
+
+                    if(user_info && upline_info)
+                    {
+                        await module.exports.updateGroup(upline_info, user_info, 1);
+                    }
+                }
+            }
+        }
+    },
+
+    async updateGroup(user_info, cause_info, level, options = {})
+    {
+        console.log(level, user_info.id);
+
+        let update_count = {};
+
+        update_count.group_count = FieldValue.increment(1);
+
+        if(level === 1)
+        {
+            update_count.direct_count = FieldValue.increment(1);
         }
 
-        // perform desired operations ...
+        MDB_USER_COUNT.update(user_info.id, "compute", update_count);
+
+        let upline_info = null;
+
+        if(user_info.upline_id)
+        {
+            upline_info = await MDB_USER.get(user_info.upline_id);
+            await module.exports.updateGroup(upline_info, cause_info, level+1, options);
+        }
     },
 
 
@@ -219,13 +264,12 @@ module.exports =
     {
         let snap        = {};
         let u_info      = await MDB_USER.get(data.uid);
-
+        
         await module.exports.createInitializeParameters(data.uid, u_info);
         await module.exports.createInitializeWallet(data.uid).then((res) => 
         {
             return "done";
         });
-        
     },
 
     async testIssueBitcoin()
