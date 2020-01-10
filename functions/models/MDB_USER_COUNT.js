@@ -38,6 +38,10 @@ module.exports =
         let deduction = points * -1;
         await this.doc(uid, id).update({ binary_points_left : FieldValue.increment(deduction), binary_points_right : FieldValue.increment(deduction) });
     },
+    async clearBinaryPointLeftRight(uid, id)
+    {
+        await this.doc(uid, id).update({ binary_points_left : 0, binary_points_right : 0 });
+    },
     async get(uid, id)
     {
         let res = await this.doc(uid, id).get();

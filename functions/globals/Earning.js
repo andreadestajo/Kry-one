@@ -188,13 +188,9 @@ module.exports =
     },
     async binaryGoToUpline(user_info, level, points, promise_list, user_cause, downline_position)
     {
-        console.log(level, user_info.id);
-        var current_date    = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
-        var last_update     = moment().tz('Asia/Singapore').format('YYYY-MM-DD hh:mm:ss');
-
-        console.log(current_date);
-
-
+        let current_date    = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+        let last_update     = moment().tz('Asia/Singapore').format('YYYY-MM-DD hh:mm:ss');
+        let max_income      = false;
 
         await MDB_USER_COUNT.addBinaryPointLeftRight(user_info.id, "compute", downline_position, points);
 
@@ -225,11 +221,16 @@ module.exports =
             }
         }
 
+        point_deduction = parseFloat(point_deduction.toFixed(8));
+
         //check if points deduction is not zero
         if(point_deduction !== 0)
         {
             //get current date limit
+            let nobility_info   = await MDB_NOBILITY.get(user_info.nobility_id);
             let daily_limit     = await MDB_USER_MAX.get(user_info.id, current_date);
+
+            console.log("current daily limit", daily_limit);
 
             if(!daily_limit)
             {
@@ -240,16 +241,54 @@ module.exports =
                 daily_limit     = { knight_match: daily_limit.knight_match + point_deduction, last_update: last_update };
             }
 
-            await MDB_USER_MAX.update(user_info.id, current_date, daily_limit);
-            await MDB_USER_COUNT.deductBinaryPointLeftRight(user_info.id, "compute", point_deduction);
-            
-            let binary_amount           = point_deduction * 0.1;
-            description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
-            type                        = "earned";
+            console.log(daily_limit.knight_match, nobility_info.max_income);
 
-            promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
-            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'binary', binary_amount))
-            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+            if(daily_limit.knight_match > nobility_info.max_income)
+            {
+                point_deduction = point_deduction - (daily_limit.knight_match - nobility_info.max_income);
+                daily_limit.knight_match = daily_limit.knight_match - (daily_limit.knight_match - nobility_info.max_income);
+                
+                //make sure 8 decimal only is saved
+                point_deduction = parseFloat(point_deduction.toFixed(8));
+                daily_limit.knight_match = parseFloat(daily_limit.knight_match.toFixed(8));
+
+                if(point_deduction < 0)
+                {
+                    point_deduction = 0;
+                }
+
+                if(daily_limit.knight_match < 0)
+                {
+                    daily_limit.knight_match = 0;
+                }
+
+                console.log("You have exceeded the maximum income");
+                max_income = true;
+            }
+
+            await MDB_USER_MAX.update(user_info.id, current_date, daily_limit);
+
+            if(max_income === true)
+            {
+                console.log("clearBinaryPointsLeftRight");
+                await MDB_USER_COUNT.clearBinaryPointLeftRight(user_info.id, "compute");
+            }
+            else
+            {
+                console.log("deductBinaryPointLeftRight", point_deduction);
+                await MDB_USER_COUNT.deductBinaryPointLeftRight(user_info.id, "compute", point_deduction);
+            }
+
+            if(point_deduction > 0)
+            {     
+                let binary_amount           = point_deduction * 0.1;
+                description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
+                type                        = "earned";
+
+                promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
+                promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'binary', binary_amount))
+                promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+            }
         }
 
         let upline_info = await MDB_USER.get(user_info.placement_id || 0);
