@@ -16,6 +16,7 @@
 
         <div class="q-pa-lg">
             <q-btn class="q-mb-sm q-mx-sm" @click="testUserCreate()">User Create Test</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="testBinary()">Test Binary</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="bindUserInformation()">Bind User Information</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="bindAndTurnToPledger()">Bind and Turn to Pledger</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="issueWallet('btc')">Issue Bitcoin</q-btn>
@@ -409,6 +410,24 @@ export default
             try
             {
                 res = await fbCall(FN_UPDATE_CURRENCY);
+            }
+            catch(err)
+            {
+                this.$q.notify({ message: err.message, color: 'red' });
+            }
+
+            this.$_hidePageLoading();
+        },
+        async testBinary()
+        {
+            let res;
+
+            this.$_showPageLoading();
+            try
+            {
+                let data = { uid: this.last_id };
+                res = await fbCall("testBinary", data);
+                this.$q.notify({ message: res.data.message, color: 'green' });
             }
             catch(err)
             {

@@ -123,7 +123,7 @@
 
         <!-- BINARY POINTS -->
         <k-card class="dashboard__breakdown member__card q-mt-md">
-            <div class="subtitle">Knight Match Points</div>
+            <div class="subtitle">Knight Match</div>
             <div class="text-center q-pa-lg" v-if="!earning_breakdown">
                 <q-spinner color="primary" size="2em"/>
             </div>
@@ -134,7 +134,7 @@
                     <div class="breakdown-value">
                         <div class="amount">{{ compute_options.binary_points_left.toFixed(8) }}</div>
                     </div>
-                </div>  
+                </div>
             </div>
             <div class="breakdown" v-if="earning_breakdown">
                 <div class="breakdown-list">
@@ -144,6 +144,20 @@
                         <div class="amount">{{ compute_options.binary_points_right.toFixed(8) }}</div>
                     </div>
                 </div>  
+            </div>
+            <div class="breakdown">
+                <div class="breakdown-maxincome">
+                    <div class="title">Daily Maximum Knight Match</div>
+                    <div class="value"><b>{{ $_formatNumber(current_nobility.max_income, {currency: 'BTC'})  }}</b></div>
+                    <div class="value"><k-amount-conversion :amount="current_nobility.max_income" coin="BTC"/></div>
+
+                    <div class="label">Today's Knight Match</div>
+                    <div class="progress">
+                        <div :style="`width: ${ max_income.knight_match/current_nobility.max_income*100 }%`" class="progress-bar"></div>
+                    </div>
+                    <div class="value main"><b>{{ $_formatNumber(max_income.knight_match, {currency: 'BTC'})  }}</b></div>
+                    <div class="value"><k-amount-conversion :amount="max_income.knight_match" coin="BTC"/></div>
+                </div>
             </div>
         </k-card>
 
@@ -208,7 +222,8 @@ import DB_USER_WALLET   from '../../../models/DB_USER_WALLET';
 import DB_USER          from '../../../models/DB_USER';
 import DB_USER_EARNING  from '../../../models/DB_USER_EARNING';
 import DB_USER_COUNT    from '../../../models/DB_USER_COUNT';
-import {arrayToObject}  from "../../../utilities/ObjectUtils";
+import DB_USER_MAX      from '../../../models/DB_USER_MAX';
+import { arrayToObject }  from "../../../utilities/ObjectUtils";
 
 export default
 {
@@ -216,6 +231,7 @@ export default
     components: { KCard },
     data: () =>
     ({
+        current_nobility     : { max_income: 0 },
         target_nobility      : '',
         target_nobility_info : {},
         user_wallet          : [],
@@ -225,6 +241,7 @@ export default
         earning_breakdown    : { binary: { total: 0 }, direct: { total: 0 }, stairstep: { total: 0 } },
         compute_options      : { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0, binary_points_left: 0, binary_points_right: 0 },
         group_status         : {},
+        max_income           : { knight_match: 0 },
     }),
     computed:
     {
@@ -237,7 +254,12 @@ export default
     {
         async initializeData()
         {
+            const moment        = require('moment');
+            let current_date    = moment().format('YYYY-MM-DD');
+            this.$bind('max_income', DB_USER_MAX.doc(this.$_current_user_data.id, current_date));
+
             // Get people to place
+            this.$bind('current_nobility', DB_NOBILITY.doc(this.$_current_user_data.nobility_id));
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
             await this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
 

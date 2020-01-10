@@ -12,6 +12,7 @@ const FUNCTIONS_FIRESTORE       = FUNCTIONS_REGION.firestore; // For triggers
 const account_controller        = require('./controllers/AccountController');
 const admin_controller          = require('./controllers/AdminController');
 const member_controller         = require('./controllers/MemberController');
+const test_controller           = require('./controllers/TestController');
 const schedule_controller       = require('./controllers/ScheduleController');
 const callback_controller       = require('./controllers/CallbackController');
 const user_trigger              = require('./triggers/UserTrigger');
@@ -54,8 +55,9 @@ exports.triggerUserCompute      = FUNCTIONS_FIRESTORE.document('/users/{uid}/com
 exports.bitapsCallback          = FUNCTIONS_HTTPS.onRequest(callback_controller.bitaps);
 
 //Test Calls
-exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);
-exports.testIssueBitcoin        = FUNCTIONS_HTTPS.onCall(user_trigger.testIssueBitcoin);
+// exports.testInitializeWallet    = FUNCTIONS_HTTPS.onCall(user_trigger.testCreate);
+// exports.testIssueBitcoin        = FUNCTIONS_HTTPS.onCall(user_trigger.testIssueBitcoin);
+exports.testBinary              = FUNCTIONS_HTTPS.onCall(test_controller.testBinary);
 
 // Initializer
 exports.initialize              = FUNCTIONS_HTTPS.onRequest(initialize_controller.initialize);

@@ -3,11 +3,13 @@ const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
 const MDB_USER_COUNT        = require('../models/MDB_USER_COUNT');
+const MDB_USER_MAX          = require('../models/MDB_USER_MAX');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
 const FieldValue            = require("firebase-admin").firestore.FieldValue;
+const moment                = require('moment');
 
 module.exports =
 {
@@ -186,14 +188,22 @@ module.exports =
     },
     async binaryGoToUpline(user_info, level, points, promise_list, user_cause, downline_position)
     {
+        console.log(level, user_info.id);
+        var current_date    = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+        var last_update     = moment().tz('Asia/Singapore').format('YYYY-MM-DD hh:mm:ss');
+
+        console.log(current_date);
+
+
+
         await MDB_USER_COUNT.addBinaryPointLeftRight(user_info.id, "compute", downline_position, points);
 
         let user_count          = await MDB_USER_COUNT.get(user_info.id, "compute");
 
         if(!user_count)
         {
-            user_count.binary_points_left = 0;
-            user_count.binary_points_right = 0;
+            user_count.binary_points_left   = 0;
+            user_count.binary_points_right  = 0;
         }
 
         user_info               = await MDB_USER.get(user_info.id);
@@ -218,6 +228,19 @@ module.exports =
         //check if points deduction is not zero
         if(point_deduction !== 0)
         {
+            //get current date limit
+            let daily_limit     = await MDB_USER_MAX.get(user_info.id, current_date);
+
+            if(!daily_limit)
+            {
+                daily_limit     = { knight_match: point_deduction, last_update: last_update };
+            }
+            else
+            {
+                daily_limit     = { knight_match: daily_limit.knight_match + point_deduction, last_update: last_update };
+            }
+
+            await MDB_USER_MAX.update(user_info.id, current_date, daily_limit);
             await MDB_USER_COUNT.deductBinaryPointLeftRight(user_info.id, "compute", point_deduction);
             
             let binary_amount           = point_deduction * 0.1;
