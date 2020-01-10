@@ -2,10 +2,12 @@ const MDB_CURRENCY          = require('../models/MDB_CURRENCY');
 const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
+const MDB_USER_COUNT        = require('../models/MDB_USER_COUNT');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
+const FieldValue            = require("firebase-admin").firestore.FieldValue;
 
 module.exports =
 {
@@ -131,20 +133,21 @@ module.exports =
     },
     async unilevelGoToUpline(user_info, level, bitcoin_equivalent, promise_list, user_cause, stairstep)
     {
-        let nobility_info = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
+        let nobility_info           = this.getNobilityByID(stairstep.nobilities, user_info.nobility_id);
+        let compute_info            = await MDB_USER_COUNT.get(user_info.id, "compute");
+        let update_compute          = {};
+        update_compute.group_sale   = FieldValue.increment(bitcoin_equivalent);
+
         console.log(level, user_info, nobility_info);
-        //console.log(level, user_info.id, nobility_info.title, nobility_info.override_bonus);
+        console.log(compute_info);
+
         /* DIRECT REFERRAL */
-        // if(level === 1)
-        // {
-        //     let direct_referral_amount  = bitcoin_equivalent * 0.01;
-        //     description                 = `You earned <b>${FORMAT.numberFormat(direct_referral_amount, { decimal: 8, currency: this.earning_currency })}</b> from direct referral because <b>${user_cause.full_name}</b> purchased UNIQ.`;
-        //     type                        = "earned";
-        //     promise_list.push(WALLET.add(user_info.id, this.earning_currency, direct_referral_amount, type, description, user_cause.id));
-        //     promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'direct', direct_referral_amount))
-        //     promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
-        //     console.log(description);
-        // }
+        if(level === 1)
+        {
+            update_compute.direct_sale = FieldValue.increment(bitcoin_equivalent);
+        }
+
+        await MDB_USER_COUNT.update(user_info.id, "compute", update_compute);
 
         /* STAIRSTEP OVERRIDE */
         if(nobility_info.override_bonus > stairstep.current_percentage)
@@ -162,6 +165,10 @@ module.exports =
         }
 
         let upline_info = await MDB_USER.get(user_info.upline_id);
+
+        /* NOTIFY AS NEW PART OF GROUP */
+        let group_description = `<b>${user_cause.full_name}</b> purchased UNIQ worth <b>${FORMAT.numberFormat(bitcoin_equivalent, { decimal: 8, currency: this.earning_currency })}</b> from <b>level ${level}</b> of your group.`;
+        promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, group_description, user_cause.photo_url));
 
         if(upline_info)
         {
@@ -223,7 +230,7 @@ module.exports =
         {
             await MDB_USER.deductBinaryPointLeftRight(user_info.id, point_deduction);
             
-            let binary_amount           = point_deduction * 0.01;
+            let binary_amount           = point_deduction * 0.1;
             description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
             type                        = "earned";
 
@@ -241,7 +248,5 @@ module.exports =
             console.log("------ ** NEXT *** ------");
             await this.binaryGoToUpline(upline_info, level+1, points, promise_list, user_cause, user_info.placement_position);
         }
-
-        
     }
 };

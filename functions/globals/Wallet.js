@@ -106,7 +106,7 @@ module.exports =
                                 type: type, description:
                                 description,
                                 remark: remark,
-                                method: "add",
+                                method: "deduct",
                                 triggered_by: triggered_by,
                                 balance_before: wallet.wallet,
                                 balance_after: wallet.wallet - amount };

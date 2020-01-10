@@ -14,6 +14,14 @@ service cloud.firestore
             {
                 allow read;
             }
+            match /compute/{computeID}
+            {
+                allow read;
+            }
+            match /count/{countID}
+            {
+                allow read;
+            }
             match /earnings/{earningID}
             {
                 allow read;

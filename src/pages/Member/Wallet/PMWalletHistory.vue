@@ -24,7 +24,8 @@
                         </div>
                         <div class="list-logs-value">
                             <div  :class="`amount ${history.method}`">{{ history.amount }}</div>
-                            <div class="balance">{{ history.balance_after }}</div>
+                            <div class="balance"><k-amount-conversion :amount="history.amount_raw" :coin="currency_con.toUpperCase()"/></div>
+                            <div class="time">({{ history.balance_after }})</div>
                             <div class="time">{{ history.time }}</div>
                         </div>
                     </div>
@@ -56,7 +57,8 @@ export default
     ({
         wallet_history_data : [],
         last_history           : null,
-        is_history_empty       : false
+        is_history_empty       : false,
+        currency_con            : null,
     }),
     methods:
     {
@@ -83,7 +85,7 @@ export default
                 if(this.is_history_empty) {this.$refs.historyRef.stop()}
 
                 // Fetch data here
-                const currency = this.$route.params.currency === "uniq" ? "xau" : this.$route.params.currency;
+                const currency = this.currency_con = this.$route.params.currency === "uniq" ? "xau" : this.$route.params.currency;
                 const options = {limit: 10}; // default limit is 10 you can modify this one
 
                 // Set start after
@@ -138,11 +140,12 @@ export default
                         type          : data.type,
                         description   : data.description,
                         remark        : data.remark === "No Remarks" ? '' : data.remark,
+                        amount_raw    : data.amount,
                         amount        : this.$_formatNumber(data.amount, {currency: currency.toUpperCase()}),
-                        balance_after : data.balance_after,
+                        balance_after : this.$_formatNumber(data.balance_after, {currency: currency.toUpperCase()}),
                         time          : moment(data.date_created.toDate()).startOf('hour').fromNow(),
                         date          : data.date_created.toDate(),
-                        method        : 'add'
+                        method        : data.method,
                     };
 
                     this.wallet_history_data.push(history_data)

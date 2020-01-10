@@ -47,7 +47,7 @@ exports.updateCurrency2         = FUNCTIONS_HTTPS.onCall(schedule_controller.upd
 
 // Triggers
 exports.triggerUserCreate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onCreate(user_trigger.create);
-//exports.triggerUserUpdate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onWrite(user_trigger.update);
+exports.triggerUserUpdate       = FUNCTIONS_FIRESTORE.document('/users/{uid}').onWrite(user_trigger.update);
 exports.triggerUserCompute      = FUNCTIONS_FIRESTORE.document('/users/{uid}/compute/compute').onWrite(user_trigger.compute);
 
 // Callback

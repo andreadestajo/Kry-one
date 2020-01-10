@@ -146,6 +146,56 @@
                 </div>  
             </div>
         </k-card>
+
+        <!-- BINARY POINTS -->
+        <k-card class="dashboard__breakdown member__card q-mt-md">
+            <div class="subtitle">Group Status</div>
+            <div class="text-center q-pa-lg" v-if="!earning_breakdown">
+                <q-spinner color="primary" size="2em"/>
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-street-view"></q-icon></div>
+                    <div class="breakdown-label">Direct Count </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ compute_options.direct_count }}</div>
+                    </div>
+                </div>  
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-sitemap"></q-icon></div>
+                    <div class="breakdown-label">Group Count</div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ compute_options.group_count }}</div>
+                    </div>
+                </div>  
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-dollar-sign"></q-icon></div>
+                    <div class="breakdown-label">Direct Sale </div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ $_formatNumber(compute_options.direct_sale, {currency: 'BTC'}) }}</div>
+                        <div class="conversion">
+                            <k-amount-conversion :amount="compute_options.direct_sale" coin="BTC"/>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+            <div class="breakdown" v-if="earning_breakdown">
+                <div class="breakdown-list">
+                    <div class="breakdown-icon"><q-icon name="fa fa-hand-holding-usd"></q-icon></div>
+                    <div class="breakdown-label">Group Sale</div>
+                    <div class="breakdown-value">
+                        <div class="amount">{{ $_formatNumber(compute_options.group_sale, {currency: 'BTC'}) }}</div>
+                        <div class="conversion">
+                            <k-amount-conversion :amount="compute_options.group_sale" coin="BTC"/>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </k-card>
     </div>
 </template>
 
@@ -157,7 +207,8 @@ import DB_NOBILITY      from "../../../models/DB_NOBILITY";
 import DB_USER_WALLET   from '../../../models/DB_USER_WALLET';
 import DB_USER          from '../../../models/DB_USER';
 import DB_USER_EARNING  from '../../../models/DB_USER_EARNING';
-import {arrayToObject} from "../../../utilities/ObjectUtils";
+import DB_USER_COUNT    from '../../../models/DB_USER_COUNT';
+import {arrayToObject}  from "../../../utilities/ObjectUtils";
 
 export default
 {
@@ -171,7 +222,9 @@ export default
         user_earning         : null,
         placement_message    : false,
         paid_downline        : [],
-        earning_breakdown    : {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}}
+        earning_breakdown    : {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}},
+        compute_options      : { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0 },
+        group_status         : {},
     }),
     computed:
     {
@@ -186,6 +239,7 @@ export default
         {
             // Get people to place
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
+            await this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
 
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
@@ -226,6 +280,15 @@ export default
     },
     watch:
     {
+        group_status()
+        {
+            this.compute_options =  { 
+                                        group_count: this.group_status.group_count || 0,
+                                        direct_count: this.group_status.direct_count || 0,
+                                        group_sale: this.group_status.group_sale || 0,
+                                        direct_sale: this.group_status.direct_sale || 0
+                                    };
+        },
         user_earning(user_earning)
         {
             const default_data = {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}};
