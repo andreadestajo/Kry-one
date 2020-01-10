@@ -304,10 +304,8 @@ export default
                                 DB_USER.getUserByReferralCode(sponsor).then(user =>
                                 {
                                     // check if eligible
-                                    console.log(user);
                                     this.is_eligible  = user && !user.error ? user.nobility_info.rank_order > 1 : false;
                                     this.sponsor_name = this.is_eligible ? user.full_name : null;
-
                                     resolve(!!user)
                                 });
                             }, 500)

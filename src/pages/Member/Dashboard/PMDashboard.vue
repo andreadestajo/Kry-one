@@ -132,7 +132,7 @@
                     <div class="breakdown-icon"><q-icon name="fa fa-caret-left"></q-icon></div>
                     <div class="breakdown-label">Points on Left </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(8) }}</div>
+                        <div class="amount">{{ compute_options.binary_points_left.toFixed(8) }}</div>
                     </div>
                 </div>  
             </div>
@@ -141,7 +141,7 @@
                     <div class="breakdown-icon"><q-icon name="fa fa-caret-right"></q-icon></div>
                     <div class="breakdown-label">Points on Right </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_current_user_data.binary_points_right.toFixed(8) }}</div>
+                        <div class="amount">{{ compute_options.binary_points_right.toFixed(8) }}</div>
                     </div>
                 </div>  
             </div>
@@ -222,8 +222,8 @@ export default
         user_earning         : null,
         placement_message    : false,
         paid_downline        : [],
-        earning_breakdown    : {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}},
-        compute_options      : { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0 },
+        earning_breakdown    : { binary: { total: 0 }, direct: { total: 0 }, stairstep: { total: 0 } },
+        compute_options      : { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0, binary_points_left: 0, binary_points_right: 0 },
         group_status         : {},
     }),
     computed:
@@ -286,7 +286,9 @@ export default
                                         group_count: this.group_status.group_count || 0,
                                         direct_count: this.group_status.direct_count || 0,
                                         group_sale: this.group_status.group_sale || 0,
-                                        direct_sale: this.group_status.direct_sale || 0
+                                        direct_sale: this.group_status.direct_sale || 0,
+                                        binary_points_left: this.group_status.binary_points_left || 0,
+                                        binary_points_right: this.group_status.binary_points_right || 0,
                                     };
         },
         user_earning(user_earning)
