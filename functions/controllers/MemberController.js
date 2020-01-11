@@ -42,6 +42,17 @@ const sendRegistrationLink = async (user_full_name, email, name, link) =>
 
 module.exports =
 {
+    async getTime()
+    {
+        let time            = moment().tz('Asia/Singapore').format('YYYY-MM-DD HH:mm:ss');
+        let today           = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+        let today_ends      = `${today} 23:59:59`;
+        let start           = new Date(time).getTime() / 1000;
+        let end             = new Date(today_ends).getTime() / 1000;
+        let remaining_time  = end - start;
+
+        return { time: time, remaining_time: remaining_time, today_ends: today_ends };
+    },
     async submitKyc(data, context)
     {
         // Variable declarations
@@ -122,7 +133,7 @@ module.exports =
                 transfer_wallet.amount          = data.amount;
                 transfer_wallet.issue_by_id     = logged_in_user.id;
                 transfer_wallet.issue_by        = logged_in_user.full_name;
-                transfer_wallet.issue_to_id     = recipient.id;      
+                transfer_wallet.issue_to_id     = recipient.id;
                 transfer_wallet.issue_to        = recipient.full_name;
                 transfer_wallet.currency        = data.currency;
                 transfer_wallet.status          = "pending";

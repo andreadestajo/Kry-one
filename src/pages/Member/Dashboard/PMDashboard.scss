@@ -113,7 +113,9 @@
                     text-align: center;
                     color: $text-light;
                     font-size: 14px;
-
+                    .primary {
+                        color: $primary;
+                    }
                     &.main {
                         color: $primary;
                     }

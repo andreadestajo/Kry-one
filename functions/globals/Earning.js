@@ -234,19 +234,30 @@ module.exports =
 
             if(!daily_limit)
             {
-                daily_limit     = { knight_match: point_deduction, last_update: last_update };
+                daily_limit     = { knight_match: (point_deduction * 0.1), last_update: last_update };
             }
             else
             {
-                daily_limit     = { knight_match: daily_limit.knight_match + point_deduction, last_update: last_update };
+                daily_limit     = { knight_match: daily_limit.knight_match + (point_deduction * 0.1), last_update: last_update };
             }
 
             console.log(daily_limit.knight_match, nobility_info.max_income);
+
+
 
             if(daily_limit.knight_match > nobility_info.max_income)
             {
                 point_deduction = point_deduction - (daily_limit.knight_match - nobility_info.max_income);
                 daily_limit.knight_match = daily_limit.knight_match - (daily_limit.knight_match - nobility_info.max_income);
+
+                console.log(`point_deduction = ${point_deduction} - (${daily_limit.knight_match} - ${nobility_info.max_income});`);
+                console.log("max income reached", point_deduction, daily_limit.knight_match);
+
+                //no more earnings if daily limit is maxed out
+                if(daily_limit.knight_match === nobility_info.max_income)
+                {
+                    point_deduction = 0;
+                }
                 
                 //make sure 8 decimal only is saved
                 point_deduction = parseFloat(point_deduction.toFixed(8));
