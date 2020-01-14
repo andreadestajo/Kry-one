@@ -73,6 +73,54 @@
             border-bottom: 1px solid #eee;
         }
         .breakdown {
+
+            &-maxincome {
+                padding: 10px;
+
+                border: 1px solid #eee;
+                .title {
+                    text-align: center;
+                    color: $text-one;
+                    font-weight: bold;
+                }
+                .label {
+                    margin-top: 10px;
+                    text-align: center;
+                    color: $text-three;
+                    font-weight: bold;
+                    font-size: 14px;
+                    text-transform: uppercase;
+                }
+                .progress {
+
+                    height: 20px;
+                    background-color: #eee;
+                    border: 1px solid #ddd;
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+
+                    border-radius: 5px;
+                    overflow: hidden;
+
+                    &-bar {
+                        height: 20px;
+                        background-color: $primary;
+                    }
+                }
+                .value {
+                    text-align: center;
+                    color: $text-light;
+                    font-size: 14px;
+                    .primary {
+                        color: $primary;
+                    }
+                    &.main {
+                        color: $primary;
+                    }
+                }
+            }
             &-list {
                 display: grid;
                 grid-template-columns: auto 1fr 1fr;

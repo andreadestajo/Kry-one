@@ -55,6 +55,7 @@ module.exports =
     },
     async createInitializeParameters(id)
     {
+
         /* get user info */
         let user_info = await MDB_USER.get(id);
 
@@ -72,10 +73,15 @@ module.exports =
         /* initialize earning */
         await MDB_USER_EARNING.initializeEarning(id);
 
-        /* record user upline */
-        let upline_info                     = await MDB_USER.getUserByReferralCode(user_info.referred_by);
+        console.log(user_info.referred_by);
 
-        console.log("upline _info", upline_info);
+        let upline_info = null;
+
+        if(user_info.referred_by)
+        {
+            /* record user upline */
+            upline_info = await MDB_USER.getUserByReferralCode(user_info.referred_by);
+        }
 
         if(upline_info)
         {
@@ -91,6 +97,10 @@ module.exports =
         user_info.notification_count        = 0;
 
         await MDB_USER.update(id, user_info);
+
+        /* initialize count and points */
+        await MDB_USER_COUNT.update(id, "compute", { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0, binary_points_left: 0, binary_points_right: 0, binary_point_value: 0 });
+        await MDB_USER_COMPUTE.update(id, "compute", { compute_binary: 0, compute_unilevel: 0 });
 
         /* CHECK IF ENLISTED */
         if(user_info.hasOwnProperty('knight_data'))
@@ -262,10 +272,7 @@ module.exports =
 
     async testCreate(data, context)
     {
-        let snap        = {};
-        let u_info      = await MDB_USER.get(data.uid);
-        
-        await module.exports.createInitializeParameters(data.uid, u_info);
+        await module.exports.createInitializeParameters(data.uid);
         await module.exports.createInitializeWallet(data.uid).then((res) => 
         {
             return "done";

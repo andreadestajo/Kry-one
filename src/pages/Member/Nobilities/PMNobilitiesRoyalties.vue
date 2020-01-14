@@ -48,7 +48,6 @@
             async getNobilities()
             {
                 await this.$bind('nobilities', DB_NOBILITY.collection({ order_by: 'rank_order' }));
-                console.log(this.nobilities);
             },
         },
     }

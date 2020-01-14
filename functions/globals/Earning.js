@@ -3,19 +3,19 @@ const MDB_NOBILITY          = require('../models/MDB_NOBILITY');
 const MDB_USER              = require('../models/MDB_USER');
 const MDB_USER_EARNING      = require('../models/MDB_USER_EARNING');
 const MDB_USER_COUNT        = require('../models/MDB_USER_COUNT');
+const MDB_USER_MAX          = require('../models/MDB_USER_MAX');
 const MDB_USER_NOTIFICATION = require('../models/MDB_USER_NOTIFICATION');
 const MDB_PROMOTION         = require('../models/MDB_PROMOTION');
 const WALLET                = require('../globals/Wallet');
 const FORMAT                = require('../globals/FormatHelper');
 const FieldValue            = require("firebase-admin").firestore.FieldValue;
+const moment                = require('moment');
 
 module.exports =
 {
     earning_currency: 'BTC',
     async updateRank(user_id)
     {
-        console.log("updateRank", user_id);
-
         let user_info       = MDB_USER.get(user_id);
         let downline_list   = MDB_USER.getDownline(user_id);
         
@@ -27,20 +27,15 @@ module.exports =
 
         if(!user_info)
         {
-            console.log("no upline");
             return 0;
         }
 
         let next_nobility           = await MDB_NOBILITY.getNextTargetNobilityByRankOrder(user_info.nobility_info.rank_order);
 
-        console.log("next nobility target", next_nobility);
 
         if(next_nobility.required_direct > 0)
         {
             let required_nobility_info  = await MDB_NOBILITY.get(next_nobility.required_rank_id);
-
-            console.log("Target rank is ", next_nobility.title);
-            console.log("Need ", next_nobility.required_direct, next_nobility.required_rank_title, required_nobility_info.rank_order)
 
             let downline_ranks = [];
 
@@ -72,8 +67,6 @@ module.exports =
                    }
                } 
             });
-
-            console.log(`${requirement_count} direct met the requirement out of ${next_nobility.required_direct}.`);
 
             if(requirement_count >= next_nobility.required_direct)
             {
@@ -114,7 +107,6 @@ module.exports =
     },
     async unilevel(user_info, uniq_amount_purchase)
     {
-        console.log("unilevel", user_info, uniq_amount_purchase);
 
         let promise_list        = [];
         let conversion_rates    = await MDB_CURRENCY.get('XAU');
@@ -122,7 +114,7 @@ module.exports =
         let upline_info         = await MDB_USER.get(user_info.upline_id);
         let nobilities          = await MDB_NOBILITY.getMany();
 
-        promise_list.push(MDB_USER.addBinaryPointValue(user_info.id, bitcoin_equivalent));
+        promise_list.push(MDB_USER_COUNT.addBinaryPointValue(user_info.id, "compute", bitcoin_equivalent));
 
         if(upline_info)
         {
@@ -137,9 +129,6 @@ module.exports =
         let compute_info            = await MDB_USER_COUNT.get(user_info.id, "compute");
         let update_compute          = {};
         update_compute.group_sale   = FieldValue.increment(bitcoin_equivalent);
-
-        console.log(level, user_info, nobility_info);
-        console.log(compute_info);
 
         /* DIRECT REFERRAL */
         if(level === 1)
@@ -161,7 +150,6 @@ module.exports =
             promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'stairstep', stairstep_amount));
             promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
             stairstep.current_percentage = nobility_info.override_bonus;
-            console.log(description);
         }
 
         let upline_info = await MDB_USER.get(user_info.upline_id);
@@ -192,8 +180,6 @@ module.exports =
     },
     async binary(user_info, points)
     {
-        console.log("BINARY METHOD");
-
         let promise_list        = [];
         let upline_info         = await MDB_USER.get(user_info.placement_id);
 
@@ -202,15 +188,25 @@ module.exports =
     },
     async binaryGoToUpline(user_info, level, points, promise_list, user_cause, downline_position)
     {
-        console.log(user_info.id, user_info.full_name);
-        await MDB_USER.addBinaryPointLeftRight(user_info.id, downline_position, points);
+        let current_date    = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+        let last_update     = moment().tz('Asia/Singapore').format('YYYY-MM-DD hh:mm:ss');
+        let max_income      = false;
+
+        await MDB_USER_COUNT.addBinaryPointLeftRight(user_info.id, "compute", downline_position, points);
+
+        let user_count          = await MDB_USER_COUNT.get(user_info.id, "compute");
+
+        if(!user_count)
+        {
+            user_count.binary_points_left   = 0;
+            user_count.binary_points_right  = 0;
+        }
 
         user_info               = await MDB_USER.get(user_info.id);
-        let point_deduction     = 0;
-        let point_left          = user_info.binary_points_left || 0;
-        let point_right         = user_info.binary_points_right || 0;
 
-        console.log(point_left, point_right)
+        let point_deduction     = 0;
+        let point_left          = user_count.binary_points_left || 0;
+        let point_right         = user_count.binary_points_right || 0;
 
         //check points that will be deducted in left and right
         if(point_left !== 0 && point_right !== 0)
@@ -225,27 +221,91 @@ module.exports =
             }
         }
 
+        point_deduction = parseFloat(point_deduction.toFixed(8));
+
         //check if points deduction is not zero
         if(point_deduction !== 0)
         {
-            await MDB_USER.deductBinaryPointLeftRight(user_info.id, point_deduction);
-            
-            let binary_amount           = point_deduction * 0.1;
-            description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
-            type                        = "earned";
+            //get current date limit
+            let nobility_info   = await MDB_NOBILITY.get(user_info.nobility_id);
+            let daily_limit     = await MDB_USER_MAX.get(user_info.id, current_date);
 
-            promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
-            promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'binary', binary_amount))
-            promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+            console.log("current daily limit", daily_limit);
 
-            console.log(description);
+            if(!daily_limit)
+            {
+                daily_limit     = { knight_match: (point_deduction * 0.1), last_update: last_update };
+            }
+            else
+            {
+                daily_limit     = { knight_match: daily_limit.knight_match + (point_deduction * 0.1), last_update: last_update };
+            }
+
+            console.log(daily_limit.knight_match, nobility_info.max_income);
+
+
+
+            if(daily_limit.knight_match > nobility_info.max_income)
+            {
+                point_deduction = point_deduction - (daily_limit.knight_match - nobility_info.max_income);
+                daily_limit.knight_match = daily_limit.knight_match - (daily_limit.knight_match - nobility_info.max_income);
+
+                console.log(`point_deduction = ${point_deduction} - (${daily_limit.knight_match} - ${nobility_info.max_income});`);
+                console.log("max income reached", point_deduction, daily_limit.knight_match);
+
+                //no more earnings if daily limit is maxed out
+                if(daily_limit.knight_match === nobility_info.max_income)
+                {
+                    point_deduction = 0;
+                }
+                
+                //make sure 8 decimal only is saved
+                point_deduction = parseFloat(point_deduction.toFixed(8));
+                daily_limit.knight_match = parseFloat(daily_limit.knight_match.toFixed(8));
+
+                if(point_deduction < 0)
+                {
+                    point_deduction = 0;
+                }
+
+                if(daily_limit.knight_match < 0)
+                {
+                    daily_limit.knight_match = 0;
+                }
+
+                console.log("You have exceeded the maximum income");
+                max_income = true;
+            }
+
+            await MDB_USER_MAX.update(user_info.id, current_date, daily_limit);
+
+            if(max_income === true)
+            {
+                console.log("clearBinaryPointsLeftRight");
+                await MDB_USER_COUNT.clearBinaryPointLeftRight(user_info.id, "compute");
+            }
+            else
+            {
+                console.log("deductBinaryPointLeftRight", point_deduction);
+                await MDB_USER_COUNT.deductBinaryPointLeftRight(user_info.id, "compute", point_deduction);
+            }
+
+            if(point_deduction > 0)
+            {     
+                let binary_amount           = point_deduction * 0.1;
+                description                 = `You earned <b>${FORMAT.numberFormat(binary_amount, { decimal: 8, currency: this.earning_currency })}</b> from knight match because <b>${user_cause.full_name}</b> has been placed.`;
+                type                        = "earned";
+
+                promise_list.push(WALLET.add(user_info.id, this.earning_currency, binary_amount, type, description, user_cause.id));
+                promise_list.push(MDB_USER_EARNING.addEarning(user_info.id, 'binary', binary_amount))
+                promise_list.push(MDB_USER_NOTIFICATION.addNew(user_info.id, description, user_cause.photo_url));
+            }
         }
 
         let upline_info = await MDB_USER.get(user_info.placement_id || 0);
 
         if(upline_info)
         {
-            console.log("------ ** NEXT *** ------");
             await this.binaryGoToUpline(upline_info, level+1, points, promise_list, user_cause, user_info.placement_position);
         }
     }

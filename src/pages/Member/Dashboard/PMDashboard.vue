@@ -60,7 +60,7 @@
             <div class="icon"><q-icon name="warning"></q-icon></div>
             <div class="message">
                 <div class="message-title">Place your knight mate!</div>
-                <div class="message-detail">There {{ this.unplaced_downline.length == 1 ? 'is' : 'are' }} <b>{{ this.unplaced_downline.length }} {{ this.unplaced_downline.length == 1 ? 'person' : 'people' }}</b> you need to place! Click here in order to place {{ this.unplaced_downline.length == 1 ? 'that' : 'those' }} {{ this.unplaced_downline.length == 1 ? 'downline' : 'downlines' }}.</div>
+                <div class="message-detail">There {{ this.unplaced_downline.length == 1 ? 'is' : 'are' }} <b>{{ this.unplaced_downline.length }} {{ this.unplaced_downline.length == 1 ? 'person' : 'people' }}</b> you need to place! Click here in order to place {{ this.unplaced_downline.length == 1 ? 'that' : 'those' }} {{ this.unplaced_downline.length == 1 ? 'knight mate' : 'knight mates' }}.</div>
             </div>
         </div>
 
@@ -123,7 +123,7 @@
 
         <!-- BINARY POINTS -->
         <k-card class="dashboard__breakdown member__card q-mt-md">
-            <div class="subtitle">Knight Match Points</div>
+            <div class="subtitle">Knight Match</div>
             <div class="text-center q-pa-lg" v-if="!earning_breakdown">
                 <q-spinner color="primary" size="2em"/>
             </div>
@@ -132,18 +132,33 @@
                     <div class="breakdown-icon"><q-icon name="fa fa-caret-left"></q-icon></div>
                     <div class="breakdown-label">Points on Left </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_current_user_data.binary_points_left.toFixed(8) }}</div>
+                        <div class="amount">{{ compute_options.binary_points_left.toFixed(8) }}</div>
                     </div>
-                </div>  
+                </div>
             </div>
             <div class="breakdown" v-if="earning_breakdown">
                 <div class="breakdown-list">
                     <div class="breakdown-icon"><q-icon name="fa fa-caret-right"></q-icon></div>
                     <div class="breakdown-label">Points on Right </div>
                     <div class="breakdown-value">
-                        <div class="amount">{{ $_current_user_data.binary_points_right.toFixed(8) }}</div>
+                        <div class="amount">{{ compute_options.binary_points_right.toFixed(8) }}</div>
                     </div>
                 </div>  
+            </div>
+            <div class="breakdown">
+                <div v-if="current_nobility" class="breakdown-maxincome">
+                    <div class="title">Daily Maximum Knight Match</div>
+                    <div class="value"><b>{{ $_formatNumber(current_nobility.max_income, {currency: 'BTC'})  }}</b></div>
+                    <div class="value"><k-amount-conversion :amount="current_nobility.max_income" coin="BTC"/></div>
+
+                    <div class="label">Today's Knight Match</div>
+                    <div class="value">Daily limit will reset in <b class="primary">{{ remaining_time }}</b></div>
+                    <div class="progress">
+                        <div :style="`width: ${ max_income.knight_match/current_nobility.max_income*100 }%`" class="progress-bar"></div>
+                    </div>
+                    <div class="value main"><b>{{ $_formatNumber(max_income.knight_match, {currency: 'BTC'})  }}</b></div>
+                    <div class="value"><k-amount-conversion :amount="max_income.knight_match" coin="BTC"/></div>
+                </div>
             </div>
         </k-card>
 
@@ -202,13 +217,16 @@
 <script>
 import './PMDashboard.scss';
 
-import KCard    from '../../../components/Member/KCard';
-import DB_NOBILITY      from "../../../models/DB_NOBILITY";
-import DB_USER_WALLET   from '../../../models/DB_USER_WALLET';
-import DB_USER          from '../../../models/DB_USER';
-import DB_USER_EARNING  from '../../../models/DB_USER_EARNING';
-import DB_USER_COUNT    from '../../../models/DB_USER_COUNT';
-import {arrayToObject}  from "../../../utilities/ObjectUtils";
+import KCard                from '../../../components/Member/KCard';
+import DB_NOBILITY          from "../../../models/DB_NOBILITY";
+import DB_USER_WALLET       from '../../../models/DB_USER_WALLET';
+import DB_USER              from '../../../models/DB_USER';
+import DB_USER_EARNING      from '../../../models/DB_USER_EARNING';
+import DB_USER_COUNT        from '../../../models/DB_USER_COUNT';
+import DB_USER_MAX          from '../../../models/DB_USER_MAX';
+import { arrayToObject }    from "../../../utilities/ObjectUtils";
+import { fbCall }           from "../../../utilities/Callables";
+import { FN_GET_TIME }      from "../../../references/refs_functions";
 
 export default
 {
@@ -216,15 +234,20 @@ export default
     components: { KCard },
     data: () =>
     ({
+        current_nobility     : { max_income: 0 },
         target_nobility      : '',
         target_nobility_info : {},
         user_wallet          : [],
         user_earning         : null,
         placement_message    : false,
         paid_downline        : [],
-        earning_breakdown    : {binary: {total: 0}, direct: {total: 0}, stairstep: {total: 0}},
-        compute_options      : { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0 },
+        earning_breakdown    : { binary: { total: 0 }, direct: { total: 0 }, stairstep: { total: 0 } },
+        compute_options      : { group_count: 0, direct_count: 0, group_sale: 0, direct_sale: 0, binary_points_left: 0, binary_points_right: 0 },
         group_status         : {},
+        max_income           : { knight_match: 0 },
+        remaining_seconds    : 0,
+        remaining_time       : "CALCULATING",
+        interval             : 0,
     }),
     computed:
     {
@@ -233,21 +256,44 @@ export default
             return this.paid_downline.filter(n => !n.hasOwnProperty('placement'));
         }
     },
+    beforeRouteLeave(to, from, next)
+    {
+        clearInterval(this.interval);
+        setTimeout(() =>
+        {
+            next();
+        });
+    },
     methods:
     {
         async initializeData()
         {
             // Get people to place
+            this.$bind('current_nobility', DB_NOBILITY.doc(this.$_current_user_data.nobility_id));
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
             this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
+
+            // Bind earnings
+            this.$bind('user_earning', DB_USER_EARNING.collection(this.$_current_user_data.id));
 
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
             this.target_nobility = nobility ? nobility.title.toUpperCase() : '';
             this.target_nobility_info = nobility ? nobility : {};
 
-            // Bind earnings
-            await this.$bind('user_earning', DB_USER_EARNING.collection(this.$_current_user_data.id));
+            // Get Max Income
+
+            let system_time         = await fbCall(FN_GET_TIME);
+            const moment            = require('moment');
+            let current_date        = moment(system_time.data.time).format('YYYY-MM-DD');
+            this.remaining_seconds  = system_time.data.remaining_time; 
+
+            this.interval = setInterval(() =>
+            {
+                this.remaining_seconds = this.remaining_seconds - 1;
+            }, 1000);
+
+            this.$bind('max_income', DB_USER_MAX.doc(this.$_current_user_data.id, current_date));
         },
         checkWallet(currency, prop = "wallet") {
             // returns 0 if wallet is not available yet
@@ -257,6 +303,14 @@ export default
             if(!this.$_current_user_wallet.hasOwnProperty(currency)) {return _default}
 
             return this.$_current_user_wallet[currency][prop];
+        },
+        secToTimer(sec)
+        {
+            var measuredTime = new Date(null);
+            measuredTime.setSeconds(sec); // specify value of SECONDS
+            var MHSTime = measuredTime.toISOString().substr(11, 8);
+
+            return MHSTime;
         }
     },
     earning_breakdown:
@@ -280,13 +334,19 @@ export default
     },
     watch:
     {
+        remaining_seconds() {
+            
+            this.remaining_time = this.secToTimer(this.remaining_seconds);
+        }, 
         group_status()
         {
             this.compute_options =  { 
                                         group_count: this.group_status.group_count || 0,
                                         direct_count: this.group_status.direct_count || 0,
                                         group_sale: this.group_status.group_sale || 0,
-                                        direct_sale: this.group_status.direct_sale || 0
+                                        direct_sale: this.group_status.direct_sale || 0,
+                                        binary_points_left: this.group_status.binary_points_left || 0,
+                                        binary_points_right: this.group_status.binary_points_right || 0,
                                     };
         },
         user_earning(user_earning)
