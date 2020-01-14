@@ -6,6 +6,10 @@ if(process.env.GCLOUD_PROJECT === 'krypto-one-test')
 {
     service_account = require("../service-accounts/krypto-one-test-firebase-adminsdk-fnbb5-1c31cd1e2a.json");
 }
+else if(process.env.GCLOUD_PROJECT === 'krypto-one-beta')
+{
+    service_account = require("../service-accounts/krypto-one-beta-firebase-adminsdk-z7893-04433b2bfb.json");
+}
 else
 {
     service_account = require("../service-accounts/krypto-one-live-a484cd2c7b48.json");
