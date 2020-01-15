@@ -248,6 +248,7 @@ export default
         remaining_seconds    : 0,
         remaining_time       : "CALCULATING",
         interval             : 0,
+        project              : "krypto-one-live",
     }),
     computed:
     {
@@ -268,6 +269,8 @@ export default
     {
         async initializeData()
         {
+            this.project = env('FIREBASE_PROJECTID');
+
             // Get people to place
             this.$bind('current_nobility', DB_NOBILITY.doc(this.$_current_user_data.nobility_id));
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));

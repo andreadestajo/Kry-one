@@ -4,8 +4,12 @@
         <q-header>
             <q-toolbar>
                 <q-btn flat dense round @click="drawer = !drawer" icon="menu" aria-label="Menu"/>
-                <q-toolbar-title class="text-center">
+                <q-toolbar-title v-if="project == 'krypto-one-live'" class="text-center">
                     Krypto.One™
+                </q-toolbar-title>
+
+                <q-toolbar-title v-if="project != 'krypto-one-live'" class="text-center">
+                    KryptoKnight.Beta
                 </q-toolbar-title>
 
                 <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
@@ -57,7 +61,8 @@ export default
     name: 'AdminLayout',
     data: () =>
     ({
-        drawer: false
+        drawer : false,
+        project : "krypto-one-live",
     }),
     navigations:
     [
@@ -69,6 +74,10 @@ export default
         { label: 'Monarchy View'   , icon: 'fa fa-sitemap '          , side: '', route: 'member_monarchy' },
         { label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
     ],
+    mounted()
+    {
+        this.project = env('FIREBASE_PROJECTID');
+    },
     methods:
     {
         goToRoute(route)

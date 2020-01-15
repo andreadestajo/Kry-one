@@ -140,8 +140,6 @@ export default
                         others          : data.options
                     };
 
-                    console.log(this.new_count);
-
                     this.new_count = this.new_count - 1;
 
                     this.notification_data.push(notification_data)
