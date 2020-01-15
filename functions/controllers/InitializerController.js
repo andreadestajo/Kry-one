@@ -15,6 +15,8 @@ module.exports =
             return res.status(200).send({message: "Has been initialized."});
         }
 
+        await ScheduleController.updateCurrency();
+
         // Initialize Nobilities
         const addNobilities = nobilities.map(n => {
             delete n.__index;
@@ -76,10 +78,11 @@ module.exports =
             badge_color: nobility.badge_color,
         };
 
+        
         const addAccount = MDB_USER.doc(createUser.data.uid).set(account_data);
 
         // update currency
-        Promise.all([...addNobilities, ...deleteUsers, addAccount, ScheduleController.updateCurrency()])
+        await Promise.all([...addNobilities, ...deleteUsers, addAccount])
             .then(() => {
                 return res.status(200).send({message: "You have successfully initialized the data."})
 

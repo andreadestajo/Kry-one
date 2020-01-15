@@ -73,8 +73,6 @@ module.exports =
         /* initialize earning */
         await MDB_USER_EARNING.initializeEarning(id);
 
-        console.log(user_info.referred_by);
-
         let upline_info = null;
 
         if(user_info.referred_by)
@@ -218,8 +216,12 @@ module.exports =
         {
             if(previousValue.nobility_info)
             {
+                console.log(previousValue);
+                console.log(previousValue.nobility_info);
+
                 if(previousValue.nobility_info.rank_order === 1 && newValue.nobility_info.rank_order !== 1)
                 {
+                    console.log("LINE 224");
                     console.log(newValue.full_name + " is now a paid account");
 
                     //get info of user
