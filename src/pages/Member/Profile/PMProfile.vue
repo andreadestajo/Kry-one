@@ -5,7 +5,7 @@
         <div class="registration__profile full-width column no-wrap justify-center items-center content-center q-pb-lg">
             <span class="avatar q-pa-sm">
                 <q-avatar size="120px">
-                    <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
+                    <q-img spinner-size="5px" :src="$_current_user_data.photo_url ? $_current_user_data.photo_url : '../statics/boy.jpg'"></q-img>
                 </q-avatar>
             </span>
             <span class="name text-weight-bold">{{$_current_user_data ? $_current_user_data.email : ''}}</span>
@@ -80,7 +80,9 @@
                       :error-message="'Please select a currency.'"
                       @blur="$v.form.currency.$touch()">
             </q-select>
-
+            <k-field label="Upload ID (Selfie)" note="Take a picture holding the ID">
+                <k-uploader v-model="form.photo_url" :storage_ref="$options.STORE_MEMBER_IDS(`profile_${(new Date).getTime()}`)"></k-uploader>
+            </k-field>
             <div class="q-pt-md">
                 <q-btn unelevated
                        label="Update Profile"
@@ -90,6 +92,7 @@
                        @click="confirmUpdate">
                 </q-btn>
             </div>
+
         </q-form>
 
     </q-page>
@@ -100,6 +103,8 @@
     import KHeader  from '../../../components/Member/KHeader'
     import KField   from '../../../components/Member/KField'
     import KCard    from '../../../components/Member/KCard'
+    import KUploader    from '../../../components/Member/KUploader';
+    import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
 
     import refs_countries      from "../../../references/refs_countries";
     import {currencies_list}   from "../../../references/refs_currencies";
@@ -109,7 +114,8 @@
 
     export default {
         name: "PMProfile",
-        components: { KHeader, KField, KCard },
+        components: { KHeader, KField, KCard, KUploader },
+        STORE_MEMBER_IDS,
         data: () =>
         ({
             form:
@@ -118,16 +124,22 @@
                 contact_number : '',
                 email          : '',
                 country        : '',
-                currency       : ''
+                currency       : '',
+                photo_url      : '',
             },
             update_error :
             {
                 code    : '',
-                message : ''
+                message : '',
             }
         }),
         methods:
         {
+            getStorageRef(type)
+            {
+                console.log(`${type}_${(new Date).getTime()}`);
+                return STORE_MEMBER_IDS(`${type}_${(new Date).getTime()}`)
+            },
             confirmUpdate()
             {
                 this.$v.form.$touch();
@@ -148,7 +160,8 @@
                     contact_number : this.form.contact_number,
                     country        : this.form.country,
                     currency       : this.form.currency.value,
-                    date_modified  : new Date()
+                    date_modified  : new Date(),
+                    photo_url      : this.form.photo_url,
                 };
 
                 await fbCall(FN_UPDATE_PROFILE, JSON.stringify(data))
@@ -178,7 +191,8 @@
                 contact_number : this.$_current_user_data.contact_number,
                 email          : this.$_current_user_data.email,
                 country        : this.$_current_user_data.country,
-                currency       : currency ? currency : null
+                currency       : currency ? currency : null,
+                photo_url      : this.$_current_user_data.photo_url,
             };
 
             this.form = Object.assign(this.form, initial_data);

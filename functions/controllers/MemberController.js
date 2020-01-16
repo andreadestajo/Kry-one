@@ -491,7 +491,6 @@ module.exports =
     async updateProfile(data, context)
     {
         const user_data = JSON.parse(data);
-
         const update_data = await MDB_USER.update(context.auth.uid, user_data)
             .then(data => ({error: null, data}))
             .catch(error => ({error}));
