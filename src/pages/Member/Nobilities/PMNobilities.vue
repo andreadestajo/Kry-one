@@ -7,7 +7,7 @@
                 <q-tabs v-model="tab" dense class="text-grey" active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
                     <q-tab name="royalties" label="Royalties" />
                     <q-tab name="knight_match" label="Knight Match" />
-                    <q-tab name="referral_bonus" label="Referral" />
+                    <!-- <q-tab name="referral_bonus" label="Referral" /> -->
                 </q-tabs>
 
                 <q-separator />
