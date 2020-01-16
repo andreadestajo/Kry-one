@@ -9,7 +9,7 @@
                 </q-toolbar-title>
 
                 <q-toolbar-title v-if="project != 'krypto-one-live'" class="text-center">
-                    KryptoKnight.Beta
+                    KryptoKnight.Me
                 </q-toolbar-title>
 
                 <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
