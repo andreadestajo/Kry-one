@@ -239,7 +239,7 @@ export default
         {
             // Get people to place
             this.$bind('paid_downline', DB_USER.collection().where('upline_id', '==', this.$_current_user_data.id).where('nobility_info.rank_order', '>', 1));
-            await this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
+            this.$bind('group_status', DB_USER_COUNT.doc(this.$_current_user_data.id, "compute"));
 
             // Get next target nobility
             const nobility = await DB_NOBILITY.getNextTargetNobilityByRankOrder(this.$_current_user_data.nobility_info.rank_order);
