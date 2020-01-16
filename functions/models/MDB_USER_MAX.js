@@ -2,7 +2,7 @@ const { ADMIN_DB }  = require("../plugin/firebase");
 const FieldValue    = require("firebase-admin").firestore.FieldValue;
 module.exports =
 {
-    table: (uid) => `users/${uid}/count`,
+    table: (uid) => `users/${uid}/max`,
 
     doc(uid, id)
     {
@@ -17,30 +17,6 @@ module.exports =
     {
         let res = await ADMIN_DB.collection(this.table(uid)).add(data);
         return res.id;
-    },
-    async addBinaryPointValue(uid, id, binary_point_value)
-    {
-        this.doc(uid, id).update({ binary_point_value : FieldValue.increment(binary_point_value) });
-    },
-    async addBinaryPointLeftRight(uid, id, position, points)
-    {
-        if(position.toLowerCase() === 'left')
-        {
-            await this.doc(uid, id).update({ binary_points_left : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
-        }
-        else
-        {
-            await this.doc(uid, id).update({ binary_points_right : FieldValue.increment(points), binary_point_value : FieldValue.increment(points) });
-        } 
-    },
-    async deductBinaryPointLeftRight(uid, id, points)
-    {
-        let deduction = points * -1;
-        await this.doc(uid, id).update({ binary_points_left : FieldValue.increment(deduction), binary_points_right : FieldValue.increment(deduction) });
-    },
-    async clearBinaryPointLeftRight(uid, id)
-    {
-        await this.doc(uid, id).update({ binary_points_left : 0, binary_points_right : 0 });
     },
     async get(uid, id)
     {

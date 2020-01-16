@@ -4,8 +4,12 @@
         <q-header>
             <q-toolbar>
                 <q-btn flat dense round @click="drawer = !drawer" icon="menu" aria-label="Menu"/>
-                <q-toolbar-title class="text-center">
+                <q-toolbar-title v-if="project == 'krypto-one-live'" class="text-center">
                     Krypto.One™
+                </q-toolbar-title>
+
+                <q-toolbar-title v-if="project != 'krypto-one-live'" class="text-center">
+                    KryptoKnight.FreeAccount
                 </q-toolbar-title>
 
                 <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
@@ -22,7 +26,7 @@
                 <q-item @click.native="$router.push({name: 'member_profile'})" class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
                     <span class="profile-avatar q-pa-sm">
                         <q-avatar size="120px">
-                            <q-img spinner-size="5px" src="../statics/boy.jpg"></q-img>
+                            <q-img spinner-size="5px" :src="$_current_user_data.photo_url ? $_current_user_data.photo_url : '../statics/boy.jpg'"></q-img>
                         </q-avatar>
                     </span>
                     <span class="profile-name text-weight-bold">{{$_current_user_data ? $_current_user_data.email : ''}}</span>
@@ -57,7 +61,8 @@ export default
     name: 'AdminLayout',
     data: () =>
     ({
-        drawer: false
+        drawer : false,
+        project : "krypto-one-live",
     }),
     navigations:
     [
@@ -69,6 +74,10 @@ export default
         { label: 'Monarchy View'   , icon: 'fa fa-sitemap '          , side: '', route: 'member_monarchy' },
         { label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
     ],
+    mounted()
+    {
+        this.project = env('FIREBASE_PROJECTID');
+    },
     methods:
     {
         goToRoute(route)

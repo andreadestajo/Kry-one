@@ -7,6 +7,7 @@ const FORMAT                 = require('../globals/FormatHelper');
 
 const MDB_USER_WALLET        = require('../models/MDB_USER_WALLET');
 const MDB_USER               = require('../models/MDB_USER');
+const MDB_USER_COUNT         = require('../models/MDB_USER_COUNT');
 const MDB_USER_COMPUTE       = require('../models/MDB_USER_COMPUTE');
 const MDB_NOBILITY           = require('../models/MDB_NOBILITY');
 const MDB_CURRENCY           = require('../models/MDB_CURRENCY');
@@ -41,6 +42,17 @@ const sendRegistrationLink = async (user_full_name, email, name, link) =>
 
 module.exports =
 {
+    async getTime()
+    {
+        let time            = moment().tz('Asia/Singapore').format('YYYY-MM-DD HH:mm:ss');
+        let today           = moment().tz('Asia/Singapore').format('YYYY-MM-DD');
+        let today_ends      = `${today} 23:59:59`;
+        let start           = new Date(time).getTime() / 1000;
+        let end             = new Date(today_ends).getTime() / 1000;
+        let remaining_time  = end - start;
+
+        return { time: time, remaining_time: remaining_time, today_ends: today_ends };
+    },
     async submitKyc(data, context)
     {
         // Variable declarations
@@ -121,7 +133,7 @@ module.exports =
                 transfer_wallet.amount          = data.amount;
                 transfer_wallet.issue_by_id     = logged_in_user.id;
                 transfer_wallet.issue_by        = logged_in_user.full_name;
-                transfer_wallet.issue_to_id     = recipient.id;      
+                transfer_wallet.issue_to_id     = recipient.id;
                 transfer_wallet.issue_to        = recipient.full_name;
                 transfer_wallet.currency        = data.currency;
                 transfer_wallet.status          = "pending";
@@ -327,6 +339,12 @@ module.exports =
         // structure link
         const registration_link = `${process.env.APP_DOMAIN}register?id=${add_new_knight.data}&&eid=${knight_data.eid}`;
 
+        // for tester only
+        if(process.env.GCLOUD_PROJECT === 'krypto-one-test')
+        {
+            HTTPS_ERROR('failed-precondition', registration_link);
+        }
+        
         return sendRegistrationLink(logged_in_user.full_name, knight_data.email, knight_data.full_name, registration_link);
     },
     async placeDownline(data, context)
@@ -361,8 +379,10 @@ module.exports =
             update_user.placement.upline_name    = upline_info.full_name;
             update_user.placement.date_placed    = new Date();
 
+            let downline_to_place_count = await MDB_USER_COUNT.get(downline_to_place.id, "compute");
+
             await MDB_USER.update(downline_to_place.id, update_user);
-            await MDB_USER_COMPUTE.update(downline_to_place.id, 'compute', { compute_binary: downline_to_place.binary_point_value || 0 })
+            await MDB_USER_COMPUTE.update(downline_to_place.id, 'compute', { compute_binary: downline_to_place_count.binary_point_value || 0 })
         }
 
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};
@@ -471,7 +491,6 @@ module.exports =
     async updateProfile(data, context)
     {
         const user_data = JSON.parse(data);
-
         const update_data = await MDB_USER.update(context.auth.uid, user_data)
             .then(data => ({error: null, data}))
             .catch(error => ({error}));

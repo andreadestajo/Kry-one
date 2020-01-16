@@ -57,7 +57,6 @@ module.exports =
 
     async register (data, context)
     {
-        console.log(data.registration_form_data);
         const user_info       = JSON.parse(data.registration_form_data);
 
         // Check if sponsor is
@@ -71,14 +70,8 @@ module.exports =
         {
             HTTPS_ERROR('failed-precondition', 'Not eligible to be a sponsor.');
         }
+        
         user_info.referred_by = user_info.referral_code;
-
-        if(user_info.hasOwnProperty('knight_data'))
-        {
-            /* UNILEVEL EARNING UPON UNIQ PURCHASE */
-            //await EARNING.unilevel(logged_in_user, data.amount);
-            console.log('awitttt')
-        }
 
         // Create new user and return result
         const create_user = await ADMIN_AUTH.createUser

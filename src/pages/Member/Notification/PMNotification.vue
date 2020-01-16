@@ -10,7 +10,7 @@
                                    @load="fetchNotifications"
                                    ref="notificationRef"
                                    :scroll-target="$refs.scrollTargetRef">
-                    <div v-for="notif in notification_data" :class="`list ${notif.is_new ? 'new' : ''}`" @click="action(notif)">
+                    <div v-for="notif in notification_data" :class="`list ${notif.is_new}`" @click="action(notif)">
                         <div class="list-image">
                             <q-avatar>
                                 <q-img spinner-size="0" :src="notif.image"></q-img>
@@ -53,7 +53,8 @@ export default
         notification_data     : [],
         last_history          : null,
         first_history         : null,
-        is_notification_empty : false
+        is_notification_empty : false,
+        new_count             : 0,
     }),
     methods: 
     {
@@ -132,12 +133,14 @@ export default
                     const notification_data =
                     {
                         detail          : data.detail,
-                        is_new          : data.new,
+                        is_new          : this.new_count > 0 ? 'new' : 'old',
                         relative_time   : getRelativeTime(new Date(data.created_date.toDate())),
                         image           : data.image,
                         id              : notification.id,
                         others          : data.options
                     };
+
+                    this.new_count = this.new_count - 1;
 
                     this.notification_data.push(notification_data)
                 });
@@ -203,7 +206,9 @@ export default
     mounted()
     {
         // Set notification count to 0
-        this.resetNotificationCount()
+        this.new_count = this.$_current_user_data.notification_count;
+        console.log(this.new_count);
+        this.resetNotificationCount();
     },
     beforeDestroy()
     {

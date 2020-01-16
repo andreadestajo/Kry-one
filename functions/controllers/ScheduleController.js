@@ -57,7 +57,7 @@ module.exports =
                     },
                     headers:
                     {
-                        'X-CMC_PRO_API_KEY': '543bebff-f139-47fd-8401-f8a0f89bbe9c'
+                        'X-CMC_PRO_API_KEY': '3d4aec6e-3060-42dc-adda-bbc801fbdd66'
                     },
                     json: true,
                     gzip: true
@@ -88,7 +88,7 @@ module.exports =
                     },
                     headers:
                     {
-                        'X-CMC_PRO_API_KEY': '543bebff-f139-47fd-8401-f8a0f89bbe9c'
+                        'X-CMC_PRO_API_KEY': '3d4aec6e-3060-42dc-adda-bbc801fbdd66'
                     },
                     json: true,
                     gzip: true
