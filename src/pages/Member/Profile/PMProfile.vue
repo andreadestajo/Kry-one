@@ -80,7 +80,7 @@
                       :error-message="'Please select a currency.'"
                       @blur="$v.form.currency.$touch()">
             </q-select>
-            <k-field label="Upload ID (Selfie)" note="Take a picture holding the ID">
+            <k-field label="Profile Picture">
                 <k-uploader v-model="form.photo_url" :storage_ref="$options.STORE_MEMBER_IDS(`profile_${(new Date).getTime()}`)"></k-uploader>
             </k-field>
             <div class="q-pt-md">
