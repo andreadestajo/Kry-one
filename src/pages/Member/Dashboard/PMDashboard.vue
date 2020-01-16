@@ -150,7 +150,7 @@
                     </div>
                 </div>  
             </div>
-            <div class="breakdown">
+            <div class="breakdown" v-if="$_current_user_wallet.nobility_info.rank_order > 1">
                 <div v-if="current_nobility" class="breakdown-maxincome">
                     <div class="title">Daily Maximum Knight Match</div>
                     <div class="value"><b>{{ $_formatNumber(current_nobility.max_income, {currency: 'BTC'})  }}</b></div>
