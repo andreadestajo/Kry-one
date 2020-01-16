@@ -5,6 +5,7 @@ const MDB_PROMOTION             = require('../models/MDB_PROMOTION');
 const MDB_USER                  = require('../models/MDB_USER');
 const MDB_ISSUE_WALLET          = require('../models/MDB_ISSUE_WALLET');
 const MDB_USER_NOTIFICATION     = require('../models/MDB_USER_NOTIFICATION');
+const MDB_KYC_VERIFICATION      = require('../models/MDB_KYC_VERIFICATION');
 const MDB_TRANSFER_CRYPTO       = require('../models/MDB_TRANSFER_CRYPTO');
 const { HTTPS_ERROR }           = require('../plugin/firebase');
 const AUTH                      = require('../globals/Auth');
@@ -14,8 +15,34 @@ const Ethereum                  = require('../globals/Bitaps/Ethereum');
  
 module.exports =
 {
+    async kyc(data, context)
+    {   
+        let logged_in_user = await AUTH.admin_only(context);
+        let description    = "";
+
+        data.modified_date = new Date();
+
+        if(data.status === "approved")
+        {
+            description = "Your KYC has been approved."
+        }
+        else
+        {
+            description = "Your KYC has been rejected."
+        }
+
+        MDB_USER_NOTIFICATION.addNew(logged_in_user.id, description, logged_in_user.photo_url)
+
+
+        await MDB_KYC_VERIFICATION.update(logged_in_user.i, data);
+        await MDB_USER.update(logged_in_user.i, {kyc_status: data.status});
+
+        console.log(data);
+    },
     async promoteUser(data, context)
     {
+        await AUTH.admin_only(context);
+
         const promotion_info = Object.assign(data.promotion_info,
         {
             promoted_by_user_id: context.auth.uid,
