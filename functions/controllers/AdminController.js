@@ -34,8 +34,8 @@ module.exports =
         MDB_USER_NOTIFICATION.addNew(logged_in_user.id, description, logged_in_user.photo_url)
 
 
-        await MDB_KYC_VERIFICATION.update(logged_in_user.i, data);
-        await MDB_USER.update(logged_in_user.i, {kyc_status: data.status});
+        await MDB_KYC_VERIFICATION.update(logged_in_user.id, data);
+        await MDB_USER.update(logged_in_user.id, {kyc_status: data.status});
 
         console.log(data);
     },

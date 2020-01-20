@@ -238,7 +238,7 @@ export default
             this.$_showPageLoading();
             this.computeNobility();
 
-            const upgrade_account                 = {};
+            const upgrade_account               = {};
 
             upgrade_account.target_nobility     = this.matched_nobility.id;
             upgrade_account.amount              = parseFloat(this.form.amount).toFixed(8);
