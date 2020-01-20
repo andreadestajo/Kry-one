@@ -39,9 +39,11 @@
 <script>
     import KField from "../../../components/Admin/KField";
     import KModal from "../../../components/Admin/KModal"
-
     import DB_KYC_VERIFICATION from "../../../models/DB_KYC_VERIFICATION"
     import DB_USER from "../../../models/DB_USER";
+    import { FN_KYC } from "../../../references/refs_functions";
+    import { fbCall } from '../../../utilities/Callables';
+
 
     export default
     {
@@ -105,10 +107,15 @@
                         modified_date   : new Date()
                     };
 
-                    await DB_KYC_VERIFICATION.update(this.kyc_details_value.id, data);
-                    await DB_USER.update(this.kyc_details_value.id, {kyc_status: data.status});
+                    // await DB_KYC_VERIFICATION.update(this.kyc_details_value.id, data);
+                    // await DB_USER.update(this.kyc_details_value.id, {kyc_status: data.status});
+
+                    let status  = is_accepted ? 'approved' : 'rejected';
+                    
+                    await fbCall(FN_KYC, data);
 
                     this.$_hidePageLoading();
+
                     this.$_notify
                     ({
                         message : `Successfully ${data.status} KYC`,

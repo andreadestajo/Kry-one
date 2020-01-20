@@ -13,10 +13,15 @@
                     </span>
                 </div>
             </div>
-            <div class="group q-pa-sm" v-if="!Object.keys(target_nobility_info).length">
+            <div class="group q-pa-sm" v-if="$_current_user_data.nobility_info.rank_order < 12 && !Object.keys(target_nobility_info).length">
                 <q-spinner color="primary" size="2em"/>
             </div>
-            <template v-if="Object.keys(target_nobility_info).length" >
+            <template v-if="$_current_user_data.nobility_info.rank_order == 12">
+                <div class="group q-pb-lg">
+                    <div class="group-label">Congratulations! You reach the highest RANK in NOBILITIES</div>
+                </div>
+            </template>
+            <template v-if="$_current_user_data.nobility_info.rank_order < 12 && Object.keys(target_nobility_info).length" >
                 <div class="group">
                     <div class="group-label">Your next target</div>
                     <div class="group-value next">{{target_nobility}}</div>
@@ -145,7 +150,7 @@
                     </div>
                 </div>  
             </div>
-            <div class="breakdown">
+            <div class="breakdown" v-if="$_current_user_data.nobility_info.rank_order > 1">
                 <div v-if="current_nobility" class="breakdown-maxincome">
                     <div class="title">Daily Maximum Knight Match</div>
                     <div class="value"><b>{{ $_formatNumber(current_nobility.max_income, {currency: 'BTC'})  }}</b></div>
