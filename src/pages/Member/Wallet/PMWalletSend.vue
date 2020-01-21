@@ -149,6 +149,8 @@ import {
     minValue
 } from "vuelidate/src/validators";
 
+import axios from 'axios';
+
 export default
 {
     components: { KHeader, KCard, KField},
@@ -205,7 +207,8 @@ export default
             return Number(this.send_wallet_form.amount) + (this.is_external_send ? Number(this.send_wallet_form.charge) : 0)
         }
     },
-    methods: {
+    methods: 
+    {
         chooseWallet(wallet)
         {
             this.active_wallet          = {
@@ -232,10 +235,32 @@ export default
                 this.internal_user_id = user.id;
             }
 
+            // check if address is from external uniq
+            if (this.active_wallet.abb === 'UNIQ')
+            {
+                await this.checkUniqAddress();
+            }
+
             this.is_external_send = !user;
             this.is_confirmation_dialog_open = true;
             
             this.$_hidePageLoading();
+        },
+        async checkUniqAddress()
+        {
+            try
+            {
+                await axios.post('https://uniqx.co/api/wallet/check', 
+                {
+                    address: this.send_wallet_form.send_to.trim()
+                });
+
+                this.send_wallet_form.charge = this.send_wallet_form.amount * 0.375;
+            }
+            catch (e)
+            {
+                this.send_wallet_form.charge = 0;
+            }
         },
         async confirmTransaction()
         {
@@ -262,7 +287,7 @@ export default
             send_wallet.charge         = this.send_wallet_form.charge;
             send_wallet.currency       = this.active_wallet.abb;
             send_wallet.remarks        = this.send_wallet_form.remarks;
-            send_wallet.address        = this.send_wallet_form.send_to;
+            send_wallet.address        = this.send_wallet_form.send_to.trim();
             
             try
             {
@@ -279,12 +304,12 @@ export default
         },
         async transferWallet()
         {
-            let send_wallet         = {};
-            send_wallet.amount      = this.send_wallet_form.amount;
-            send_wallet.send_to     = this.internal_user_id;
-            send_wallet.currency    = this.active_wallet.abb;
-            send_wallet.address     = this.send_wallet_form.send_to;
-            send_wallet.remarks     = this.send_wallet_form.remarks;
+            let send_wallet                  = {};
+                send_wallet.amount           = this.send_wallet_form.amount;
+                send_wallet.send_to          = this.internal_user_id;
+                send_wallet.currency         = this.active_wallet.abb;
+                send_wallet.address          = this.send_wallet_form.send_to.trim();
+                send_wallet.remarks          = this.send_wallet_form.remarks;
             
             try
             {

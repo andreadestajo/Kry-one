@@ -93,6 +93,11 @@ module.exports =
         let transfer_wallet             = null;
         let uniq_recipient              = null;
 
+        if (logged_in_user.kyc_status !== 'approved')
+        {
+            HTTPS_ERROR('failed-precondition', `Please verify your account first.`);
+        }
+
         await Promise.all([recipient, logged_in_user_wallet]).then(async (res) =>
         {
             recipient               = res[0];
@@ -108,17 +113,26 @@ module.exports =
             }
             else
             {
-                if (data.currency === 'xau')
+                // sending to uniq wallet (external)
+                if (data.currency === 'xau' && process.env.GCLOUD_PROJECT === 'krypto-one-live')
                 {
-                    uniq_recipient = await WALLET.add_uniq(data.amount, data.address);
-                    
+                    uniq_recipient = await WALLET.addUniq(data.amount, data.address);
+
                     if (uniq_recipient)
                     {
                         /* deduct wallet to sender */
                         description = `You have sent <b>${data.amount} ${data.currency}</b> to the account of <b>${uniq_recipient.full_name}</b>.`;
                         type        = "sent";
 
+                        /* add uniq charge */
+                        let old_amount = data.amount;
+                        data.amount = WALLET.addUniqCharge(data.amount);
+
                         await WALLET.deduct(logged_in_user.id, data.currency, data.amount, type, description, '');
+
+                        /* amount without charge */
+                        data.amount = old_amount;
+
                         return true;
                     }
                 }
@@ -452,6 +466,11 @@ module.exports =
         let logged_in_user              = await AUTH.member_only(context);
         let logged_in_user_wallet       = await MDB_USER_WALLET.get(logged_in_user.id, data.currency.toUpperCase());
         let transfer_wallet             = {};
+
+        if (logged_in_user.kyc_status !== 'approved')
+        {
+            HTTPS_ERROR('failed-precondition', `Please verify your account first.`);
+        }
 
         if(logged_in_user_wallet.wallet < data.amount)
         {

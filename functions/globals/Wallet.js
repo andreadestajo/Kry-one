@@ -119,7 +119,7 @@ module.exports =
 
         return true;
     },
-    async add_uniq(amount, address)
+    async addUniq(amount, address)
     {
         try
         {
@@ -136,5 +136,10 @@ module.exports =
         {
             return null;
         }
+    },
+    addUniqCharge(amount)
+    {
+        let charge = amount * 0.375;
+        return amount + charge;
     }
 };
