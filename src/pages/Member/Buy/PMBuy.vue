@@ -198,13 +198,24 @@ export default
 
             if(!nobility) {return 0}
 
-            this.form.amount = this.$_convertRate(nobility.price, 'XAU', this.form.payment_currency);
+            console.log(nobility.price, "XAU");
+
+            let amount = parseFloat(this.$_convertRate(nobility.price, 'XAU', this.form.payment_currency));
+
+            amount = amount + (amount * 0.1);
+            amount = amount.toFixed(8)
+
+            this.form.amount = amount;
+            console.log(this.form.amount, this.form.payment_currency);
             this.$v.form.amount.$touch();
         },
         computeNobility()
         {
             const matched_nobilities = this.nobilities.filter(n => {
-                return parseFloat(n.price) <= this.uniqAmount && parseFloat(n.price) !== 0
+                let condition1 = parseFloat(n.price).toFixed(8);
+                let condition2 = parseFloat(this.uniqAmount).toFixed(8);
+                console.log(condition1, "<=", condition2, n.title);
+                return parseFloat(condition1) <= condition2 && parseFloat(n.price) !== 0
             });
 
             if(!matched_nobilities.length)
@@ -238,7 +249,7 @@ export default
             this.$_showPageLoading();
             this.computeNobility();
 
-            const upgrade_account               = {};
+            const upgrade_account                 = {};
 
             upgrade_account.target_nobility     = this.matched_nobility.id;
             upgrade_account.amount              = parseFloat(this.form.amount).toFixed(8);
