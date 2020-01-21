@@ -9,7 +9,7 @@
                 <div class="points">Left: {{ ((data.binary_points_left || 0) * 1000).toFixed(0)  }}</div>
                 <div class="points">Right: {{ ((data.binary_points_right || 0) * 1000).toFixed(0)  }}</div> -->
             </div>
-            <div unelevated label="Back" type="reset" class="q-mt-sm full-width" value="hello" name="hello" @click="copyLink(data.id)">COPY ID</div>
+            <!-- <div unelevated label="Back" type="reset" class="q-mt-sm full-width" value="hello" name="hello" @click="copyLink(data.id)">COPY ID</div> -->
         </a>
         <a v-if="!data" href="javascript:" style="background-color: #aaa" @click="placementConfirmation()">
             <div>
