@@ -290,7 +290,6 @@ export default
             this.target_nobility_info = nobility ? nobility : {};
 
             // Get Max Income
-
             let system_time         = await fbCall(FN_GET_TIME);
             const moment            = require('moment');
             let current_date        = moment(system_time.data.time).format('YYYY-MM-DD');

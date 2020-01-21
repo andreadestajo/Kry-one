@@ -31,7 +31,7 @@ module.exports =
             description = "Your KYC has been rejected."
         }
 
-        MDB_USER_NOTIFICATION.addNew(logged_in_user.id, description, logged_in_user.photo_url)
+        await MDB_USER_NOTIFICATION.addNew(logged_in_user.id, description, logged_in_user.photo_url)
 
 
         await MDB_KYC_VERIFICATION.update(logged_in_user.id, data);
