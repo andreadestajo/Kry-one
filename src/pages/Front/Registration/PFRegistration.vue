@@ -350,7 +350,7 @@
                                     const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
                                     console.log("enlistKnight", enlistKnight);
 
-                                    resolve(!user && !enlistKnight)
+                                    resolve(!user)
                                 }, 500)
                             });
                         }
