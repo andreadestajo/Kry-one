@@ -346,11 +346,18 @@
                                 setTimeout(async () =>
                                 {
                                     const user = await DB_USER.getUserByEmailAddress(email);
-                                    console.log("user", user);
-                                    const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
-                                    console.log("enlistKnight", enlistKnight);
+                                    let enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
 
-                                    resolve(!user)
+                                    if(this.knight_data)
+                                    {
+                                        console.log("From Enlist", this.knight_data);
+                                        if(this.knight_data.email == enlistKnight.email)
+                                        {
+                                            enlistKnight = null;
+                                        }
+                                    }
+
+                                    resolve(!user && !enlistKnight)
                                 }, 500)
                             });
                         }
