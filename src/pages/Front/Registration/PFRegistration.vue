@@ -169,16 +169,13 @@
 
 <script>
     import './PFRegistration.scss';
-    import PFRegistrationConfirmation from "./PFRegistrationConfirmation"
-
-    import DB_USER          from "../../../models/DB_USER"
-    import DB_ENLIST_KNIGHT from "../../../models/DB_ENLIST_KNIGHT"
-
-    import {fbCall} 	  from "../../../utilities/Callables";
-    import {FN_REGISTER}  from "../../../references/refs_functions";
-
-    import refs_countries     from "../../../references/refs_countries";
-    import {currencies_list}  from "../../../references/refs_currencies";
+    import PFRegistrationConfirmation   from "./PFRegistrationConfirmation"
+    import DB_USER                      from "../../../models/DB_USER"
+    import DB_ENLIST_KNIGHT             from "../../../models/DB_ENLIST_KNIGHT"
+    import {fbCall} 	                from "../../../utilities/Callables";
+    import {FN_REGISTER}                from "../../../references/refs_functions";
+    import refs_countries               from "../../../references/refs_countries";
+    import {currencies_list}            from "../../../references/refs_currencies";
 
     import {
         required,
@@ -210,8 +207,8 @@
             is_eligible        : false,
             registration_error :
             {
-                code    : '',
-                message : ''
+                code           : '',
+                message        : ''
             },
             has_valid_eid: false,
             knight_data: null,
@@ -316,11 +313,11 @@
                 }
                 else
                 {
-                    this.knight_data   = Object.assign({}, knight_data);
-                    this.has_valid_eid = true;
-                    this.registration_form_data.referral_code = knight_data.sponsor;
-                    this.registration_form_data.full_name     = knight_data.full_name;
-                    this.registration_form_data.email         = knight_data.email;
+                    this.knight_data                            = Object.assign({}, knight_data);
+                    this.has_valid_eid                          = true;
+                    this.registration_form_data.referral_code   = knight_data.sponsor;
+                    this.registration_form_data.full_name       = knight_data.full_name;
+                    this.registration_form_data.email           = knight_data.email;
                 }
 
                 this.$_hidePageLoading();
@@ -331,11 +328,11 @@
             return {
                 registration_form_data:
                 {
-                    full_name      : {required},
-                    contact_number : {required},
-                    password       : {required, minLength: minLength(6)},
-                    country        : {required},
-                    currency       : {required},
+                    full_name      : { required },
+                    contact_number : { required },
+                    password       : { required, minLength: minLength(6) },
+                    country        : { required },
+                    currency       : { required },
                     email          :
                     {
                         required,
@@ -349,9 +346,11 @@
                                 setTimeout(async () =>
                                 {
                                     const user = await DB_USER.getUserByEmailAddress(email);
+                                    console.log("user", user);
                                     const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
+                                    console.log("enlistKnight", enlistKnight);
 
-                                    resolve(!user || !enlistKnight)
+                                    resolve(!user && !enlistKnight)
                                 }, 500)
                             });
                         }
