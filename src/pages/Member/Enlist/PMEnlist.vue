@@ -287,7 +287,7 @@ export default
                                 const user = await DB_USER.getUserByEmailAddress(email);
                                 const enlistKnight = await DB_ENLIST_KNIGHT.getEnlistmentByEmailAddress(email);
 
-                                resolve(!user || !enlistKnight)
+                                resolve(!user && !enlistKnight)
                             }, 500)
                         });
                     }
