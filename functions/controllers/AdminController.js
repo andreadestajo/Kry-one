@@ -20,21 +20,19 @@ module.exports =
         let logged_in_user = await AUTH.admin_only(context);
         let description    = "";
 
-        
+
         data.modified_date = new Date();
 
         if(data.status === "approved")
         {
-            description = "Your KYC has been approved."
+            description = "Your KYC has been approved.";
         }
         else
         {
-            description = "Your KYC has been rejected."
+            description = "Your KYC has been rejected.";
         }
 
         await MDB_USER_NOTIFICATION.addNew(logged_in_user.id, description, logged_in_user.photo_url)
-
-
         await MDB_KYC_VERIFICATION.update(logged_in_user.id, data);
         await MDB_USER.update(logged_in_user.id, {kyc_status: data.status});
 
