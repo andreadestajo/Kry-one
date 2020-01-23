@@ -20,6 +20,7 @@ module.exports =
         let logged_in_user = await AUTH.admin_only(context);
         let description    = "";
 
+        
         data.modified_date = new Date();
 
         if(data.status === "approved")
