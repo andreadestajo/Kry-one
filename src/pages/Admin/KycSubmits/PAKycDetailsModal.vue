@@ -104,7 +104,9 @@
                     {
                         status          : is_accepted ? 'approved' : 'rejected',
                         modified_by     : user_id,
-                        modified_date   : new Date()
+                        modified_date   : new Date(),
+                        user_id         : this.kyc_details_value.id,
+
                     };
 
                     // await DB_KYC_VERIFICATION.update(this.kyc_details_value.id, data);
