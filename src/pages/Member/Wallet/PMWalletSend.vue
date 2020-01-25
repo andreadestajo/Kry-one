@@ -20,6 +20,10 @@
                              @blur="$v.send_wallet_form.amount.$touch()">
                     </q-input>
                 </k-field>
+                <div class="conversion">
+                    <k-amount-conversion :amount="parseFloat(send_wallet_form.amount)" :coin="active_wallet.abb"/>
+                </div>
+                
                 <!-- TO -->
                 <k-field label="To">
                     <q-input v-model="send_wallet_form.send_to"
