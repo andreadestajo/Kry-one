@@ -7,9 +7,34 @@ service cloud.firestore
 		{
 			allow read, write;
 		}
+        function notUpdating(field)
+        {
+            return !(field in request.resource.data) || resource.data[field] == request.resource.data[field]
+        }
+
 		match /users/{userID}
         {
-            allow read, write;
+            allow read;
+            allow update: if notUpdating('email')
+                        &&   notUpdating('contact_number')
+                        &&   notUpdating('country')
+                        &&   notUpdating('created_at')
+                        &&   notUpdating('currency')
+                        &&   notUpdating('email_verified')
+                        &&   notUpdating('filters')
+                        &&   notUpdating('full_name')
+                        &&   notUpdating('id')
+                        &&   notUpdating('is_agree')
+                        &&   notUpdating('kyc_status')
+                        &&   notUpdating('knight_data')
+                        &&   notUpdating('nobility_id')
+                        &&   notUpdating('nobility_info')
+                        &&   notUpdating('photo_url')
+                        &&   notUpdating('referral_code')
+                        &&   notUpdating('referrred_by')
+                        &&   notUpdating('upline_id')
+                        &&   notUpdating('upline_info')
+                        &&   request.auth.uid == userID;
             
             match /wallets/{walletID}
             {
