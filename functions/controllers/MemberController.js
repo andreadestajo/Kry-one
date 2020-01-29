@@ -124,14 +124,7 @@ module.exports =
                         description = `You have sent <b>${data.amount} ${data.currency}</b> to the account of <b>${uniq_recipient.full_name}</b>.`;
                         type        = "sent";
 
-                        /* add uniq charge */
-                        let old_amount = data.amount;
-                        data.amount = WALLET.addUniqCharge(data.amount);
-
                         await WALLET.deduct(logged_in_user.id, data.currency, data.amount, type, description, '');
-
-                        /* amount without charge */
-                        data.amount = old_amount;
 
                         return true;
                     }
