@@ -240,10 +240,10 @@ export default
             }
 
             // check if address is from external uniq
-            if (this.active_wallet.abb === 'UNIQ')
-            {
-                await this.checkUniqAddress();
-            }
+            // if (this.active_wallet.abb === 'UNIQ')
+            // {
+            //     await this.checkUniqAddress();
+            // }
 
             this.is_external_send = !user;
             this.is_confirmation_dialog_open = true;
