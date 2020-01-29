@@ -86,7 +86,7 @@
                         <div class="value">{{send_wallet_form.send_to}}</div>
                     </div>
 
-                    <div v-if="is_external_send" class="content-group q-pt-md">
+                    <div class="content-group q-pt-md">
                         <div class="label text-weight-medium">Charge</div>
                         <div class="value">{{$_formatNumber(send_wallet_form.charge, {currency: active_wallet.abb})}}</div>
                         <div class="conversion">PHP 0.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 0.00</div>
@@ -175,24 +175,6 @@ export default
         internal_user_id: null,
         currency_options: []
     }),
-    watch: 
-    {
-        active_wallet(val)
-        {
-            if (val.abb === 'BTC')
-            {
-                this.send_wallet_form.charge = 0.00015;
-            }
-            else if (val.abb === 'ETH')
-            {
-                this.send_wallet_form.charge = 0.0015;
-            }
-            else
-            {
-                this.send_wallet_form.charge = 0;
-            }
-        }
-    },
     computed:
     {
         amountError()
@@ -225,6 +207,7 @@ export default
         },
         async showConfirmDialog()
         {
+            this.send_wallet_form.charge = 0;
             this.$v.send_wallet_form.$touch();
 
             if (this.$v.send_wallet_form.$error) {return 0}
@@ -238,12 +221,10 @@ export default
                 this.internal_user_id = null;
                 this.internal_user_id = user.id;
             }
-
-            // check if address is from external uniq
-            // if (this.active_wallet.abb === 'UNIQ')
-            // {
-            //     await this.checkUniqAddress();
-            // }
+            else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH')
+            {
+                this.send_wallet_form.charge = this.send_wallet_form.amount * 0.375;
+            }
 
             this.is_external_send = !user;
             this.is_confirmation_dialog_open = true;

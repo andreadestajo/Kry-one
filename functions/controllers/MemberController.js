@@ -395,43 +395,17 @@ module.exports =
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};
     },
     async transferCrypto(data, context)
-    {
-        function scientificToDecimal(num) {
-            const sign = Math.sign(num);
-            //if the number is in scientific notation remove it
-            if(/\d+\.?\d*e[\+\-]*\d+/i.test(num)) {
-                const zero = '0';
-                const parts = String(num).toLowerCase().split('e'); //split into coeff and exponent
-                const e = parts.pop(); //store the exponential part
-                let l = Math.abs(e); //get the number of zeros
-                const direction = e/l; // use to determine the zeroes on the left or right
-                const coeff_array = parts[0].split('.');
-                
-                if (direction === -1) {
-                    coeff_array[0] = Math.abs(coeff_array[0]);
-                    num = zero + '.' + new Array(l).join(zero) + coeff_array.join('');
-                }
-                else {
-                    const dec = coeff_array[1];
-                    if (dec) l = l - dec.length;
-                    num = coeff_array.join('') + new Array(l+1).join(zero);
-                }
-            }
-            
-            if (sign < 0) {
-                num = -num;
-            }
-    
-            return num;
-        }
-        
-        data.amount                     = parseFloat(data.amount);
+    {   
+        // Convert to number
+        data.amount = Number(data.amount);
 
+        // Validate amount
         if (data.amount < 0.0001)
         {
             HTTPS_ERROR('failed-precondition', `Minimum amount is 0.0001.`);
         }
         
+        // Validate BTC
         if (data.currency === 'BTC')
         {
             const bitcoin = new Bitcoin();
@@ -442,6 +416,7 @@ module.exports =
                 HTTPS_ERROR('failed-precondition', `Address is invalid.`);
             }
         }
+        // Validate ETH
         else if (data.currency === 'ETH')
         {
             const ethereum = new Ethereum();
@@ -452,7 +427,12 @@ module.exports =
                 HTTPS_ERROR('failed-precondition', `Address is invalid.`);
             }
         }
+        else
+        {
+            HTTPS_ERROR('failed-precondition', `Currency is invalid.`);
+        }
 
+        // Initialize variables
         data.currency                   = data.currency.toLowerCase();
         let description, type           = "";
         let promise_list                = [];
@@ -460,15 +440,18 @@ module.exports =
         let logged_in_user_wallet       = await MDB_USER_WALLET.get(logged_in_user.id, data.currency.toUpperCase());
         let transfer_wallet             = {};
 
+        // Validate KYC
         if (logged_in_user.kyc_status !== 'approved')
         {
             HTTPS_ERROR('failed-precondition', `Please verify your account first.`);
         }
 
+        // Validate wallet balance
         if(logged_in_user_wallet.wallet < data.amount)
         {
             HTTPS_ERROR('failed-precondition', `You don't have enough balance to proceed on this transaction.`);
         }
+        // Validate send self
         else if(logged_in_user_wallet.address == data.address)
         {
             HTTPS_ERROR('failed-precondition', `Sending money to self is not allowed.`);
@@ -477,8 +460,8 @@ module.exports =
         {
             /* list of request to admin */
             transfer_wallet                 = {};
-            transfer_wallet.amount          = Number(data.amount);
-            transfer_wallet.charge          = Number(data.charge);
+            transfer_wallet.amount          = data.amount;
+            transfer_wallet.charge          = WALLET.getExternalCharge(data.amount);
             transfer_wallet.issue_by_id     = logged_in_user.id;
             transfer_wallet.issue_by        = logged_in_user.full_name;
             transfer_wallet.currency        = data.currency;
@@ -490,15 +473,15 @@ module.exports =
             promise_list.push(MDB_TRANSFER_CRYPTO.add(transfer_wallet));
 
             /* deduct wallet to sender */
-            description                     = `You have requested to transfer <b>${scientificToDecimal(transfer_wallet.amount)} ${data.currency}</b> to <b>${data.address}</b>.`;
+            description                     = `You have requested to transfer <b>${WALLET.scientificToDecimal(transfer_wallet.amount)} ${data.currency}</b> to <b>${data.address}</b>.`;
             type                            = "sent";
 
-            promise_list.push(WALLET.deduct(logged_in_user.id, transfer_wallet.currency, (transfer_wallet.amount + transfer_wallet.charge), type, description));
+            promise_list.push(WALLET.deduct(logged_in_user.id, transfer_wallet.currency, WALLET.setExternalCharge(transfer_wallet.amount), type, description));
 
             await Promise.all(promise_list);
         }
 
-        return { status: "success", message: `Your request to transfer ${scientificToDecimal(transfer_wallet.amount)} ${transfer_wallet.currency.toUpperCase()} to ${data.address} has been submitted.` };
+        return { status: "success", message: `Your request to transfer ${WALLET.scientificToDecimal(transfer_wallet.amount)} ${transfer_wallet.currency.toUpperCase()} to ${data.address} has been submitted.` };
     },
     async updateProfile(data, context)
     {
