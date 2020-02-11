@@ -108,7 +108,7 @@ module.exports =
 
         const promise = await Promise.all([transfer_info, transfer_update]);
 
-        await WALLET.add(promise[0].issue_by_id, promise[0].currency, promise[0].amount, 'received', 'Wallet transfer rejected');
+        await WALLET.add(promise[0].issue_by_id, promise[0].currency, (promise[0].amount + promise[0].charge), 'received', 'Wallet transfer rejected');
 
         return { status: 'success', message: 'Successfully rejected the transfer.' };
     },
