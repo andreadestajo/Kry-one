@@ -5,5 +5,6 @@ export default
     'SSS Card',
     'PRC ID',
     'POSTAL ID',
-    'UMID'
+    'UMID',
+    'Others (Please Specify)'
 ]

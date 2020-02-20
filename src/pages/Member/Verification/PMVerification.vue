@@ -98,8 +98,21 @@
                                   v-model="form.id_type"
                                   :options="$options.id_types_options"
                                   option-value="code"
-                                  option-label="name">
+                                  option-label="name"
+                                  >
                         </q-select>
+                        <q-input
+                                :error="$v.other_id_type.$error"
+                                :error-message="'ID Type is required'"
+                                @blur="$v.other_id_type.$touch()"
+                                class="input" 
+                                placeholder="Please specify your ID type"
+                                v-model="other_id_type" 
+
+                                v-if="isIdInputHidden"
+                                
+                                dense outlined>
+                        </q-input>
                     </k-field>
 
                     <!-- ID EXPIRATION DATE -->
@@ -144,7 +157,15 @@
                 </k-card>
             </q-form>
         </div>
-
+            <!-- <q-btn
+      :loading="loading1"
+      :percentage="percentage1"
+      color="primary"
+      @click="startComputing(1)"
+      style="width: 150px"
+    >
+    BUTTON
+    </q-btn> -->
         <k-alert-dialog ref="kAlertDialogRef" title="SUCCESS!" @confirm="confirmDialog">
             <span slot="message">
                 You've already submitted your KYC verification.
@@ -180,6 +201,7 @@ export default
     components: { KHeader, KField, KUploader, KCard, KAlertDialog},
     data:() =>(
     {
+        other_id_type   : '',
         form:
         {
             first_name         : '',
@@ -193,7 +215,8 @@ export default
             id_expiration_date : null,
             front_id_url       : '',
             back_id_url        : '',
-            selfie_url         : ''
+            selfie_url         : '',
+
         }
     }),
     methods:
@@ -212,6 +235,12 @@ export default
                 'Are you sure you want to submit your details?',
                 async () => {
                     this.$_showPageLoading();
+
+                    // Assign new id type specified by user
+                    if(this.other_id_type != '')
+                    {
+                        this.form.id_type   = this.other_id_type; 
+                    }
 
                     // Set date time submitted based on the timezone of the user
                     this.form.date_time_submitted = new Date();
@@ -236,8 +265,21 @@ export default
             
         }
     },
+
+    computed: {
+        isIdInputHidden () {
+            if(this.form.id_type == "Others (Please Specify)"){
+                return true;
+            }else{
+
+                return false;
+            }
+        },
+    },
+
     validations:
     {
+        other_id_type   : {required},
         form:
         {
             first_name         : {required},
