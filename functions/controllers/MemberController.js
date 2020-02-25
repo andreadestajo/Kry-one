@@ -497,5 +497,11 @@ module.exports =
         }
 
         return update_data;
+    },
+
+    async getUserKycData(uid, context)
+    {
+        const kyc_data = await MDB_KYC_VERIFICATION.get(uid);
+        return kyc_data;
     }
 };
