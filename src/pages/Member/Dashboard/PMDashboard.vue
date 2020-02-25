@@ -86,8 +86,8 @@
              style="background-color: #FF7043">
             <div class="icon"><q-icon name="info"></q-icon></div>
             <div class="message">
-                <div class="message-title">KYC Verification is being processed.</div>
-                <div class="message-detail">KYC Verification is being processed. Your account verification is under review. This process usually takes an average of around 2-3 business days. Thank you for your patience.</div>
+                <div class="message-title">KYC has been rejected.</div>
+                <div class="message-detail">We're sorry! Your KYC Verification has been rejected.</div>
             </div>
         </div>
 
@@ -97,8 +97,8 @@
              style="background-color: #66BB6A">
             <div class="icon"><q-icon name="info"></q-icon></div>
             <div class="message">
-                <div class="message-title">KYC Verification is being processed.</div>
-                <div class="message-detail">KYC Verification is being processed. Your account verification is under review. This process usually takes an average of around 2-3 business days. Thank you for your patience.</div>
+                <div class="message-title">KYC Verification has been accepted.</div>
+                <div class="message-detail">Congrats! Your KYC Verification has been accepted.</div>
             </div>
         </div>
 
