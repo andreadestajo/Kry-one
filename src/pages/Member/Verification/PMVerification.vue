@@ -242,17 +242,19 @@ export default
                 let kyc_data = await fbCall(FN_GET_KYC_DATA, this.$_current_user_data.id)
                 if(kyc_data)
                 {
-                    this.form.first_name    = kyc_data.data.first_name;
-                    this.form.last_name     = kyc_data.data.last_name;
-                    this.form.middle_name   = kyc_data.data.middle_name;
-                    this.form.birthdate     = kyc_data.data.birthdate;
-                    this.form.state_city    = kyc_data.data.state_city;
-                    this.form.country       = kyc_data.data.country;
-                    this.form.id_number     = kyc_data.data.id_number;
-                    this.form.id_type       = kyc_data.data.id_type;
-                    this.form.front_id_url  = kyc_data.data.front_id_url;
-                    this.form.back_id_url   = kyc_data.data.back_id_url;
-                    this.form.selfie_url    = kyc_data.data.selfie_url;
+                    let moment                      = require('moment');
+                    this.form.first_name            = kyc_data.data.first_name;
+                    this.form.last_name             = kyc_data.data.last_name;
+                    this.form.middle_name           = kyc_data.data.middle_name;
+                    this.form.birthdate             = moment.unix(kyc_data.data.birthdate._seconds).format('YYYY/MM/DD');
+                    this.form.state_city            = kyc_data.data.state_city;
+                    this.form.country               = kyc_data.data.country;
+                    this.form.id_number             = kyc_data.data.id_number;
+                    this.form.id_expiration_date    = moment.unix(kyc_data.data.id_expiration_date._seconds).format('YYYY/MM/DD');
+                    this.form.id_type               = kyc_data.data.id_type;
+                    this.form.front_id_url          = kyc_data.data.front_id_url;
+                    this.form.back_id_url           = kyc_data.data.back_id_url;
+                    this.form.selfie_url            = kyc_data.data.selfie_url;
 
                 }
             } catch (error) {
