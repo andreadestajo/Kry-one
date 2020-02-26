@@ -193,14 +193,14 @@ import KAlertDialog from '../../../components/Shared/KAlertDialog'
 import {required}          from "vuelidate/src/validators";
 import {fbCall} 	       from "../../../utilities/Callables";
 import {FN_SUBMIT_KYC}     from "../../../references/refs_functions";
-import {FN_GET_KYC_DATA}   from "../../../references/refs_functions";
 import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
 
 
 import refs_countries from "../../../references/refs_countries";
 import refs_id_types  from "../../../references/refs_id_types";
 
-import DB_USER from "../../../models/DB_USER";
+import DB_USER              from "../../../models/DB_USER";
+import DB_KYC_VERIFICATION  from "../../../models/DB_KYC_VERIFICATION";
 
 export default
 {  
@@ -268,23 +268,24 @@ export default
         },
         async getUserKycData(){
             try {
-                let kyc_data = await fbCall(FN_GET_KYC_DATA, this.$_current_user_data.id)
+                let kyc_data    = await DB_KYC_VERIFICATION.get(this.$_current_user_data.id);
+
                 if(kyc_data)
                 {
                     let moment                      = require('moment');
-                    this.form.first_name            = kyc_data.data.first_name;
-                    this.form.last_name             = kyc_data.data.last_name;
-                    this.form.middle_name           = kyc_data.data.middle_name;
-                    this.form.birthdate             = moment.unix(kyc_data.data.birthdate._seconds).format('YYYY/MM/DD');
-                    this.form.state_city            = kyc_data.data.state_city;
-                    this.form.country               = kyc_data.data.country;
-                    this.form.id_number             = kyc_data.data.id_number;
-                    this.form.id_expiration_date    = moment.unix(kyc_data.data.id_expiration_date._seconds).format('YYYY/MM/DD');
-                    this.form.id_type               = kyc_data.data.id_type;
-                    this.form.front_id_url          = kyc_data.data.front_id_url;
-                    this.form.back_id_url           = kyc_data.data.back_id_url;
-                    this.form.selfie_url            = kyc_data.data.selfie_url;
-
+                    this.form.first_name            = kyc_data.first_name;
+                    this.form.last_name             = kyc_data.last_name;
+                    this.form.middle_name           = kyc_data.middle_name;
+                    this.form.birthdate             = moment.unix(kyc_data.birthdate.seconds).format('YYYY/MM/DD');
+                    this.form.state_city            = kyc_data.state_city;
+                    this.form.state_city            = kyc_data.state_city;
+                    this.form.country               = kyc_data.country;
+                    this.form.id_number             = kyc_data.id_number;
+                    this.form.id_expiration_date    = moment.unix(kyc_data.id_expiration_date.seconds).format('YYYY/MM/DD');
+                    this.form.id_type               = kyc_data.id_type;
+                    this.form.front_id_url          = kyc_data.front_id_url;
+                    this.form.back_id_url           = kyc_data.back_id_url;
+                    this.form.selfie_url            = kyc_data.selfie_url;
                 }
             } catch (error) {
                 console.log(error)

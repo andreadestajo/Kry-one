@@ -15,8 +15,7 @@ FN_ENLIST_KNIGHT         = `enlistKnight`,
 FN_TRANSFER_CRYPTO       = `transferCrypto`,
 FN_PLACE_DOWNLINE        = `placeDownline`,
 FN_GET_TIME              = `getTime`,
-FN_UPDATE_PROFILE        = `updateProfile`,
-FN_GET_KYC_DATA          = `getUserKycData`;
+FN_UPDATE_PROFILE        = `updateProfile`;
 
 // Admin
 export const

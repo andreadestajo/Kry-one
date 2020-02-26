@@ -29,9 +29,6 @@ exports.transferCrypto          = FUNCTIONS_HTTPS.onCall(member_controller.trans
 exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
 exports.getTime                 = FUNCTIONS_HTTPS.onCall(member_controller.getTime);
 
-// KYC
-exports.getUserKycData          = FUNCTIONS_HTTPS.onCall(member_controller.getUserKycData);
-
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);
 exports.login                   = FUNCTIONS_HTTPS.onCall(account_controller.login);
