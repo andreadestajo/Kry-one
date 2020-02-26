@@ -70,7 +70,7 @@
         </div>
 
         <!-- IF KYC PENDING -->
-        <div v-if="$_current_user_data.kyc_status === 'pending'"
+        <div @click="$router.push({ name: 'member_verification'})" v-if="$_current_user_data.kyc_status === 'pending'"
              class="dashboard__warning q-mt-md"
              style="background-color: #26A69A">
             <div class="icon"><q-icon name="info"></q-icon></div>
@@ -81,7 +81,7 @@
         </div>
         
         <!-- IF KYC REJECTED -->
-        <div v-if="$_current_user_data.kyc_status === 'rejected'"
+        <div @click="$router.push({ name: 'member_verification'})" v-if="$_current_user_data.kyc_status === 'rejected'"
              class="dashboard__warning q-mt-md"
              style="background-color: #FF7043">
             <div class="icon"><q-icon name="info"></q-icon></div>
@@ -92,7 +92,7 @@
         </div>
 
         <!-- IF KYC ACCEPTED -->
-        <div v-if="$_current_user_data.kyc_status === 'accepted'"
+        <div @click="$router.push({ name: 'member_verification'})" v-if="$_current_user_data.kyc_status === 'accepted'"
              class="dashboard__warning q-mt-md"
              style="background-color: #66BB6A">
             <div class="icon"><q-icon name="info"></q-icon></div>
