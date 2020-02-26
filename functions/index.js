@@ -1,22 +1,22 @@
 // Initialize dotenv to read .env file.
-const dotenv                    = require('dotenv');
+const dotenv                        = require('dotenv');
 dotenv.config();
 
-const FUNCTIONS                 = require('firebase-functions');
+const FUNCTIONS                     = require('firebase-functions');
 
-const FUNCTIONS_REGION          = FUNCTIONS.region('asia-northeast1');
-const FUNCTIONS_HTTPS           = FUNCTIONS_REGION.https; // FUNCTIONS.https
-const FUNCTIONS_PUBSUB          = FUNCTIONS_REGION.pubsub; // FUNCTIONS.https
-const FUNCTIONS_FIRESTORE       = FUNCTIONS_REGION.firestore; // For triggers
+const FUNCTIONS_REGION              = FUNCTIONS.region('asia-northeast1');
+const FUNCTIONS_HTTPS               = FUNCTIONS_REGION.https; // FUNCTIONS.https
+const FUNCTIONS_PUBSUB              = FUNCTIONS_REGION.pubsub; // FUNCTIONS.https
+const FUNCTIONS_FIRESTORE           = FUNCTIONS_REGION.firestore; // For triggers
 
-const account_controller        = require('./controllers/AccountController');
-const admin_controller          = require('./controllers/AdminController');
-const member_controller         = require('./controllers/MemberController');
-const test_controller           = require('./controllers/TestController');
-const schedule_controller       = require('./controllers/ScheduleController');
-const callback_controller       = require('./controllers/CallbackController');
-const user_trigger              = require('./triggers/UserTrigger');
-const initialize_controller     = require('./controllers/InitializerController');
+const account_controller            = require('./controllers/AccountController');
+const admin_controller              = require('./controllers/AdminController');
+const member_controller             = require('./controllers/MemberController');
+const test_controller               = require('./controllers/TestController');
+const schedule_controller           = require('./controllers/ScheduleController');
+const callback_controller           = require('./controllers/CallbackController');
+const user_trigger                  = require('./triggers/UserTrigger');
+const initialize_controller         = require('./controllers/InitializerController');
 
 // Member
 exports.submitKyc               = FUNCTIONS_HTTPS.onCall(member_controller.submitKyc);
@@ -28,6 +28,9 @@ exports.updateProfile           = FUNCTIONS_HTTPS.onCall(member_controller.updat
 exports.transferCrypto          = FUNCTIONS_HTTPS.onCall(member_controller.transferCrypto);
 exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
 exports.getTime                 = FUNCTIONS_HTTPS.onCall(member_controller.getTime);
+
+// KYC
+exports.getUserKycData          = FUNCTIONS_HTTPS.onCall(member_controller.getUserKycData);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);

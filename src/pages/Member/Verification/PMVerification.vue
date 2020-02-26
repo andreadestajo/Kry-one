@@ -10,8 +10,13 @@
                 Please wait for a notification regarding your verification status.
                 Thank you.
             </k-card>
-
-            <q-form v-if="!$_current_user_data.kyc_status">
+            <k-card v-else-if="$_current_user_data.kyc_status === 'accepted'" class="q-my-md q-pa-md q-px-lg">
+                Your KYC has been verified.
+            </k-card>
+            <k-card v-else-if="$_current_user_data.kyc_status === 'rejected'" class="q-my-md q-pa-md q-px-lg">
+                Your KYC has been rejected.
+            </k-card>
+            <q-form v-if="!$_current_user_data.kyc_status || $_current_user_data.kyc_status == 'rejected'">
                 <k-card class="q-my-md q-pa-md q-px-lg">
                     <!-- FIRST NAME -->
                     <k-field label="First Name">
@@ -188,6 +193,7 @@ import KAlertDialog from '../../../components/Shared/KAlertDialog'
 import {required}          from "vuelidate/src/validators";
 import {fbCall} 	       from "../../../utilities/Callables";
 import {FN_SUBMIT_KYC}     from "../../../references/refs_functions";
+import {FN_GET_KYC_DATA}   from "../../../references/refs_functions";
 import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
 
 
@@ -260,6 +266,30 @@ export default
                 }
             );
         },
+        async getUserKycData(){
+            try {
+                let kyc_data = await fbCall(FN_GET_KYC_DATA, this.$_current_user_data.id)
+                if(kyc_data)
+                {
+                    let moment                      = require('moment');
+                    this.form.first_name            = kyc_data.data.first_name;
+                    this.form.last_name             = kyc_data.data.last_name;
+                    this.form.middle_name           = kyc_data.data.middle_name;
+                    this.form.birthdate             = moment.unix(kyc_data.data.birthdate._seconds).format('YYYY/MM/DD');
+                    this.form.state_city            = kyc_data.data.state_city;
+                    this.form.country               = kyc_data.data.country;
+                    this.form.id_number             = kyc_data.data.id_number;
+                    this.form.id_expiration_date    = moment.unix(kyc_data.data.id_expiration_date._seconds).format('YYYY/MM/DD');
+                    this.form.id_type               = kyc_data.data.id_type;
+                    this.form.front_id_url          = kyc_data.data.front_id_url;
+                    this.form.back_id_url           = kyc_data.data.back_id_url;
+                    this.form.selfie_url            = kyc_data.data.selfie_url;
+
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
         confirmDialog()
         {
             
@@ -277,6 +307,9 @@ export default
         },
     },
 
+    mounted() {
+        this.getUserKycData();
+    },
     validations:
     {
         other_id_type   : {required},
