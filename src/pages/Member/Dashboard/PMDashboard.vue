@@ -349,13 +349,14 @@ export default
         },
         async getUserKycVerification()
         {
-            // const punctuations          = ['.', '!', '?'];
+            let user            = {};
+            user.kyc_status     = this.$_current_user_data.kyc_status;
             
-            const user_id               = await DB_USER.getCurrentUser().uid;
-            const kyc_verification      = await DB_KYC_VERIFICATION.get(user_id);
-
-            if(kyc_verification.status == 'rejected')
+            if(user.kyc_status == 'rejected')
             {
+                user.id                     = this.$_current_user_data.id;
+
+                const kyc_verification      = await DB_KYC_VERIFICATION.get(user.id);
                 this.reason_detail          = kyc_verification.reason != "" ? kyc_verification.reason : "";
             }
         }
