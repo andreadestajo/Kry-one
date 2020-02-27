@@ -88,6 +88,10 @@
             <div class="message">
                 <div class="message-title">KYC has been rejected.</div>
                 <div class="message-detail">We're sorry! Your KYC Verification has been rejected.</div>
+                <div v-if="reason_detail != ''" class="message-detail">{{reason_detail}}</div>
+                <div v-if="reason_detail != ''" class="message-detail">
+                    <font style="font-weight: bolder">Click here</font> to submit again
+                </div>
             </div>
         </div>
 
@@ -251,6 +255,7 @@ import DB_USER              from '../../../models/DB_USER';
 import DB_USER_EARNING      from '../../../models/DB_USER_EARNING';
 import DB_USER_COUNT        from '../../../models/DB_USER_COUNT';
 import DB_USER_MAX          from '../../../models/DB_USER_MAX';
+import DB_KYC_VERIFICATION  from '../../../models/DB_KYC_VERIFICATION';
 import { arrayToObject }    from "../../../utilities/ObjectUtils";
 import { fbCall }           from "../../../utilities/Callables";
 import { FN_GET_TIME }      from "../../../references/refs_functions";
@@ -276,6 +281,7 @@ export default
         remaining_time       : "CALCULATING",
         interval             : 0,
         project              : "krypto-one-live",
+        reason_detail        : ''
     }),
     computed:
     {
@@ -340,6 +346,18 @@ export default
             var MHSTime = measuredTime.toISOString().substr(11, 8);
 
             return MHSTime;
+        },
+        async getUserKycVerification()
+        {
+            // const punctuations          = ['.', '!', '?'];
+            
+            const user_id               = await DB_USER.getCurrentUser().uid;
+            const kyc_verification      = await DB_KYC_VERIFICATION.get(user_id);
+
+            if(kyc_verification.status == 'rejected')
+            {
+                this.reason_detail          = kyc_verification.reason != "" ? kyc_verification.reason : "";
+            }
         }
     },
     earning_breakdown:
@@ -360,6 +378,7 @@ export default
         }
 
         this.initializeData();
+        this.getUserKycVerification();
     },
     watch:
     {

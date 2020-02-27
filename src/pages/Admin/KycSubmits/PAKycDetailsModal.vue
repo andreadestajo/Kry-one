@@ -39,6 +39,7 @@
 <script>
     import KField from "../../../components/Admin/KField";
     import KModal from "../../../components/Admin/KModal"
+    import PAKycReasonModal  from  "./PAKycReasonModal";
     import DB_KYC_VERIFICATION from "../../../models/DB_KYC_VERIFICATION"
     import DB_USER from "../../../models/DB_USER";
     import { FN_KYC } from "../../../references/refs_functions";
@@ -51,7 +52,8 @@
         components:
         {
             KField,
-            KModal
+            KModal,
+            PAKycReasonModal
         },
         props:
         {
@@ -79,6 +81,10 @@
                 this.setKycDetails(kyc_details);
                 this.$refs.kModalRef.showModal();
             },
+            closeKycDetailsModal()
+            {
+                this.$refs.kModalRef.hideModal();
+            },
             setKycDetails(kyc_details)
             {
                 const formatted_details =
@@ -90,6 +96,10 @@
                 };
 
                 this.kyc_details_value = Object.assign({}, kyc_details, formatted_details);
+            },
+            showReasonModal()
+            {
+                this.$emit('reasonModalOpenEmit');
             },
             confirmSubmit(is_accepted)
             {
@@ -106,7 +116,7 @@
                         modified_by     : user_id,
                         modified_date   : new Date(),
                         user_id         : this.kyc_details_value.id,
-
+                        reason          : ""
                     };
 
                     // await DB_KYC_VERIFICATION.update(this.kyc_details_value.id, data);
@@ -126,6 +136,11 @@
                     this.$refs.kModalRef.hideModal()
                 };
 
+                if (is_accepted == undefined)
+                {
+                    this.showReasonModal();
+                    return;
+                }
                 this.$_showConfirmDialog(message, callback);
             }
         },

@@ -49,7 +49,8 @@
             </template>
         </k-table>
 
-        <pa-kyc-details-modal ref="kycDetailsModal" />
+        <pa-kyc-details-modal @reasonModalOpenEmit="showReasonModal" ref="kycDetailsModal" />
+        <pa-kyc-reason-modal @kycDetailsModalCloseEmit="closeKycDetailsModal" ref="kycReasonModal" />
     </q-page>
 </template>
 
@@ -57,6 +58,7 @@
     import KHeader             from '../../../components/Admin/KHeader'
     import KTable              from '../../../components/Admin/KTable'
     import PaKycDetailsModal   from './PAKycDetailsModal'
+    import PaKycReasonModal    from './PAKycReasonModal'
 
     import DB_KYC_VERIFICATION from '../../../models/DB_KYC_VERIFICATION'
 
@@ -64,7 +66,7 @@
 
     export default {
         name: "PAKycSubmits",
-        components: {PaKycDetailsModal, KHeader, KTable},
+        components: {PaKycReasonModal, PaKycDetailsModal, KHeader, KTable},
         data: () =>
         ({
             kyc_submits      : [],
@@ -77,6 +79,15 @@
             viewKycDetails(kyc_data)
             {
                 this.$refs.kycDetailsModal.showKycDetailsModal(kyc_data.details)
+                this.$refs.kycReasonModal.setKycDetails(kyc_data.details);
+            },
+            showReasonModal()
+            {
+                this.$refs.kycReasonModal.showKycReasonModal();
+            },
+            closeKycDetailsModal()
+            {
+                this.$refs.kycDetailsModal.closeKycDetailsModal();
             }
         },
         async mounted()
