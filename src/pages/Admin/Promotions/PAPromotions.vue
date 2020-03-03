@@ -60,12 +60,23 @@
                 }
 
                 await DB_PROMOTION.bindAllPromotions(this, params);
+            },
+            async fetchUsers()
+            {
+                let promotions = await DB_PROMOTION.getCollection('created_date', 'desc');
+                this.$bind('promotions', promotions);
             }
         },
         async mounted()
         {
-            this.$refs.kTableRef.showLoading();
-            await DB_PROMOTION.bindAllPromotions(this);
+            try {
+                this.$refs.kTableRef.showLoading();
+                this.fetchUsers();
+                await DB_PROMOTION.bindAllPromotions(this);
+                this.$refs.kTableRef.hideLoading();
+            } catch (error) {
+                console.log(error)
+            }
         },
         watch:
         {
@@ -80,11 +91,11 @@
                 {
                     promotions_data.push
                     ({
-                        name              : p.user_full_name,
+                        name              : p.full_name,
                         previous_nobility : p.previous_nobility_title,
-                        promoted_nobility : p.promoted_nobility_title,
-                        date_promoted     : this.$_formatDate(p.created_at.toDate(), 'MMMM DD, YYYY'),
-                        time_promoted     : this.$_formatDate(p.created_at.toDate(), 'hh:mm A'),
+                        promoted_nobility : p.nobility_title,
+                        date_promoted     : this.$_formatDate(p.created_date.toDate(), 'MMMM DD, YYYY'),
+                        time_promoted     : this.$_formatDate(p.created_date.toDate(), 'hh:mm A'),
                     })
                 });
 

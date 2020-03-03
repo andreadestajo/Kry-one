@@ -70,5 +70,22 @@ export default
         query = query.orderBy('created_at');
 
         return _this.$bind(options.name, query)
+    },
+    getCollection(order_by = null, order = null)
+    {
+        let collection;
+        if(order_by != null || order_by != '')
+        {
+            collection = DB.collection(this.table).orderBy(order_by)
+        }else 
+        if (order != null || order_by != '')
+        {
+            collection = DB.collection(this.table).orderBy(order_by, order)
+
+        }else
+        if(order_by != null || order_by != ''){
+            collection = DB.collection(this.table);
+        }
+        return collection;
     }
 }
