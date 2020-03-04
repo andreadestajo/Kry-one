@@ -1,4 +1,4 @@
-const {ADMIN_DB}    = require("../plugin/firebase");
+const {ADMIN_DB, ADMIN_AUTH}    = require("../plugin/firebase");
 const FieldValue    = require("firebase-admin").firestore.FieldValue;
 module.exports =
 {
@@ -124,5 +124,23 @@ module.exports =
             .catch(error => {
                 return {error}
             })
+    },
+
+    async disable(uid)
+    {
+        let result = await ADMIN_AUTH.updateUser(uid, {
+            disabled: true
+        })
+
+        return result;
+    },
+
+    async enable(uid)
+    {
+        let result = await ADMIN_AUTH.updateUser(uid, {
+            disabled: false
+        })
+
+        return result;
     }
 };

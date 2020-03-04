@@ -28,6 +28,7 @@ exports.updateProfile           = FUNCTIONS_HTTPS.onCall(member_controller.updat
 exports.transferCrypto          = FUNCTIONS_HTTPS.onCall(member_controller.transferCrypto);
 exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
 exports.getTime                 = FUNCTIONS_HTTPS.onCall(member_controller.getTime);
+exports.blockingStatus          = FUNCTIONS_HTTPS.onCall(member_controller.blockingStatus);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);

@@ -40,6 +40,20 @@
                                     <q-item-label>{{action.label}}</q-item-label>
                                 </q-item-section>
                             </q-item>
+
+                            <q-item clickable dense
+                                    v-close-popup
+                                    @click="blockingStatus({data: user.data})">
+                                <q-item-section avatar  >
+                                    <q-icon color="primary"
+                                            size="xs"
+                                            :name="user.data.is_block == true ? 'fas fa-key' : 'fas fa-ban'"
+                                    />
+                                </q-item-section>
+                                <q-item-section>
+                                    <q-item-label>{{user.data.is_block == true ? 'Unblock' : 'Block'}}</q-item-label>
+                                </q-item-section>
+                            </q-item>
                         </q-list>
                     </q-btn-dropdown>
                 </q-td>
@@ -115,10 +129,32 @@
                         break;
                     case 'monarchy':
                         break;
-                    case 'block_user':
-                        break;
                     default:
                         this.$_notify({message: 'Invalid action. Please try again'})
+                }
+            },
+            blockingStatus(item)
+            {
+                if (item.data.is_block == '' || item.data.is_block == undefined || item.data.is_block == false) 
+                {
+                    this.$router.push
+                    ({
+                        name  : 'admin_users_block',
+                        params: {
+                                block_status: 'block',
+                                user_id     : item.data.id
+                            }
+                    });
+                }else
+                {
+                    this.$router.push
+                    ({
+                        name  : 'admin_users_block',
+                        params: {
+                                block_status: 'unblock',
+                                user_id     : item.data.id
+                            }
+                    });
                 }
             },
             async searchUser()
@@ -157,7 +193,8 @@
                         contact_number : u.contact_number,
                         kyc_status     : u.kyc_status ? u.kyc_status.toUpperCase() : '',
                         id             : u.id,
-                        referral_code  : u.referral_code
+                        referral_code  : u.referral_code,
+                        is_block       : u.is_block,
                     })
                 });
 
@@ -181,7 +218,7 @@
             //{ label: 'Accelerate User', icon: 'trending_up'             , key: 'accelerate_user'},
             { label: 'Referrals'      , icon: 'people'                  , key: 'referrals'},
             //{ label: 'Monarchy'       , icon: 'fas fa-users'            , key: 'monarchy'},
-            //{ label: 'Block User'     , icon: 'fas fa-ban'              , key: 'block_user'},
+            // { label: 'Block User'     , icon: 'fas fa-ban'              , key: 'block_user'},
         ]
     }
 </script>

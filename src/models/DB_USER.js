@@ -97,7 +97,7 @@ export default
     {
         return await this.doc(id).delete();
     },
-    signIn(email, password)
+    async signIn(email, password)
     {
         return AUTH.signInWithEmailAndPassword(email, password)
     },
@@ -245,5 +245,5 @@ export default
 
         return _this.$bind(options.name, this.collection()
             .where('roles', 'array-contains', 'admin'))
-    }
+    },
 }
