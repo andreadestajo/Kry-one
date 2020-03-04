@@ -149,6 +149,15 @@
 
                     if(data)
                     {
+                        // If user is block
+                        if (data == 'login blocked')
+                        {
+                            console.error('you are blocked');
+                            this.$_hidePageLoading();
+
+                            return;
+                        }
+
                         // Get user data
                         let current_user = await DB_USER.doc(data.user.uid).get();
                         current_user = Object.assign(current_user.data(), {id: current_user.id});

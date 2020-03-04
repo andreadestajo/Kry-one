@@ -506,6 +506,14 @@ module.exports =
             .then(data => ({error: null, data}))
             .catch(error => ({error}));
 
+        if (data.fields.is_block == true)
+        {
+            let status = await MDB_USER.disable(data.uid);
+        }else
+        {
+            let status = await MDB_USER.enable(data.uid);
+        }
+
         if(update_data.error)
         {
             // HTTPS_ERROR('failed-precondition', update_data.error.errorInfo.message);

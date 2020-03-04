@@ -195,7 +195,8 @@ const routes = [
                 [
                     { name: 'admin_users_referrals' , path: 'referrals/:referral_code' , component: () => import('pages/Admin/Users/PAUsersReferralsModal.vue')},
                     { name: 'admin_users_wallet'    , path: 'wallet/:user_id'          , component: () => import('pages/Admin/Users/PAUsersWalletModal.vue')},
-                    { name: 'admin_users_edit'      , path: 'edit/:user_id'            , component: () => import('pages/Admin/Users/PAUsersEditModal.vue')}
+                    { name: 'admin_users_edit'      , path: 'edit/:user_id'            , component: () => import('pages/Admin/Users/PAUsersEditModal.vue')},
+                    { name: 'admin_users_block'     , path: ':block_status/:user_id'           , component: () => import('pages/Admin/Users/PAUsersBlockModal.vue')}
                 ]
             }
         ]

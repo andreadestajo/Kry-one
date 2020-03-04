@@ -97,8 +97,14 @@ export default
     {
         return await this.doc(id).delete();
     },
-    signIn(email, password)
+    async signIn(email, password)
     {
+        const is_block  = await this.isUserBlock(email);
+        console.log('is_block? ', is_block);
+        if(is_block === true){
+            return 'login blocked';
+        }
+
         return AUTH.signInWithEmailAndPassword(email, password)
     },
     signOut()
@@ -245,5 +251,11 @@ export default
 
         return _this.$bind(options.name, this.collection()
             .where('roles', 'array-contains', 'admin'))
+    },
+    async isUserBlock(email)
+    {
+        const user = await this.getUserByEmailAddress(email);
+
+        return user.is_block;
     }
 }
