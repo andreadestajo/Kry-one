@@ -497,5 +497,23 @@ module.exports =
         }
 
         return update_data;
+    },
+
+    async blockingStatus(user)
+    {
+        let data            = JSON.parse(user);
+        const update_data   = await MDB_USER.update(data.uid, data.fields)
+            .then(data => ({error: null, data}))
+            .catch(error => ({error}));
+
+        if(update_data.error)
+        {
+            // HTTPS_ERROR('failed-precondition', update_data.error.errorInfo.message);
+            console.log(update_data.error)
+            return 0;
+        }
+
+        console.log(data)
+        return update_data;
     }
 };
