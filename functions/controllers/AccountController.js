@@ -3,6 +3,7 @@ const momentTZ = moment.tz('Asia/Manila');
 
 const {ADMIN_AUTH, HTTPS_ERROR}   = require('../plugin/firebase');
 const MDB_USER                    = require('../models/MDB_USER');
+const MDB_STATS                   = require('../models/MDB_STATS');
 const MDB_ENLIST_KNIGHT           = require('../models/MDB_ENLIST_KNIGHT');
 
 const {sendMail}                  = require('../globals/EmailHelper');
@@ -116,8 +117,13 @@ module.exports =
             photo_url      : user_record.photoURL      ? user_record.photoURL      : null,
             ...user_info
         })
-        .then((res) =>
+        .then(async (res) =>
         {
+            // update user statistics
+            // increment total user and not submitted kyc
+            let user_stat        = new MDB_STATS('users');
+            await user_stat.incrementField('total');
+            await user_stat.incrementField('kyc_not_submitted');
             return {error: false}
         })
         .catch((error) =>

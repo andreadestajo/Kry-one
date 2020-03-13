@@ -19,16 +19,17 @@ const user_trigger                  = require('./triggers/UserTrigger');
 const initialize_controller         = require('./controllers/InitializerController');
 
 // Member
-exports.submitKyc               = FUNCTIONS_HTTPS.onCall(member_controller.submitKyc);
-exports.transferWallet          = FUNCTIONS_HTTPS.onCall(member_controller.transferWallet);
-exports.upgradeAccount          = FUNCTIONS_HTTPS.onCall(member_controller.upgradeAccount);
-exports.readNewNotifications    = FUNCTIONS_HTTPS.onCall(member_controller.readNewNotifications);
-exports.enlistKnight            = FUNCTIONS_HTTPS.onCall(member_controller.enlistKnight);
-exports.updateProfile           = FUNCTIONS_HTTPS.onCall(member_controller.updateProfile);
-exports.transferCrypto          = FUNCTIONS_HTTPS.onCall(member_controller.transferCrypto);
-exports.placeDownline           = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
-exports.getTime                 = FUNCTIONS_HTTPS.onCall(member_controller.getTime);
-exports.blockingStatus          = FUNCTIONS_HTTPS.onCall(member_controller.blockingStatus);
+exports.submitKyc                   = FUNCTIONS_HTTPS.onCall(member_controller.submitKyc);
+exports.transferWallet              = FUNCTIONS_HTTPS.onCall(member_controller.transferWallet);
+exports.upgradeAccount              = FUNCTIONS_HTTPS.onCall(member_controller.upgradeAccount);
+exports.readNewNotifications        = FUNCTIONS_HTTPS.onCall(member_controller.readNewNotifications);
+exports.enlistKnight                = FUNCTIONS_HTTPS.onCall(member_controller.enlistKnight);
+exports.updateProfile               = FUNCTIONS_HTTPS.onCall(member_controller.updateProfile);
+exports.transferCrypto              = FUNCTIONS_HTTPS.onCall(member_controller.transferCrypto);
+exports.placeDownline               = FUNCTIONS_HTTPS.onCall(member_controller.placeDownline);
+exports.getTime                     = FUNCTIONS_HTTPS.onCall(member_controller.getTime);
+exports.blockingStatus              = FUNCTIONS_HTTPS.onCall(member_controller.blockingStatus);
+exports.populatePromotionFilters    = FUNCTIONS_HTTPS.onCall(member_controller.populatePromotionFilters);
 
 // Account
 exports.register                = FUNCTIONS_HTTPS.onCall(account_controller.register);

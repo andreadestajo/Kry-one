@@ -85,6 +85,15 @@ module.exports =
                 promotions.amount                   = 0;
                 promotions.required_price           = 0;  
                 promotions.created_date             = new Date();
+                // filters
+                // lower case the filters for search accuracy
+                promotions.filters                  = [
+                                                        promotions.full_name.toLowerCase(),
+                                                        promotions.previous_nobility_title.toLowerCase(),
+                                                        promotions.nobility_title.toLowerCase(),
+                                                        promotions.created_date.toLowerCase(),
+                                                        user_info.email.toLowerCase()
+                                                      ]
 
                 promise_list.push(MDB_PROMOTION.add(promotions));
 

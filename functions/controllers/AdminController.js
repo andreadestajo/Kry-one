@@ -7,6 +7,7 @@ const MDB_ISSUE_WALLET          = require('../models/MDB_ISSUE_WALLET');
 const MDB_USER_NOTIFICATION     = require('../models/MDB_USER_NOTIFICATION');
 const MDB_KYC_VERIFICATION      = require('../models/MDB_KYC_VERIFICATION');
 const MDB_TRANSFER_CRYPTO       = require('../models/MDB_TRANSFER_CRYPTO');
+const MDB_STATS                 = require('../models/MDB_STATS');
 const { HTTPS_ERROR }           = require('../plugin/firebase');
 const AUTH                      = require('../globals/Auth');
 const WALLET                    = require('../globals/Wallet');
@@ -34,10 +35,26 @@ module.exports =
 
         console.log(data);
 
+        let user_data       = await MDB_USER.get(data.user_id);
+
         await MDB_USER_NOTIFICATION.addNew(data.user_id, description, logged_in_user.photo_url)
         await MDB_KYC_VERIFICATION.update(data.user_id, data);
-        await MDB_USER.update(data.user_id, {kyc_status: data.status});
+        await MDB_USER.update(data.user_id, {
+            kyc_status: data.status,
+            previous_kyc_status: user_data.kyc_status && user_data.kyc_status != '' ? user_data.kyc_status : 'not submitted'
+        });
 
+        let mdb_stats   = new MDB_STATS('users');
+
+        // update statistics
+        if(user.data.kyc_status == '')
+        {
+            // if kyc status is empty string, decrement kyc_not_submitted
+            await mdb.decrementField('kyc_not_submitted');
+        }else{
+            await mdb_stats.decrementField('kyc_' + user_data.kyc_status);
+        }
+        await mdb_stats.incrementField('kyc_' + data.status);
         console.log(data);
     },
     async promoteUser(data, context)

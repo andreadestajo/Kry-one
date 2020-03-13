@@ -57,7 +57,7 @@ export default
         // Filter or pagination here
         if(options.hasOwnProperty('search_text'))
         {
-            query = query.where("filters", "array-contains", options.search_text)
+            query = query.where("filters", "array-contains", options.search_text.toLowerCase())
         }
 
         // Set default name
@@ -67,25 +67,8 @@ export default
         }
 
         // order
-        query = query.orderBy('created_at');
+        query = query.orderBy('created_date', 'desc');
 
         return _this.$bind(options.name, query)
-    },
-    getCollection(order_by = null, order = null)
-    {
-        let collection;
-        if(order_by != null || order_by != '')
-        {
-            collection = DB.collection(this.table).orderBy(order_by)
-        }else 
-        if (order != null || order_by != '')
-        {
-            collection = DB.collection(this.table).orderBy(order_by, order)
-
-        }else
-        if(order_by != null || order_by != ''){
-            collection = DB.collection(this.table);
-        }
-        return collection;
     }
 }

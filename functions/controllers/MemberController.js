@@ -523,5 +523,31 @@ module.exports =
 
         console.log(data)
         return update_data;
+    },
+
+    async populatePromotionFilters()
+    {
+        let promotions = await MDB_PROMOTION.getMany();
+        if(!promotions.empty)
+        {
+            promotions.forEach(async (promotion, index) => 
+            {
+                if(!promotion.filters)
+                {
+                    let filters = [];
+
+                    let user    = await MDB_USER.get(promotion.user_id);
+
+                    filters.push(promotion.full_name.toString().toLowerCase());
+                    filters.push(promotion.previous_nobility_title.toString().toLowerCase());
+                    filters.push(promotion.nobility_title.toString().toLowerCase());
+                    filters.push(promotion.created_date);
+                    filters.push(user.email.toString().toLowerCase());
+
+                    await MDB_PROMOTION.update(promotion.id, {filters: filters});
+                }
+            });
+            return {message: 'execution done'}
+        }
     }
 };
