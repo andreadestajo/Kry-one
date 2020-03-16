@@ -266,31 +266,31 @@ export default
                 }
             );
         },
-        // async getUserKycData(){
-        //     try {
-        //         let kyc_data    = await DB_KYC_VERIFICATION.get(this.$_current_user_data.id);
+        async getUserKycData(){
+            try {
 
-        //         if(kyc_data)
-        //         {
-        //             let moment                      = require('moment');
-        //             this.form.first_name            = kyc_data.first_name;
-        //             this.form.last_name             = kyc_data.last_name;
-        //             this.form.middle_name           = kyc_data.middle_name;
-        //             this.form.birthdate             = moment.unix(kyc_data.birthdate.seconds).format('YYYY/MM/DD');
-        //             this.form.state_city            = kyc_data.state_city;
-        //             this.form.state_city            = kyc_data.state_city;
-        //             this.form.country               = kyc_data.country;
-        //             this.form.id_number             = kyc_data.id_number;
-        //             this.form.id_expiration_date    = moment.unix(kyc_data.id_expiration_date.seconds).format('YYYY/MM/DD');
-        //             this.form.id_type               = kyc_data.id_type;
-        //             this.form.front_id_url          = kyc_data.front_id_url;
-        //             this.form.back_id_url           = kyc_data.back_id_url;
-        //             this.form.selfie_url            = kyc_data.selfie_url;
-        //         }
-        //     } catch (error) {
-        //         console.log(error)
-        //     }
-        // },
+                if(this.$_current_user_data.status == 'rejected')
+                {
+                    let kyc_data                    = await DB_KYC_VERIFICATION.get(this.$_current_user_data.id);
+                    let moment                      = require('moment');
+                    this.form.first_name            = kyc_data.first_name;
+                    this.form.last_name             = kyc_data.last_name;
+                    this.form.middle_name           = kyc_data.middle_name;
+                    this.form.birthdate             = moment.unix(kyc_data.birthdate.seconds).format('YYYY/MM/DD');
+                    this.form.state_city            = kyc_data.state_city;
+                    this.form.state_city            = kyc_data.state_city;
+                    this.form.country               = kyc_data.country;
+                    this.form.id_number             = kyc_data.id_number;
+                    this.form.id_expiration_date    = moment.unix(kyc_data.id_expiration_date.seconds).format('YYYY/MM/DD');
+                    this.form.id_type               = kyc_data.id_type;
+                    this.form.front_id_url          = kyc_data.front_id_url;
+                    this.form.back_id_url           = kyc_data.back_id_url;
+                    this.form.selfie_url            = kyc_data.selfie_url;
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        },
         confirmDialog()
         {
             

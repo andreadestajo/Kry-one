@@ -60,18 +60,13 @@
                 }
 
                 await DB_PROMOTION.bindAllPromotions(this, params);
+                this.$refs.kTableRef.hideLoading();
             },
-            async fetchUsers()
-            {
-                let promotions = await DB_PROMOTION.getCollection('created_date', 'desc');
-                this.$bind('promotions', promotions);
-            }
         },
         async mounted()
         {
             try {
                 this.$refs.kTableRef.showLoading();
-                this.fetchUsers();
                 await DB_PROMOTION.bindAllPromotions(this);
                 this.$refs.kTableRef.hideLoading();
             } catch (error) {

@@ -203,7 +203,6 @@ export default
     bindAllUsers(_this, options = {})
     {
         let query = this.collection();
-
         // Filter or pagination here
         if(options.hasOwnProperty('search_text'))
         {
@@ -217,7 +216,7 @@ export default
         }
 
         // order
-        query = query.orderBy('full_name');
+        query = query.orderBy('created_at', 'desc');
 
         return _this.$bind(options.name, query)
     },

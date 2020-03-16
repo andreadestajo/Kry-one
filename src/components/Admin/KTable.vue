@@ -4,7 +4,8 @@
              :columns="columns"
              row-key="name"
              :loading="is_loading"
-             class="ktable">
+             class="ktable"
+             :pagination.sync="tbl_pagination">
 
         <template v-slot:top>
             <slot name="table_top"></slot>
@@ -29,7 +30,8 @@
         },
         data: () =>
         ({
-            is_loading: false
+            is_loading: false,
+            tbl_pagination : {rowsPerPage: 15}
         }),
         methods:
         {

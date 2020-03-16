@@ -16,6 +16,7 @@
             </template>
 
             <template slot="table_rows" slot-scope="user">
+                <q-td key="created_at">{{ user.data.created_at}}</q-td>
                 <q-td key="name">{{ user.data.name }}</q-td>
                 <q-td key="email">{{ user.data.email }}</q-td>
                 <q-td key="nobility">{{ user.data.nobility_info.title }}</q-td>
@@ -69,6 +70,8 @@
 </template>
 
 <script>
+    import moment                  from 'moment'
+
     import KHeader                 from '../../../components/Admin/KHeader'
     import KTable                  from '../../../components/Admin/KTable'
 
@@ -195,6 +198,7 @@
                         id             : u.id,
                         referral_code  : u.referral_code,
                         is_block       : u.is_block,
+                        created_at     : moment.unix(u.created_at.seconds).format("MMMM D, YYYY")
                     })
                 });
 
@@ -203,6 +207,7 @@
         },
         columns:
         [
+            { name: 'created_at'     , label: 'Date Joined'     , field: 'created_at'     , align: 'center', sortable: true},
             { name: 'name'           , label: 'Name'             , field: 'name'           , align: 'center', sortable: true},
             { name: 'email'          , label: 'Email'            , field: 'email'          , align: 'center', sortable: true},
             { name: 'nobility'       , label: 'Nobility'         , field: 'nobility'       , align: 'center', sortable: true},
