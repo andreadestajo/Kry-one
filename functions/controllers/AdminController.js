@@ -47,7 +47,7 @@ module.exports =
         let mdb_stats   = new MDB_STATS('users');
 
         // update statistics
-        if(user.data.kyc_status == '')
+        if(user_data.kyc_status == '')
         {
             // if kyc status is empty string, decrement kyc_not_submitted
             await mdb.decrementField('kyc_not_submitted');
