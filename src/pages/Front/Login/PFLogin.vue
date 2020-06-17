@@ -181,6 +181,12 @@
                 })
                 .catch(error => {
                     console.log(error);
+
+                    // if user is block
+                    if (error.code == 'auth/user-disabled')
+                    {
+                        this.$router.push({name: 'front_block'});
+                    }
                     // Show a snackbar here
                     this.login_error_code = error.code;
                     this.$_hidePageLoading();

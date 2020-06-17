@@ -23,6 +23,11 @@ const routes = [
                 path: 'unverified',
                 component: () => import('pages/Front/Login/PFUnverifiedUser.vue')
             },
+            {   
+                name: 'front_block',
+                path: 'block',
+                component: () => import('pages/Front/Login/PFBlock.vue')
+            },
 			{   
                 name: 'front_register', 
                 path: 'register',
@@ -196,7 +201,7 @@ const routes = [
                     { name: 'admin_users_referrals' , path: 'referrals/:referral_code' , component: () => import('pages/Admin/Users/PAUsersReferralsModal.vue')},
                     { name: 'admin_users_wallet'    , path: 'wallet/:user_id'          , component: () => import('pages/Admin/Users/PAUsersWalletModal.vue')},
                     { name: 'admin_users_edit'      , path: 'edit/:user_id'            , component: () => import('pages/Admin/Users/PAUsersEditModal.vue')},
-                    { name: 'admin_users_block'     , path: ':block_status/:user_id'           , component: () => import('pages/Admin/Users/PAUsersBlockModal.vue')}
+                    { name: 'admin_users_block'     , path: ':block_status/:user_id'   , component: () => import('pages/Admin/Users/PAUsersBlockModal.vue')}
                 ]
             }
         ]
