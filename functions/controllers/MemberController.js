@@ -400,9 +400,10 @@ module.exports =
         data.amount = Number(data.amount);
 
         // Validate amount
-        if (data.amount < 0.0001)
+        // Minimum amount must be $100
+        if (data.amount <0.011383)
         {
-            HTTPS_ERROR('failed-precondition', `Minimum amount is 0.0001.`);
+            HTTPS_ERROR('failed-precondition', `Minimum amount is 0.011383.`);
         }
         
         // Validate BTC
