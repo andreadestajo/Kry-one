@@ -41,6 +41,7 @@ exports.resendEmailVerification = FUNCTIONS_HTTPS.onCall(account_controller.rese
 exports.promoteUser             = FUNCTIONS_HTTPS.onCall(admin_controller.promoteUser);
 exports.issueWallet             = FUNCTIONS_HTTPS.onCall(admin_controller.issueWallet);
 exports.rejectTransfer          = FUNCTIONS_HTTPS.onCall(admin_controller.rejectTransfer);
+exports.approveTransfer         = FUNCTIONS_HTTPS.onCall(admin_controller.approveTransfer);
 exports.processTransfer         = FUNCTIONS_HTTPS.onCall(admin_controller.processTransfer);
 exports.checkCentralWallet      = FUNCTIONS_HTTPS.onCall(admin_controller.checkCentralWallet);
 exports.updateUserDetails       = FUNCTIONS_HTTPS.onCall(admin_controller.updateUserDetails);

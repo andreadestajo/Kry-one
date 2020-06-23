@@ -145,7 +145,7 @@ import KTable                  from '../../../components/Admin/KTable'
 import DB_TRANSFER_CRYPTO      from '../../../models/DB_TRANSFER_CRYPTO'
 import DB_CRYPTO_REPORT      from '../../../models/DB_CRYPTO_REPORT'
 
-import { FN_REJECT_TRANSFER, FN_PROCESS_TRANSFER, FN_CHECK_CENTRAL_WALLET } from "../../../references/refs_functions";
+import { FN_REJECT_TRANSFER, FN_APPROVE_TRANSFER, FN_PROCESS_TRANSFER, FN_CHECK_CENTRAL_WALLET } from "../../../references/refs_functions";
 
 import { fbCall } 			   from "../../../utilities/Callables";
 
@@ -326,6 +326,29 @@ export default {
                             this.$q.loading.hide();
                         }
                         break;
+                    case 'approve':
+                        if (confirm('Are you sure?'))
+                        {
+                            this.$q.loading.show();
+
+                            try
+                            {
+                                let res = await fbCall(FN_APPROVE_TRANSFER, 
+                                {
+                                    id:         item.data.id,
+                                    currency:   item.data.currency
+                                });
+                                
+                                this.$q.notify({ message: res.data.message, color: 'green' });
+                            }
+                            catch (e)
+                            {
+                                this.$q.notify({ message: err.message, color: 'red' });
+                            }
+                            
+                            this.$q.loading.hide();
+                        }
+                        break;
                     default:
                         this.$_notify({message: 'Invalid action. Please try again'})
                 }
@@ -489,6 +512,7 @@ export default {
         actions:
         [
             { label: 'Reject'     , icon: 'fas fa-ban'   , key: 'reject'},
+            { label: 'Approve'     , icon: 'fas fa-check'   , key: 'approve'},
         ]
     }
 </script>

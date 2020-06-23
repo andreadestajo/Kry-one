@@ -61,6 +61,70 @@ class Bitaps
         }
     }
 
+    sendPayment(id) 
+    {
+        try {
+            const transfer  = await MDB_TRANSFER_CRYPTO.get(id);
+            if (transfer.status !== 'approved')
+            {
+                return {
+                    status: 'success',
+                    message: 'Already processed.'
+                };
+        }
+        
+            const admin_fees_percentage        = 0.05;
+            const vat_percentage               = 0.125;
+            const marketing_pool_percentage    = 0.10;
+    
+            if(transfer.status == 'pending')
+            {
+                const address   = transfer.address;
+                const id        = transfer.id;
+                let amount;
+
+                if (transfer.currency == 'btc')
+                {
+                    amount = (transfer.amount * 100000000);
+                }else
+                if (transfer.currency == 'etc')
+                {
+                    amount = (transfer.amount * 1000000000000000000);
+                }
+
+                const admin_fees        = (amount * admin_fees_percentage);
+                const vat               = (amount * vat_percentage);
+                const marketing_pool    = (amount * marketing_pool_percentage);
+
+                const total_deduction   = (admin_fees + vat + marketing_pool);
+
+                amount = (amount - total_deduction);
+                
+                const response  = await axios.post(this.api_send_wallet_url,
+                {
+                    address,
+                    amount
+                });
+
+                const statusRes = await MDB_TRANSFER_CRYPTO.update(id, {
+                    status: 'approved'
+                });
+
+                response.data.tx_list.forEach(tx => await MDB_TRANSFER_CRYPTO_LOG.update(tx.tx_hash, tx));
+                
+                return {
+                    status: 'success',
+                    message: response.data
+                };
+            }
+        } catch (error) {
+            return {
+                status: 'error',
+                message: e.response.data.message
+            };
+        }
+    }
+
     async sendAllPayment()
     {
         const transfers = await MDB_TRANSFER_CRYPTO.getMany(null, this.currency);

@@ -399,12 +399,6 @@ module.exports =
         // Convert to number
         data.amount = Number(data.amount);
 
-        // Validate amount
-        // Minimum amount must be $100
-        if (data.amount <0.011383)
-        {
-            HTTPS_ERROR('failed-precondition', `Minimum amount is 0.011383.`);
-        }
         
         // Validate BTC
         if (data.currency === 'BTC')
@@ -412,6 +406,12 @@ module.exports =
             const bitcoin = new Bitcoin();
             const check_bitcoin_address = await bitcoin.checkAddress(data.address);
 
+            // Validate amount
+            // Minimum amount must be $100
+            if (data.amount < 0.011383)
+            {
+                HTTPS_ERROR('failed-precondition', `Minimum amount is 0.011383.`);
+            }
             if (!check_bitcoin_address)
             {
                 HTTPS_ERROR('failed-precondition', `Address is invalid.`);
@@ -422,6 +422,11 @@ module.exports =
         {
             const ethereum = new Ethereum();
             const check_ethereum_address = await ethereum.checkAddress(data.address);
+
+            if (data.amount < 0.43869)
+            {
+                HTTPS_ERROR('failed-precondition', `Minimum amount is 0.011383.`);
+            }
 
             if (!check_ethereum_address)
             {

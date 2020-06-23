@@ -117,8 +117,8 @@ module.exports =
     {
         await AUTH.admin_only(context);
         
-        const transfer_info = await MDB_TRANSFER_CRYPTO.get(data.id);
-        const transfer_update = MDB_TRANSFER_CRYPTO.update(data.id, 
+        const transfer_info     = await MDB_TRANSFER_CRYPTO.get(data.id);
+        const transfer_update   = await MDB_TRANSFER_CRYPTO.update(data.id, 
         {
             status: 'rejected'
         });
@@ -128,6 +128,45 @@ module.exports =
         await WALLET.add(promise[0].issue_by_id, promise[0].currency, (promise[0].amount + promise[0].charge), 'received', 'Wallet transfer rejected');
 
         return { status: 'success', message: 'Successfully rejected the transfer.' };
+    },
+
+    async approveTransfer(data, context) {
+        try {
+            await AUTH.admin_only(context);
+
+            if (data.currency == "btc")
+            {
+                const bitcoin           = new Bitcoin();
+                const bitcoin_result    = bitcoin.sendPayment(data.id);
+    
+                if (bitcoin_result.status == "success")
+                {
+                    return { status: 'success', message: 'Successfully transfered the request.' };
+                }
+                else if(bitcoin_result.status == "error")
+                {
+                    return { status: 'error', message: bitcoin_result.message };
+                }
+            }
+    
+            if (data.currency == "eth")
+            {
+                const ethereum          = new Ethereum();
+                const ethereum_result   = bitcoin.sendPayment(data.id);
+                
+                if (ethereum_result.status == "success")
+                {
+                    return { status: 'success', message: 'Successfully transfered the request.' };
+                }
+                else if(ethereum_result.status == "error")
+                {
+                    return { status: 'error', message: ethereum_result.message };
+                }
+            }
+
+        } catch (error) {
+            return { status: 'error', message: error };
+        }
     },
 
     async processTransfer(data, context)
