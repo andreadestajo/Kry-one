@@ -152,7 +152,7 @@ module.exports =
             if (data.currency == "eth")
             {
                 const ethereum          = new Ethereum();
-                const ethereum_result   = bitcoin.sendPayment(data.id);
+                const ethereum_result   = ethereum.sendPayment(data.id);
                 
                 if (ethereum_result.status == "success")
                 {

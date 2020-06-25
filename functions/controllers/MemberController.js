@@ -394,23 +394,39 @@ module.exports =
 
         return {status: 'success', message: `${downline_to_place.full_name} has been successfully placed to ${data.position} of ${upline_info.full_name}`};
     },
+    async minimumAmount (currency, amount) {
+
+        return await MDB_CURRENCY.get(currency).then(async (doc) => {
+            let min_amount = amount / doc.USD;
+            console.log(min_amount)
+            min_amount     = min_amount.toFixed(3)
+
+            return min_amount;
+            
+        }).catch(err => {
+            console.log(err)
+            return err
+        });
+    },
     async transferCrypto(data, context)
     {   
         // Convert to number
-        data.amount = Number(data.amount);
-
+        data.amount     = Number(data.amount);
         
         // Validate BTC
         if (data.currency === 'BTC')
         {
+            let minimum_btc = await minimumAmount('BTC', 100);
+    
+
             const bitcoin = new Bitcoin();
             const check_bitcoin_address = await bitcoin.checkAddress(data.address);
 
             // Validate amount
             // Minimum amount must be $100
-            if (data.amount < 0.011383)
+            if (data.amount < minimum_btc)
             {
-                HTTPS_ERROR('failed-precondition', `Minimum amount is 0.011383.`);
+                HTTPS_ERROR('failed-precondition', `Minimum amount is ${minimum_btc}`);
             }
             if (!check_bitcoin_address)
             {
@@ -420,12 +436,14 @@ module.exports =
         // Validate ETH
         else if (data.currency === 'ETH')
         {
+            let minimum_eth = await minimumAmount('BTC', 100);
+
             const ethereum = new Ethereum();
             const check_ethereum_address = await ethereum.checkAddress(data.address);
 
-            if (data.amount < 0.43869)
+            if (data.amount < minimum_eth)
             {
-                HTTPS_ERROR('failed-precondition', `Minimum amount is 0.011383.`);
+                HTTPS_ERROR('failed-precondition', `Minimum amount is ${minimum_eth}.`);
             }
 
             if (!check_ethereum_address)
