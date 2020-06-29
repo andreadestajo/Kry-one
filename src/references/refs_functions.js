@@ -24,7 +24,7 @@ FN_PROMOTE_USER         = `promoteUser`,
 FN_KYC                  = `kyc`,
 FN_REJECT_TRANSFER      = `rejectTransfer`,
 FN_APPROVE_TRANSFER     = `approveTransfer`,
-FN_PROCESS_TRANSFER     = `processTransfer`,
+// FN_PROCESS_TRANSFER     = `processTransfer`,
 FN_CHECK_CENTRAL_WALLET = `checkCentralWallet`,
 FN_UPDATE_USER_DETAILS  = `updateUserDetails`;
 

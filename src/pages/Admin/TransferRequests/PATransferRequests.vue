@@ -53,7 +53,7 @@
                         <q-btn flat round color="primary" icon="search" @click="searchUser"/>
                     </template>
                 </q-input> -->
-                <q-btn @click="processAll()" label="Process Payout (First 100 Requests)" style="width: 100%;" unelevated color="primary" />
+                <!-- <q-btn @click="processAll()" label="Process Payout (First 100 Requests)" style="width: 100%;" unelevated color="primary" /> -->
             </template>
 
             <template slot="table_rows" slot-scope="user">
@@ -218,27 +218,27 @@ export default {
         }),
         methods:
         {
-            async processAll()
-            {
-                if (confirm('Are you sure?'))
-                {
-                    this.$q.loading.show();
+            // async processAll()
+            // {
+            //     if (confirm('Are you sure?'))
+            //     {
+            //         this.$q.loading.show();
 
-                    try
-                    {
-                        let res = await fbCall(FN_PROCESS_TRANSFER);
-                        this.$q.notify({ message: res.data.message, color: res.data.status === 'success' ? 'green' : 'red' });
-                    }
-                    catch (e)
-                    {
-                        this.$q.notify({ message: err.message, color: 'red' });
-                    }
+            //         try
+            //         {
+            //             let res = await fbCall(FN_PROCESS_TRANSFER);
+            //             this.$q.notify({ message: res.data.message, color: res.data.status === 'success' ? 'green' : 'red' });
+            //         }
+            //         catch (e)
+            //         {
+            //             this.$q.notify({ message: err.message, color: 'red' });
+            //         }
 
-                    await this.reload();
+            //         await this.reload();
                     
-                    this.$q.loading.hide();
-                }
-            },
+            //         this.$q.loading.hide();
+            //     }
+            // },
             async reload()
             {
                 this.$unbind('users_wew');
@@ -338,12 +338,21 @@ export default {
                                     id:         item.data.id,
                                     currency:   item.data.currency
                                 });
+
+                                if(res.data.status == 'error')
+                                {
+                                    this.$q.notify({ message: res.data.message, color: 'red' });
+                                    this.$q.loading.hide();
+                                    return;
+                                }
                                 
                                 this.$q.notify({ message: res.data.message, color: 'green' });
                             }
                             catch (e)
                             {
-                                this.$q.notify({ message: err.message, color: 'red' });
+                                console.log("ERROR")
+                                console.log(e)
+                                this.$q.notify({ message: e.data.message, color: 'red' });
                             }
                             
                             this.$q.loading.hide();
@@ -369,7 +378,7 @@ export default {
         async mounted()
         {
             this.$refs.kTableRef.showLoading();
-            await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
+            let transfers = await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
             this.$refs.kTableRef.hideLoading();
             
             const promise1 = fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'btc' }).then(btc => 

@@ -137,7 +137,7 @@ module.exports =
             if (data.currency == "btc")
             {
                 const bitcoin           = new Bitcoin();
-                const bitcoin_result    = bitcoin.sendPayment(data.id);
+                const bitcoin_result    = await bitcoin.sendPayment(data.id);
     
                 if (bitcoin_result.status == "success")
                 {
@@ -152,7 +152,7 @@ module.exports =
             if (data.currency == "eth")
             {
                 const ethereum          = new Ethereum();
-                const ethereum_result   = ethereum.sendPayment(data.id);
+                const ethereum_result   = await ethereum.sendPayment(data.id);
                 
                 if (ethereum_result.status == "success")
                 {
@@ -169,38 +169,38 @@ module.exports =
         }
     },
 
-    async processTransfer(data, context)
-    {
-        await AUTH.admin_only(context);
+    // async processTransfer(data, context)
+    // {
+    //     await AUTH.admin_only(context);
 
-        const bitcoin = new Bitcoin();
-        const bitcoin_result = bitcoin.sendAllPayment();
+    //     const bitcoin = new Bitcoin();
+    //     const bitcoin_result = bitcoin.sendAllPayment();
 
-        const ethereum = new Ethereum();
-        const ethereum_result = ethereum.sendAllPayment();
+    //     const ethereum = new Ethereum();
+    //     const ethereum_result = ethereum.sendAllPayment();
         
-        const response = await Promise.all([bitcoin_result, ethereum_result]);
+    //     const response = await Promise.all([bitcoin_result, ethereum_result]);
 
-        if (response[0].status === 'success' && response[1].status === 'success')
-        {
-            return { status: 'success', message: 'Successfully transfered all requests.' };
-        }
-        else
-        {
-            if (response[0].status === 'error')
-            {
-                return { status: 'error', message: response[0].message };
-            }
-            else if (response[1].status === 'error')
-            {
-                return { status: 'error', message: response[1].message };
-            }
-            else
-            {
-                return { status: 'error', message: 'Some error occured. Please try again later.' }; 
-            }
-        }
-    },
+    //     if (response[0].status === 'success' && response[1].status === 'success')
+    //     {
+    //         return { status: 'success', message: 'Successfully transfered all requests.' };
+    //     }
+    //     else
+    //     {
+    //         if (response[0].status === 'error')
+    //         {
+    //             return { status: 'error', message: response[0].message };
+    //         }
+    //         else if (response[1].status === 'error')
+    //         {
+    //             return { status: 'error', message: response[1].message };
+    //         }
+    //         else
+    //         {
+    //             return { status: 'error', message: 'Some error occured. Please try again later.' }; 
+    //         }
+    //     }
+    // },
 
     async checkCentralWallet(data, context)
     {

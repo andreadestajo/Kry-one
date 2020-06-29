@@ -15,7 +15,7 @@ class Bitaps
         this.callback_url = `https://asia-northeast1-krypto-one-live.cloudfunctions.net/bitapsCallback`;
 
         /* Staging */
-        // this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
+        this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
 
         // created wallet by Don
         // "wallet_id": "BTCvsbGPdEi4CiCYt8ygRoJJW4GvmSpdBAi9wthfDf4o8xz3i4AgZ",
@@ -23,7 +23,7 @@ class Bitaps
         // "currency": "tBTC"
 
         /* Production */
-        this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
+        // this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
 
         this.api_create_wallet_url = `${ this.api_url }/create/wallet/payment/address`;
         this.api_send_wallet_url = `${ this.api_url }/wallet/send/payment/${ this.wallet_id }`;
@@ -70,13 +70,14 @@ class Bitaps
     {
         try {
             const transfer  = await MDB_TRANSFER_CRYPTO.get(id);
-            if (transfer.status !== 'approved')
+            if (transfer.status != 'pending')
             {
                 return {
                     status: 'success',
                     message: 'Already processed.'
                 };
-        }
+            }
+
         
             const admin_fees_percentage        = 0.05;
             const vat_percentage               = 0.125;
@@ -97,6 +98,14 @@ class Bitaps
                     amount = (transfer.amount * 1000000000000000000);
                 }
 
+                let receivers_list = [];
+                
+                receivers_list.push({
+                    address: address, 
+                    amount: amount
+                })
+                console.log(receivers_list)
+
                 const admin_fees        = (amount * admin_fees_percentage);
                 const vat               = (amount * vat_percentage);
                 const marketing_pool    = (amount * marketing_pool_percentage);
@@ -104,16 +113,20 @@ class Bitaps
                 const total_deduction   = (admin_fees + vat + marketing_pool);
 
                 amount = (amount - total_deduction);
-                
+
+                console.log('==============================CREATING RESPONSE===============================')
                 const response  = await axios.post(this.api_send_wallet_url,
                 {
-                    address,
-                    amount
+                    receivers_list
                 });
+                console.log('===================================================================================')
+                console.log(response)
 
                 const statusRes = await MDB_TRANSFER_CRYPTO.update(id, {
                     status: 'approved'
                 });
+                console.log('===================================================================================')
+                console.log(statusRes)
 
                 response.data.tx_list.forEach(async tx => await MDB_TRANSFER_CRYPTO_LOG.update(tx.tx_hash, tx));
                 
@@ -123,9 +136,10 @@ class Bitaps
                 };
             }
         } catch (error) {
+            console.log('error')
             return {
                 status: 'error',
-                message: e.response.data.message
+                message: error.response.data.message
             };
         }
     }
