@@ -350,7 +350,6 @@ export default {
                             }
                             catch (e)
                             {
-                                console.log("ERROR")
                                 console.log(e)
                                 this.$q.notify({ message: e.data.message, color: 'red' });
                             }

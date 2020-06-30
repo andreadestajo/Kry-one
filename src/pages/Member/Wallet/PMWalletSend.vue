@@ -212,17 +212,14 @@ export default
 
             DB_CURRENCY.get(cur).then(async (doc) => {
                 let min_ammount = 100 / doc.USD;
-                console.log(min_ammount)
+                
                 min_ammount     = min_ammount.toFixed(3)
 
-                console.log(min_ammount)
-                console.log(this.send_wallet_form.amount)
                 if (this.send_wallet_form.amount < min_ammount ) {
                     this.$q.notify({ message: `Minimum checkout must be ${min_ammount} (100 dollars)`, color: 'red' });
                 return;
                 }
             }).catch(err => {
-                console.log(err)
                 return err
             });
             this.send_wallet_form.charge = 0;

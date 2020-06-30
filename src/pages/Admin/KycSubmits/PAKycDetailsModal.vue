@@ -19,10 +19,12 @@
                 <div class="col-xs-12 col-sm-4 q-pa-sm" v-for="field in $options.img_fields" :key="field.key">
                     <k-field  :label="field.label">
                             <img :src="kyc_details_value[field.key]"
-                                 width="230px">
+                                 width="230px" 
+                                 @click="imageZoom">
                     </k-field>
                 </div>
             </div>
+            <pa-kyc-zoom-image ref="paKycZoomModal" :image="srcImg" />
         </div>
 
         <div slot="modal-footer">
@@ -38,13 +40,12 @@
 
 <script>
     import KField from "../../../components/Admin/KField";
-    import KModal from "../../../components/Admin/KModal"
-    import PAKycReasonModal  from  "./PAKycReasonModal";
-    import DB_KYC_VERIFICATION from "../../../models/DB_KYC_VERIFICATION"
+    import KModal from "../../../components/Admin/KModal";
+    import DB_KYC_VERIFICATION from "../../../models/DB_KYC_VERIFICATION";
     import DB_USER from "../../../models/DB_USER";
     import { FN_KYC } from "../../../references/refs_functions";
     import { fbCall } from '../../../utilities/Callables';
-
+    import PaKycZoomImage from "./PAKycZoomImage";
 
     export default
     {
@@ -53,7 +54,7 @@
         {
             KField,
             KModal,
-            PAKycReasonModal
+            PaKycZoomImage
         },
         props:
         {
@@ -72,10 +73,21 @@
                 id_type            : '',
                 id_number          : '',
                 id_expiration_date : null
-            }
+            },
+            srcImg: ''
         }),
+        mounted() {
+        },
         methods:
         {
+            async imageZoom(e)
+            {
+                const evt   = e || event;
+                this.srcImg = await evt.target.src;
+                console.log('parent')
+                console.log(this.srcImg)
+                this.$refs.paKycZoomModal.zoomImageIn()
+            },
             showKycDetailsModal(kyc_details)
             {
                 this.setKycDetails(kyc_details);
