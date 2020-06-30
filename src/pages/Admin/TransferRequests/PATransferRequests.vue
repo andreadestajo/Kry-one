@@ -53,7 +53,7 @@
                         <q-btn flat round color="primary" icon="search" @click="searchUser"/>
                     </template>
                 </q-input> -->
-                <q-btn @click="processAll()" label="Process Payout (First 100 Requests)" style="width: 100%;" unelevated color="primary" />
+                <!-- <q-btn @click="processAll()" label="Process Payout (First 100 Requests)" style="width: 100%;" unelevated color="primary" /> -->
             </template>
 
             <template slot="table_rows" slot-scope="user">
@@ -145,7 +145,7 @@ import KTable                  from '../../../components/Admin/KTable'
 import DB_TRANSFER_CRYPTO      from '../../../models/DB_TRANSFER_CRYPTO'
 import DB_CRYPTO_REPORT      from '../../../models/DB_CRYPTO_REPORT'
 
-import { FN_REJECT_TRANSFER, FN_PROCESS_TRANSFER, FN_CHECK_CENTRAL_WALLET } from "../../../references/refs_functions";
+import { FN_REJECT_TRANSFER, FN_APPROVE_TRANSFER, FN_PROCESS_TRANSFER, FN_CHECK_CENTRAL_WALLET } from "../../../references/refs_functions";
 
 import { fbCall } 			   from "../../../utilities/Callables";
 
@@ -218,27 +218,27 @@ export default {
         }),
         methods:
         {
-            async processAll()
-            {
-                if (confirm('Are you sure?'))
-                {
-                    this.$q.loading.show();
+            // async processAll()
+            // {
+            //     if (confirm('Are you sure?'))
+            //     {
+            //         this.$q.loading.show();
 
-                    try
-                    {
-                        let res = await fbCall(FN_PROCESS_TRANSFER);
-                        this.$q.notify({ message: res.data.message, color: res.data.status === 'success' ? 'green' : 'red' });
-                    }
-                    catch (e)
-                    {
-                        this.$q.notify({ message: err.message, color: 'red' });
-                    }
+            //         try
+            //         {
+            //             let res = await fbCall(FN_PROCESS_TRANSFER);
+            //             this.$q.notify({ message: res.data.message, color: res.data.status === 'success' ? 'green' : 'red' });
+            //         }
+            //         catch (e)
+            //         {
+            //             this.$q.notify({ message: err.message, color: 'red' });
+            //         }
 
-                    await this.reload();
+            //         await this.reload();
                     
-                    this.$q.loading.hide();
-                }
-            },
+            //         this.$q.loading.hide();
+            //     }
+            // },
             async reload()
             {
                 this.$unbind('users_wew');
@@ -326,6 +326,37 @@ export default {
                             this.$q.loading.hide();
                         }
                         break;
+                    case 'approve':
+                        if (confirm('Are you sure?'))
+                        {
+                            this.$q.loading.show();
+
+                            try
+                            {
+                                let res = await fbCall(FN_APPROVE_TRANSFER, 
+                                {
+                                    id:         item.data.id,
+                                    currency:   item.data.currency
+                                });
+
+                                if(res.data.status == 'error')
+                                {
+                                    this.$q.notify({ message: res.data.message, color: 'red' });
+                                    this.$q.loading.hide();
+                                    return;
+                                }
+                                
+                                this.$q.notify({ message: res.data.message, color: 'green' });
+                            }
+                            catch (e)
+                            {
+                                console.log(e)
+                                this.$q.notify({ message: e.data.message, color: 'red' });
+                            }
+                            
+                            this.$q.loading.hide();
+                        }
+                        break;
                     default:
                         this.$_notify({message: 'Invalid action. Please try again'})
                 }
@@ -346,7 +377,7 @@ export default {
         async mounted()
         {
             this.$refs.kTableRef.showLoading();
-            await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
+            let transfers = await DB_TRANSFER_CRYPTO.bindAllRequests(this, { name: 'users_wew' });
             this.$refs.kTableRef.hideLoading();
             
             const promise1 = fbCall(FN_CHECK_CENTRAL_WALLET, { currency: 'btc' }).then(btc => 
@@ -489,6 +520,7 @@ export default {
         actions:
         [
             { label: 'Reject'     , icon: 'fas fa-ban'   , key: 'reject'},
+            { label: 'Approve'     , icon: 'fas fa-check'   , key: 'approve'},
         ]
     }
 </script>

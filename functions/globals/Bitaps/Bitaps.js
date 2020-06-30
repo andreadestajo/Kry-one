@@ -15,10 +15,15 @@ class Bitaps
         this.callback_url = `https://asia-northeast1-krypto-one-live.cloudfunctions.net/bitapsCallback`;
 
         /* Staging */
-        // this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
+        this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
+
+        // created wallet by Don
+        // "wallet_id": "BTCvsbGPdEi4CiCYt8ygRoJJW4GvmSpdBAi9wthfDf4o8xz3i4AgZ",
+        // "wallet_id_hash": "2151c19df527b31c93c0d506989db65794b4147c45ab629755bec3fa309cb067",
+        // "currency": "tBTC"
 
         /* Production */
-        this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
+        // this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
 
         this.api_create_wallet_url = `${ this.api_url }/create/wallet/payment/address`;
         this.api_send_wallet_url = `${ this.api_url }/wallet/send/payment/${ this.wallet_id }`;
@@ -58,6 +63,77 @@ class Bitaps
         {
             console.log(e);
             return null;
+        }
+    }
+
+    async sendPayment(id) 
+    {
+        try {
+            const transfer  = await MDB_TRANSFER_CRYPTO.get(id);
+            if (transfer.status != 'pending')
+            {
+                return {
+                    status: 'success',
+                    message: 'Already processed.'
+                };
+            }
+
+        
+            const admin_fees_percentage        = 0.05;
+            const vat_percentage               = 0.125;
+            const marketing_pool_percentage    = 0.10;
+    
+            if(transfer.status == 'pending')
+            {
+                const address   = transfer.address;
+                const id        = transfer.id;
+                let amount;
+
+                if (transfer.currency == 'btc')
+                {
+                    amount = (transfer.amount * 100000000);
+                }else
+                if (transfer.currency == 'etc')
+                {
+                    amount = (transfer.amount * 1000000000000000000);
+                }
+
+                let receivers_list = [];
+                
+                receivers_list.push({
+                    address: address, 
+                    amount: amount
+                })
+
+                const admin_fees        = (amount * admin_fees_percentage);
+                const vat               = (amount * vat_percentage);
+                const marketing_pool    = (amount * marketing_pool_percentage);
+
+                const total_deduction   = (admin_fees + vat + marketing_pool);
+
+                amount = (amount - total_deduction);
+
+                const response  = await axios.post(this.api_send_wallet_url,
+                {
+                    receivers_list
+                });
+
+                const statusRes = await MDB_TRANSFER_CRYPTO.update(id, {
+                    status: 'approved'
+                });
+
+                response.data.tx_list.forEach(async tx => await MDB_TRANSFER_CRYPTO_LOG.update(tx.tx_hash, tx));
+                
+                return {
+                    status: 'success',
+                    message: response.data
+                };
+            }
+        } catch (error) {
+            return {
+                status: 'error',
+                message: error.response.data.message
+            };
         }
     }
 

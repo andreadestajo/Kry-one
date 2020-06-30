@@ -5,6 +5,9 @@ import {isAuthorized} from "../globals/AuthenticationHelper";
 import {mapGetters}      from 'vuex'
 import {GETTER_CURRENCY} from "../store/currency-module/getters";
 
+import DB_CURRENCY from "../models/DB_CURRENCY";
+import { DB } from '../boot/firebase';
+
 export default {
     computed:
     {
@@ -47,6 +50,24 @@ export default {
          * @param options
          * @returns {string} conversionRate
          */
+
+        async $convertRate (amount, base, conversion ) {
+            base        = base === "UNIQ" ? "XAU" : base;
+            conversion  = conversion === "UNIQ" ? "XAU" : conversion;
+
+            // console.log(amount)
+            // console.log(base)
+            // console.log(conversion)
+
+            const rates = await DB_CURRENCY.get(base);
+
+            // const usd = rates["USD"] * amount
+
+            // console.log("DOLLAR: ", usd);
+            // console.log("BTC: ", usd / rates["USD"]);
+
+            return rates[conversion] * amount;
+        },
         $_convertRate(amount, base, conversion, options = {})
         {
             base       = base === "UNIQ" ? "XAU" : base;
