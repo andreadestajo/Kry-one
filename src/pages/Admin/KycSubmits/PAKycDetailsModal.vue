@@ -54,7 +54,7 @@
         {
             KField,
             KModal,
-            PaKycZoomImage
+            //PaKycZoomImage
         },
         props:
         {
