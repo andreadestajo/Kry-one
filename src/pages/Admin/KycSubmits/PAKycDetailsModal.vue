@@ -45,7 +45,7 @@
     import DB_USER from "../../../models/DB_USER";
     import { FN_KYC } from "../../../references/refs_functions";
     import { fbCall } from '../../../utilities/Callables';
-    import PaKycZoomImage from "./PAKycZoomImage";
+    // import PaKycZoomImage from "./PAKycZoomImage";
 
     export default
     {
