@@ -24,7 +24,7 @@
                     </k-field>
                 </div>
             </div>
-            <pa-kyc-zoom-image ref="paKycZoomModal" :image="srcImg" />
+            <!-- <pa-kyc-zoom-image ref="paKycZoomModal" :image="srcImg" /> -->
         </div>
 
         <div slot="modal-footer">
@@ -54,7 +54,7 @@
         {
             KField,
             KModal,
-            //PaKycZoomImage
+            // PaKycZoomImage
         },
         props:
         {
