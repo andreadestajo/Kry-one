@@ -89,7 +89,10 @@
                     <div class="content-group q-pt-md">
                         <div class="label text-weight-medium">Charge</div>
                         <div class="value">{{$_formatNumber(send_wallet_form.charge, {currency: active_wallet.abb})}}</div>
-                        <div class="conversion">PHP 0.00 <q-icon name="fa fa-exchange-alt"></q-icon> USD 0.00</div>
+                        <div class="conversion">{{ $_convertRate(send_wallet_form.charge, active_wallet.abb, 'PHP', {decimal: '2'}) }}
+                            <q-icon name="fa fa-exchange-alt"></q-icon>
+                            {{ $_convertRate(send_wallet_form.charge, active_wallet.abb, 'USD', {decimal: '2'}) }}
+                        </div>
                     </div>
 
                     <div class="content-group q-pt-md">
@@ -210,18 +213,26 @@ export default
         {
             let cur = this.active_wallet.abb == 'UNIQ' ? 'XAU' : this.active_wallet.abb;
 
-            DB_CURRENCY.get(cur).then(async (doc) => {
-                let min_ammount = 100 / doc.USD;
+            let is_valid_amount = await DB_CURRENCY.get(cur).then(async (doc) => {
+                let min_amount = 100 / doc.USD;
                 
-                min_ammount     = min_ammount.toFixed(3)
+                min_amount     = min_amount.toFixed(3)
 
-                if (this.send_wallet_form.amount < min_ammount ) {
-                    this.$q.notify({ message: `Minimum checkout must be ${min_ammount} (100 dollars)`, color: 'red' });
-                return;
+                if (this.send_wallet_form.amount < min_amount ) {
+                    this.$q.notify({ message: `Minimum checkout must be ${min_amount} (100 dollars)`, color: 'red' });
+                    return false;
                 }
+                return true
             }).catch(err => {
                 return err
             });
+
+            // console.log(is_valid_amount)
+
+            if (!is_valid_amount) {
+                return;
+            }
+
             this.send_wallet_form.charge = 0;
             this.$v.send_wallet_form.$touch();
 

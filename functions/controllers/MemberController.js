@@ -416,7 +416,18 @@ module.exports =
         // Validate BTC
         if (data.currency === 'BTC')
         {
-            let minimum_btc = await minimumAmount('BTC', 100);
+            // let minimum_btc = await minimumAmount('BTC', 100);
+            let minimum_btc = MDB_CURRENCY.get('BTC').then(async (doc) => {
+                let min_amount = 100 / doc.USD;
+                console.log(min_amount)
+                min_amount     = min_amount.toFixed(3)
+    
+                return min_amount;
+                
+            }).catch(err => {
+                console.log(err)
+                return err
+            });
     
 
             const bitcoin = new Bitcoin();
@@ -436,7 +447,18 @@ module.exports =
         // Validate ETH
         else if (data.currency === 'ETH')
         {
-            let minimum_eth = await minimumAmount('BTC', 100);
+            // let minimum_eth = await minimumAmount('ETH', 100);
+            let minimum_eth = MDB_CURRENCY.get('ETH').then(async (doc) => {
+                let min_amount = 100 / doc.USD;
+                console.log(min_amount)
+                min_amount     = min_amount.toFixed(3)
+    
+                return min_amount;
+                
+            }).catch(err => {
+                console.log(err)
+                return err
+            });
 
             const ethereum = new Ethereum();
             const check_ethereum_address = await ethereum.checkAddress(data.address);
