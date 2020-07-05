@@ -15,15 +15,10 @@ class Bitaps
         this.callback_url = `https://asia-northeast1-krypto-one-live.cloudfunctions.net/bitapsCallback`;
 
         /* Staging */
-        this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
-
-        // created wallet by Don
-        // "wallet_id": "BTCvsbGPdEi4CiCYt8ygRoJJW4GvmSpdBAi9wthfDf4o8xz3i4AgZ",
-        // "wallet_id_hash": "2151c19df527b31c93c0d506989db65794b4147c45ab629755bec3fa309cb067",
-        // "currency": "tBTC"
+        // this.api_url = `https://api.bitaps.com/${ this.currency }/testnet/v1`;
 
         /* Production */
-        // this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
+        this.api_url = `https://api.bitaps.com/${ this.currency }/v1`
 
         this.api_create_wallet_url = `${ this.api_url }/create/wallet/payment/address`;
         this.api_send_wallet_url = `${ this.api_url }/wallet/send/payment/${ this.wallet_id }`;
