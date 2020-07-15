@@ -1,58 +1,6 @@
-.login {
-    background-color: #f3f3f3;
-    
-    &__logo {
-        width: 250px;
-        height: 71px;
-        margin: auto;
-    }
+PFLogin.scss
 
-    &__title {
-        text-align: center;
-        margin-top: -20px;
-    
-        .sub {
-            font-size: 14px;
-            color: $text-two;
-            font-weight: bold;
-        }
-    }
-
-    &__form {
-        padding: 20px;
-        background-color: #fff;
-        box-shadow: 1px 1px 3px rgba(77, 57, 57, 0.05);
-        margin-top: 20px;
-        border-radius: 3px;
-
-        .label {
-            color: $text-one;
-            margin-top: 5px;
-        }
-        .input {
-            input {
-                &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-                    color: $text-light;
-                    opacity: 1; /* Firefox */
-                  }
-                  
-                &:-ms-input-placeholder { /* Internet Explorer 10-11 */
-                    color: $text-light;
-                  }
-                  
-                &::-ms-input-placeholder { /* Microsoft Edge */
-                    color: $text-light;
-                  }
-            }
-        }
-    }
+.no-scroll{
+    overflow: hidden;
 }
 
-
-@media only screen and (min-width: 992px) {
-    .login {
-        max-width: 600px;
-        margin: auto;
-        background-color: #fff;
-    }
-}
