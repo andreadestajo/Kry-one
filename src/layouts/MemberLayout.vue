@@ -12,6 +12,55 @@
                     KryptoKnight.Me
                 </q-toolbar-title>
 
+            <div class="desktopview">
+                <q-chip>
+                 <q-avatar size="32px">
+                    <q-img :src="$_current_user_data.photo_url ? $_current_user_data.photo_url : '../statics/boy.jpg'"></q-img>
+                </q-avatar>
+
+                 <q-btn-dropdown color="primary" unelevated rounded flat :label="$_current_user_data ? $_current_user_data.full_name : ''">
+
+                  <q-list>
+                    <q-item clickable v-close-popup @click.native="$router.push({name: 'member_profile'})">
+                      <q-item-section>
+                        <q-item-label>Profile</q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-separator/>
+
+                    <q-item clickable v-close-popup @click.native="$router.push({name: 'logout'})">
+                      <q-item-section>
+                        <q-item-label>Logout</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+            </q-chip>
+        </div>
+
+                  <q-btn-dropdown color="white" flat >
+                  <q-list>
+                    <q-item clickable v-close-popup @click="onItemClick">
+                      <q-item-section>
+                        <q-item-label>Photos</q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-close-popup @click="onItemClick">
+                      <q-item-section>
+                        <q-item-label>Videos</q-item-label>
+                      </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-close-popup @click="onItemClick">
+                      <q-item-section>
+                        <q-item-label>Articles</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-btn-dropdown>
+
                 <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
                     <q-badge floating color="red" v-if="$_current_user_data.notification_count">
                         {{$_current_user_data.notification_count}}
@@ -20,8 +69,13 @@
             </q-toolbar>
         </q-header>
 
+        <div style="margin-top: 50px;">
+        <member-tabs/>
+        </div>
+
+
         <!-- DRAWER-->
-        <q-drawer  v-model="drawer" show-if-above>
+        <q-drawer v-model="drawer" show-if-above>
             <q-list class="member__sidebar" separator>
                 <q-item @click.native="$router.push({name: 'member_profile'})" class="profile full-width column no-wrap justify-center items-center content-center q-pa-lg">
                     <span class="profile-avatar q-pa-sm">
@@ -55,13 +109,15 @@
 <script>
 import styles from './MemberLayout.scss';
 import DB_USER from '../models/DB_USER';
+import MemberTabs from '../components/Member/MemberTabs';
 
 export default
 {
     name: 'AdminLayout',
+    components: {MemberTabs},
     data: () =>
     ({
-        drawer : false,
+        drawer : true,
         project : "krypto-one-live",
     }),
     navigations:
@@ -98,3 +154,20 @@ export default
     }
 }
 </script>
+
+<style>
+    @media (min-width: 704px)
+    {
+        .phoneview
+        {
+            display: none;
+        }
+    }
+    @media (max-width: 704px)
+    {
+        .desktopview
+        {
+            display: none;
+        }
+    }
+</style>
