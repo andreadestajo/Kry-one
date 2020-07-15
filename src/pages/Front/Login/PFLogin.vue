@@ -80,11 +80,11 @@
       class="q-gutter-md"
     >
     <q-item>
-  <q-item-section avatar>
-    <q-icon color="red" name="warning"/>
-  </q-item-section>
-    <q-item-section style="font-weight: bold;">Please check that you are visiting</q-item-section>
-  </q-item>
+      <q-item-section avatar>
+        <q-icon color="red" name="warning"/>
+      </q-item-section>
+      <q-item-section style="font-weight: bold;">Please check that you are visiting</q-item-section>
+    </q-item>
 
     <q-field outlined stack-label dense style=" cursor: text;">
         <template v-slot:control>
@@ -96,6 +96,9 @@
           <q-separator vertical inset class="q-mx-sm" style="margin-top: 0.8px;" />
         </template>
       </q-field>
+          <q-banner v-if="!!loginError" inline-actions class="q-mb-md text-white bg-red">
+        {{loginError}}
+    </q-banner>
 
       <q-input
        class="input"
