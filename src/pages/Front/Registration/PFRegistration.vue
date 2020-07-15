@@ -1,8 +1,8 @@
 <template>
-  <q-page>
+  <q-page class="no-scroll">
       <div class="q-pa-md heights" style="margin-top: 50px;">
          <div class="q-gutter-y-md" style="max-width: 600px">
-          <img style="height: 50px; margin-top: 10px; margin-left: 40px" src="../../../krypto01.png"/>
+          <img style="height: 100px; margin-top: -10px; margin-left: 20px" src="../../../Crypto-img/Krypto01.png"/>
         </div>
         <p style="color: #e6e6e6;
          font-size: 250px;
@@ -74,7 +74,7 @@
               src="../../../img-on-phone/h7-slajder-img-16.png"/>
       </div>
 
-       <div class="q-pa-sm forms" style="max-width: 320px; margin-top: -100px; margin-left: 550px; z-index: 10">
+       <div class="q-pa-sm forms" style="max-width: 320px; margin-top: -60px; margin-left: 550px; z-index: 10">
      <q-form class="q-pa-lg registration__form" v-if="!isRegistered" style="background-color: transparent;">
                 <q-banner v-if="!!registrationError" inline-actions class="q-mb-md text-white bg-red">
                     {{registrationError}}
@@ -91,8 +91,8 @@
           <div class="flex-center flex self-center full-width no-outline" tabindex="0">https://krypto.one/</div>
         </template>
          <template v-slot:prepend>
-          <q-icon color="red" size="15px" name="lock"/>
-          <p style="font-size: 15px; margin-top: 17px; color: red;">Secure</p>
+          <q-icon color="green" size="15px" name="lock"/>
+          <p style="font-size: 15px; margin-top: 17px; color: green;">Secure</p>
           <q-separator vertical inset class="q-mx-sm" style="margin-top: -0.2px;" />
         </template>
       </q-field>
@@ -100,9 +100,9 @@
        <q-scroll-area
       :thumb-style="thumbStyle"
       :bar-style="barStyle"
-      style="height: 370px; max-width: 300px;">
+      style="height: 260px; max-width: 300px;">
 
-      <div class="q-pa-none label">
+      <div class="q-pa-none q-pt-md label">
           Full Name
       </div>
       <q-input
