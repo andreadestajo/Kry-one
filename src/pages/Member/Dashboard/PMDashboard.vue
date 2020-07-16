@@ -452,4 +452,63 @@ export default
                     width: 140%;
                 }
             }
+            @media (max-width: 819px)
+            {
+                .responsiveee
+                {
+                    width: 130%;
+                    margin-left: -110px;
+                }
+                .responsivee
+                {
+                    width: 130%;
+                    margin-left: -240px;
+                }
+            }
+            @media (max-width: 771px)
+            {
+                 .responsiveee
+                {
+                    width: 120%;
+                    margin-left: -83px;
+                }
+                .responsivee
+                {
+                    width: 120%;
+                    margin-left: -215px;
+                }
+            }
+             @media (max-width: 689px)
+            {
+                 .responsiveee
+                {
+                    width: 110%;
+                    margin-left: -54px;
+                }
+                .responsivee
+                {
+                    width: 110%;
+                    margin-left: -185px;
+                }
+            }
+             @media (max-width: 635px)
+            {
+                 .responsiveee
+                {
+                    width: 100%;
+                    margin-left: -28px;
+                }
+                .responsivee
+                {
+                    width: 100%;
+                    margin-left: -160px;
+                }
+            }
+             @media (max-width: 413px)
+             {
+                 .responsivee
+                 {
+                 margin-left: -170px;
+                 }
+             }
         </style>

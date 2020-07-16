@@ -1,6 +1,6 @@
 <template>
     <q-page class="q-pa-lg registration">
-        <k-header icon="fa fa-user" detail="Details about you">Profile</k-header>
+        <k-header style="margin-top: -0px" icon="fa fa-user" detail="Details about you">Profile</k-header>
 
         <div class="registration__profile full-width column no-wrap justify-center items-center content-center q-pb-lg">
             <span class="avatar q-pa-sm">

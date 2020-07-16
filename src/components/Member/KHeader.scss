@@ -11,11 +11,11 @@
         border: 1px solid #eee;
 
         padding: 8px 20px;
-        position: fixed;
+        position: relative;
         left: 0;
         right: 0;
         
-        top: 50px;
+        top: -45px;
         z-index: 1;
     }
     .spacer {
