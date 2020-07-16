@@ -518,6 +518,14 @@
 
 
 <style>
+@media (max-width: 9999px)
+{
+  .forms
+  {
+    position: absolute;
+    right: 500px;
+  }
+}
 @media (max-width: 1528px)
 {
   .forms
