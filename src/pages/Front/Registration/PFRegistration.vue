@@ -249,7 +249,7 @@
                class="full-width"
                @click="register()"></q-btn>
       </div>
-     <q-btn <q-btn unelevated
+     <q-btn unelevated
              label="Back"
              type="reset"
              color="grey"
@@ -257,8 +257,14 @@
              @click="$router.push('/')"/>
    </q-scroll-area>
    </q-form>
-  </div>
 
+    <p-f-registration-confirmation v-if="isRegistered"
+                                           :email="registration_form_data.email"
+                                           :full_name="registration_form_data.full_name"
+                                           :has_valid_eid="has_valid_eid"/>
+
+
+  </div>
   </q-page>
 </template>
 
