@@ -2,7 +2,7 @@
   <q-page class="no-scroll">
       <div class="q-pa-md heights" style="margin-top: 50px;">
          <div class="q-gutter-y-md" style="max-width: 600px">
-          <img style="height: 100px; margin-top: -10px; margin-left: 20px" src="../../../Crypto-img/Krypto01.png"/>
+          <img style="height: 100px; margin-top: -40px; margin-left: 20px" src="../../../Crypto-img/Krypto01.png"/>
         </div>
         <p style="color: #e6e6e6;
          font-size: 250px;
