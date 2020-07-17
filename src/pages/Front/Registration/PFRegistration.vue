@@ -249,7 +249,7 @@
                class="full-width"
                @click="register()"></q-btn>
       </div>
-     <q-btn <q-btn unelevated
+        <q-btn unelevated
              label="Back"
              type="reset"
              color="grey"

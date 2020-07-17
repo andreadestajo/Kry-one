@@ -138,7 +138,7 @@
 import styles from      './PMWalletSend.scss';
 
 import DB_USER  from "../../../models/DB_USER";
-
+import DB_BTC_ADDRESS  from "../../../models/DB_BTC_ADDRESS";
 import KHeader from '../../../components/Member/KHeader';
 import KCard   from '../../../components/Member/KCard';
 import KField  from '../../../components/Member/KField';
@@ -209,53 +209,109 @@ export default
 
             this.is_wallet_dialog_open  = false;
         },
+        async checkWalletAddress(currency)
+        {
+            if(currency == 'BTC')
+            {
+               let btc_address     = await DB_BTC_ADDRESS.get(this.send_wallet_form.send_to);
+               console.log(btc_address)
+               if(btc_address)
+               {
+                   return true;
+               }
+               else if(btc_address == null)
+               {
+                    let is_valid_amount = await DB_CURRENCY.get(currency).then(async (doc) => 
+                    {
+                        let min_amount = 100 / doc.USD;
+                    
+                        min_amount     = min_amount.toFixed(3)
+
+                        if (this.send_wallet_form.amount < min_amount ) 
+                        {
+                            this.$q.notify({ message: `Minimum checkout must be ${min_amount} (100 dollars)`, color: 'red' });
+                            return false;
+                        }
+                            return true
+                        }).catch(err => {
+                            return err
+                        });
+
+                    // console.log(is_valid_amount)
+                    return is_valid_amount;
+                }
+            }
+            else if(currency == 'ETH')
+            {
+               let eth_address     = await DB_ETH_ADDRESS.get(this.send_wallet_form.send_to);
+               console.log(eth_address)
+               if(eth_address)
+               {
+                   return true;
+               }
+               else if(eth_address == null)
+               {
+                    let is_valid_amount = await DB_CURRENCY.get(currency).then(async (doc) => 
+                    {
+                        let min_amount = 100 / doc.USD;
+                    
+                        min_amount     = min_amount.toFixed(3)
+
+                        if (this.send_wallet_form.amount < min_amount ) 
+                        {
+                            this.$q.notify({ message: `Minimum checkout must be ${min_amount} (100 dollars)`, color: 'red' });
+                            return false;
+                        }
+                            return true
+                        }).catch(err => {
+                            return err
+                        });
+
+                    // console.log(is_valid_amount)
+                    return is_valid_amount;
+                }
+            }
+            else if(currency == 'XAU')
+            {
+                return true;
+            }
+        },
         async showConfirmDialog()
         {
             let cur = this.active_wallet.abb == 'UNIQ' ? 'XAU' : this.active_wallet.abb;
-
-            let is_valid_amount = await DB_CURRENCY.get(cur).then(async (doc) => {
-                let min_amount = 100 / doc.USD;
-                
-                min_amount     = min_amount.toFixed(3)
-
-                if (this.send_wallet_form.amount < min_amount ) {
-                    this.$q.notify({ message: `Minimum checkout must be ${min_amount} (100 dollars)`, color: 'red' });
-                    return false;
-                }
-                return true
-            }).catch(err => {
-                return err
-            });
-
-            // console.log(is_valid_amount)
-
-            if (!is_valid_amount) {
+            let isWalletExist = await this.checkWalletAddress(cur);
+            console.log(isWalletExist);
+            
+            if(isWalletExist == false)
+            {
                 return;
             }
-
-            this.send_wallet_form.charge = 0;
-            this.$v.send_wallet_form.$touch();
-
-            if (this.$v.send_wallet_form.$error) {return 0}
-            
-            this.$_showPageLoading();
-
-            let user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
-
-            if (user)
+            else if(isWalletExist == true)
             {
-                this.internal_user_id = null;
-                this.internal_user_id = user.id;
-            }
-            else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH')
-            {
-                this.send_wallet_form.charge = this.send_wallet_form.amount * 0.375;
-            }
+                this.send_wallet_form.charge = 0;
+                this.$v.send_wallet_form.$touch();
 
-            this.is_external_send = !user;
-            this.is_confirmation_dialog_open = true;
-            
-            this.$_hidePageLoading();
+                if (this.$v.send_wallet_form.$error) {return 0}
+                
+                this.$_showPageLoading();
+
+                let user = await DB_USER.getUserByFilters({search_text: this.send_wallet_form.send_to});
+
+                if (user)
+                {
+                    this.internal_user_id = null;
+                    this.internal_user_id = user.id;
+                }
+                else if (this.active_wallet.abb === 'BTC' || this.active_wallet.abb === 'ETH')
+                {
+                    this.send_wallet_form.charge = this.send_wallet_form.amount * 0.375;
+                }
+
+                this.is_external_send = !user;
+                this.is_confirmation_dialog_open = true;
+                
+                this.$_hidePageLoading();
+            }
         },
         async checkUniqAddress()
         {
