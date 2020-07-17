@@ -52,7 +52,7 @@
 
                     <q-separator/>
 
-                    <q-item clickable v-close-popup @click.native="$router.push({name: 'logout'})">
+                    <q-item clickable v-close-popup @click="logout">
                       <q-item-section>
                         <q-item-label>Logout</q-item-label>
                       </q-item-section>
@@ -138,35 +138,18 @@ export default
     ({
         project : "krypto-one-live",
     }),
-    navigations:
-    [
-        { label: 'Dashboard'       , icon: 'dashboard'               , side: '', route: 'member_dashboard' },
-        { label: 'Wallet'          , icon: 'account_balance_wallet ' , side: '', route: 'member_wallet' },
-        { label: 'Enlist Knight'   , icon: 'fa fa-chess-knight '     , side: '', route: 'member_enlist' },
-        { label: 'Invite Friends'  , icon: 'fa fa-address-book '     , side: '', route: 'member_invite' },
-        { label: 'Nobilities'      , icon: 'fa fa-crown '            , side: '', route: 'member_nobilities' },
-        { label: 'Monarchy View'   , icon: 'fa fa-sitemap '          , side: '', route: 'member_monarchy' },
-        { label: 'Logout'          , icon: 'logout'                  , side: '', route: 'logout' },
-    ],
     mounted()
     {
         this.project = env('FIREBASE_PROJECTID');
     },
     methods:
     {
-        goToRoute(route)
+        logout()
         {
-            if(route === 'logout')
-            {
-                DB_USER.signOut()
-                .then(() => {
-                    this.$router.push({name: 'front_login'})
-                });
-            }
-            else
-            {
-                (route === this.$route.name) ? this.drawer = false : this.$router.push({ name: route });
-            }
+          DB_USER.signOut()
+          .then(() => {
+              this.$router.push({name: 'front_login'})
+          });
             
         }
     }
