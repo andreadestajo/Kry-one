@@ -61,27 +61,7 @@
                 </q-btn-dropdown>
             </q-chip>
 
-                  <q-btn-dropdown color="white" icon="fas fa-flag-usa" style="font-size: 0.8em" flat >
-                  <q-list>
-                    <q-item clickable v-close-popup @click="onItemClick">
-                      <q-item-section>
-                        <q-icon name="fas fa-flag-usa"/>
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-close-popup @click="onItemClick">
-                      <q-item-section>
-                        <q-icon name="fas fa-flag-usa"/>
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-close-popup @click="onItemClick">
-                      <q-item-section>
-                        <q-icon name="fas fa-flag-usa"/>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
+                  <q-btn color="white" icon="fas fa-flag-usa" style="font-size: 0.8em" flat/>
 
                 <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
                     <q-badge floating color="red" v-if="$_current_user_data.notification_count">

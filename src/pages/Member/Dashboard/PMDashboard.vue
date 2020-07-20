@@ -209,6 +209,35 @@
             </div>
         </div>
 
+          <div class="q-pa-md">
+            <q-carousel
+                animated
+                v-model="slide"
+                infinite
+                :autoplay="autoplay"
+                arrows
+                transition-prev="slide-right"
+                transition-next="slide-left"
+                @mouseenter="autoplay = false"
+                @mouseleave="autoplay = true"
+                style="margin-left: 170px; 
+              
+                box-shadow: 3px 3px 3px #e6e6e6;"
+                class="carouselll dashboard__breakdown member__card">
+                <q-carousel-slide :name="1" img-src="../statics/1.png">
+                 <a target="_blank" href="#"><q-img class="full-height" src="../statics/1.png" /></a>
+                </q-carousel-slide>
+                <q-carousel-slide :name="2" img-src="../statics/2.jpg">
+                <a target="_blank" href="#"><q-img class="full-height" src="../statics/2.png" /></a>
+                </q-carousel-slide>
+                <q-carousel-slide :name="3" img-src="../statics/3.jpg">
+                <a target="_blank" href="#"><q-img class="full-height" src="../statics/3.png" /></a>
+                </q-carousel-slide>
+                <q-carousel-slide :name="4" img-src="../statics/4.jpg">
+                <a target="_blank" href="#"><q-img class="full-height" src="../statics/4.png" /></a>
+                </q-carousel-slide>
+                </q-carousel>
+            </div>
 
 
         <!-- BINARY POINTS -->
@@ -291,7 +320,9 @@ export default
         remaining_time       : "CALCULATING",
         interval             : 0,
         project              : "krypto-one-live",
-        reason_detail        : ''
+        reason_detail        : '',
+         slide: 1,
+      autoplay: true
     }),
     computed:
     {
@@ -436,6 +467,14 @@ export default
             width: 50%;
             margin-left: -135px
         }
+        @media (min-width: 894px)
+        {
+            .carouselll
+            {
+                width: 540px; 
+                height: 300px;
+            }
+        }
             @media (max-width: 895px)
             {
                  .responsive
@@ -451,6 +490,11 @@ export default
                 {
                     width: 140%;
                 }
+                .carouselll
+                {
+                width: 780px; 
+                height: 400px;
+                }
             }
             @media (max-width: 819px)
             {
@@ -463,6 +507,11 @@ export default
                 {
                     width: 130%;
                     margin-left: -240px;
+                }
+                .carouselll
+                {
+                width: 690px; 
+                height: 400px;
                 }
             }
             @media (max-width: 771px)
@@ -477,6 +526,11 @@ export default
                     width: 120%;
                     margin-left: -215px;
                 }
+                .carouselll
+                {
+                width: 640px; 
+                height: 400px;
+                }
             }
              @media (max-width: 689px)
             {
@@ -489,6 +543,11 @@ export default
                 {
                     width: 110%;
                     margin-left: -185px;
+                }
+                .carouselll
+                {
+                width: 590px; 
+                height: 300px;
                 }
             }
              @media (max-width: 635px)
@@ -503,7 +562,116 @@ export default
                     width: 100%;
                     margin-left: -160px;
                 }
+                .carouselll
+                {
+                width: 540px; 
+                height: 300px;
+                }
             }
+             @media (max-width: 595px)
+             {
+                 .carouselll
+                {
+                width: 530px; 
+                height: 300px;
+                }
+             }
+             @media (max-width: 580px)
+             {
+                 .carouselll
+                {
+                width: 520px; 
+                height: 300px;
+                }
+             }
+             @media (max-width: 575px)
+             {
+                 .carouselll
+                {
+                width: 510px; 
+                height: 300px;
+                }
+             }
+             @media (max-width: 560px)
+             {
+                 .carouselll
+                {
+                width: 500px; 
+                height: 300px;
+                }
+             }
+             @media (max-width: 547px)
+             {
+                 .carouselll
+                {
+                width: 490px; 
+                height: 300px;
+                }
+             }
+             @media (max-width: 525px)
+             {
+                 .carouselll
+                {
+                width: 470px; 
+                height: 260px;
+                }
+             }
+              @media (max-width: 503px)
+             {
+                 .carouselll
+                {
+                width: 450px; 
+                height: 260px;
+                }
+             }
+             @media (max-width: 487px)
+             {
+                 .carouselll
+                {
+                width: 435px; 
+                height: 260px;
+                }
+             }
+             @media (max-width: 466px)
+             {
+                 .carouselll
+                {
+                width: 415px; 
+                height: 260px;
+                }
+             }
+            @media (max-width: 447px)
+             {
+                 .carouselll
+                {
+                width: 395px; 
+                height: 210px;
+                }
+             }
+             @media (max-width: 426px)
+             {
+                 .carouselll
+                {
+                width: 385px; 
+                height: 210px;
+                }
+             }
+             @media (max-width: 405px)
+             {
+                 .carouselll
+                {
+                width: 365px; 
+                height: 210px;
+                }
+             }
+              @media (max-width: 382px)
+             {
+                 .carouselll
+                {
+                width: 100%; 
+                height: 150px;
+                }
+             }
              @media (max-width: 413px)
              {
                  .responsivee
