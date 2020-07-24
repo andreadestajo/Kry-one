@@ -3,12 +3,10 @@
         <!-- HEADER -->
         <q-header>
             <q-toolbar>
-                <q-toolbar-title v-if="project == 'krypto-one-live'" class="text-center">
-                    Krypto.One™
-                </q-toolbar-title>
+              <img width="40px" v-if="project == 'krypto-one-live'" src="../iconkrypto.png"/>
+                <p v-if="project == 'krypto-one-live'" style="margin-top: 10px; font-size: 20px;" class="text-overline text-sizings text-center">Krypto.One™</p>
 
-                <img width="40px" src="../iconkrypto.png"/>
-
+                <img width="40px" v-if="project != 'krypto-one-live'" src="../iconkrypto.png"/>
                     <p v-if="project != 'krypto-one-live'" style="margin-top: 10px; font-size: 20px;" class="text-overline text-sizings text-center">KryptoKnight.Me</p>
 
 
