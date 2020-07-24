@@ -61,8 +61,7 @@
                 </q-btn-dropdown>
             </q-chip>
 
-                  <q-btn color="white" icon="fas fa-flag-usa" style="font-size: 0.8em" flat/>
-
+                  <q-btn color="white" :icon="`img:https://www.countryflags.io/${$_current_user_data.country.code}/flat/64.png`" style="font-size: 0.8em" flat/>
                 <q-btn @click="$router.push({ name: 'member_notification'})" flat round dense icon="notifications">
                     <q-badge floating color="red" v-if="$_current_user_data.notification_count">
                         {{$_current_user_data.notification_count}}
