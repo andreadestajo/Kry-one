@@ -21,7 +21,7 @@
 
           <!-- Our Story -->
 
-          <q-tab-panels v-model="tab" animated style="width: 550px; height: 500px; margin-left: 65px; background: transparent; color: white;">
+          <q-tab-panels v-model="tab" animated style="width: 450px; height: 500px; margin-left: 65px; background: transparent; color: white;">
 
             <q-tab-panel name="story">
               <div class="text-h6" style="font-size: 33px;"><b>OUR STORY</b></div>
@@ -120,20 +120,20 @@
 
             <q-dialog v-model="layout">
             <q-layout view="Lhh lpR fff" container style="background: rgba(0,0,0,0.7)">
-              <q-header style="background: rgba(0,0,0,0.5);">
+              <q-header style="background: rgba(0,0,0,0.9);">
                 <q-toolbar>
                   <q-space/>
-                  <q-btn flat v-close-popup round dense icon="close" />
-                </q-toolbar>
-                <q-tabs v-model="tab" active-color="green" class="text-white tabs-ourstory q-pa-md" narrow-indicator no-caps style="width: 100%;">
+                   <q-tabs v-model="tab" active-color="green" class="text-white tabs-ourstory q-pa-sm" narrow-indicator no-caps style="width: 100%; margin-left: -20px">
             <q-tab style="font-size: 20px" name="story">Our Story</q-tab>
             <q-tab style="font-size: 20px" name="services">Our Services</q-tab>
           </q-tabs>
+                <q-btn flat v-close-popup round dense icon="close" />
+                </q-toolbar>
               </q-header>
 
           <!-- Our Story -->
 
-          <q-tab-panels v-model="tab" animated style="max-width: 100%; margin-top: 150px; background: transparent; color: white;">
+          <q-tab-panels v-model="tab" animated style="max-width: 100%; margin-top: 60px; background: transparent; color: white;">
 
             <q-tab-panel name="story">
               <div class="text-h6" style="font-size: 33px;"><b>OUR STORY</b></div>
@@ -754,6 +754,17 @@
 
 
 <style>
+::-webkit-scrollbar
+{
+	width: 3px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb
+{
+	background-color: transparent;
+	border: 2px solid white;
+}
 @media (max-width: 9999px)
 {
   .forms
