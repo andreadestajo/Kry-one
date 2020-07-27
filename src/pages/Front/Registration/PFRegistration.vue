@@ -49,6 +49,7 @@
 
             <q-tab-panel name="services">
               <div class="text-h6" style="font-size: 33px;"><b>OUR SERVICES</b></div>
+              <img  style="width: 400px; padding-top: 20px" src="../../../Crypto-img/bitcoin.jpg"/>
               <p class="text-h6" style="font-size: 25px; padding-top: 10px">Educational</p>
               <p style="width: 380px; text-align: justify">We provide introductory information on private and public use of blockchain to empower, build confidence, break down all the barriers and open the door for opportunity for a better life.</p>
               <p class="text-h6" style="font-size: 25px; padding-top: 10px">Financial</p>
@@ -160,6 +161,7 @@
 
             <q-tab-panel name="services">
               <div class="text-h6" style="font-size: 33px;"><b>OUR SERVICES</b></div>
+              <img style="width: 100%; padding-top: 20px" src="../../../Crypto-img/bitcoin.jpg"/>
               <p class="text-h6" style="font-size: 25px; padding-top: 10px">Educational</p>
               <p style="width: 100%; text-align: justify">We provide introductory information on private and public use of blockchain to empower, build confidence, break down all the barriers and open the door for opportunity for a better life.</p>
               <p class="text-h6" style="font-size: 25px; padding-top: 10px">Financial</p>
