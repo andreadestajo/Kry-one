@@ -225,16 +225,16 @@
                 box-shadow: 3px 3px 3px #e6e6e6;"
                 class="carouselll dashboard__breakdown member__card">
                 <q-carousel-slide :name="1" img-src="../statics/1.png">
-                 <a target="_blank" href="#"><q-img class="full-height" src="../statics/1.png" /></a>
+                 <a target="_blank" href="https://bit.ly/get10dollarsofUNIQ"><q-img class="full-height" src="../statics/1.png" /></a>
                 </q-carousel-slide>
                 <q-carousel-slide :name="2" img-src="../statics/2.jpg">
-                <a target="_blank" href="#"><q-img class="full-height" src="../statics/2.png" /></a>
+                <a target="_blank" href="https://bit.ly/get10dollarsofUNIQ"><q-img class="full-height" src="../statics/2.png" /></a>
                 </q-carousel-slide>
                 <q-carousel-slide :name="3" img-src="../statics/3.jpg">
-                <a target="_blank" href="#"><q-img class="full-height" src="../statics/3.png" /></a>
+                <a target="_blank" href="https://bit.ly/get10dollarsofUNIQ"><q-img class="full-height" src="../statics/3.png" /></a>
                 </q-carousel-slide>
                 <q-carousel-slide :name="4" img-src="../statics/4.jpg">
-                <a target="_blank" href="#"><q-img class="full-height" src="../statics/4.png" /></a>
+                <a target="_blank" href="https://bit.ly/get10dollarsofUNIQ"><q-img class="full-height" src="../statics/4.png" /></a>
                 </q-carousel-slide>
                 </q-carousel>
             </div>
