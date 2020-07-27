@@ -322,14 +322,14 @@
        <q-scroll-area
       :thumb-style="thumbStyle"
       :bar-style="barStyle"
-      style="height: 330px; max-width: 300px;">
+      style="height: 330px; max-width: 300px; padding-right: 10px">
 
       <div class="q-pa-none q-pt-md label">
           Full Name
       </div>
       <q-input
       dense
-       placeholder="John Doe"
+       placeholder="Full Name"
        class="input"
        outlined
        stack-label
@@ -348,7 +348,7 @@
       </div>
       <q-input
       dense
-     placeholder="+639982736473"
+     placeholder="(+63) 9XX-XXX-XXXX"
      class="input"
      outlined
      stack-label
@@ -551,7 +551,7 @@
       thumbStyle: {
         right: '2px',
         borderRadius: '5px',
-        backgroundColor: '#f2f2f2',
+        backgroundColor: 'grey',
         width: '5px',
         opacity: 0.75
       },
