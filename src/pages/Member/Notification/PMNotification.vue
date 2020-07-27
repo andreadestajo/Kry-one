@@ -1,7 +1,7 @@
 <template>
     <q-pull-to-refresh @refresh="refreshNotifications">
         <div class="notification" ref="scrollTargetRef">
-            <k-header detail="Get live information about events">Notifications</k-header>
+            <k-header style="margin-top: 40px" detail="Get live information about events">Notifications</k-header>
             <k-card class="q-my-md">
                 <div v-if="is_notification_empty" class="notification__label">
                     <span class="list">No notifications yet.</span>
