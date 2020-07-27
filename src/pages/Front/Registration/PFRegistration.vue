@@ -450,19 +450,18 @@
        @blur="$v.registration_form_data.referral_code.$touch()"/>
 
 
-        <q-checkbox class="q-py-sm"
+        <q-checkbox class="q-py-xs"
                     right-label
-                    v-model="registration_form_data.is_agree">
-            I agree to the Kryptoknight's <br />
-            <a href="">terms of service</a> and <a href="">privacy policy.</a>
-        </q-checkbox>
+                    v-model="registration_form_data.is_agree" />
+            <label style="font-size:14px; padding: 0px;">I agree to the Kryptoknight's <a target="_blank" href="">Terms of Service</a> and <a target="_blank" href="">Privacy Policy.</a></label>
+        <!-- </q-checkbox> -->
         <div v-if="!registration_form_data.is_agree && $v.registration_form_data.$dirty"
              class="text-center"
              :style="{color: 'red'}">
             You must agree with our terms of service and privacy policy in order to proceed.
         </div>
 
-      <div>
+      <div class="q-mt-md">
         <q-btn unelevated
                label="Create Account"
                type="submit"
