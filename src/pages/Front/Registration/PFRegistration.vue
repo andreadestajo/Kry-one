@@ -5,9 +5,10 @@
           <img style="height: 90px; margin-top: -40px;" src="../../../Crypto-img/Krypto01.png"/>
         </div>
 
-          <q-btn class="ourstory" style="float: right; margin-top: -80px;" size="20px" flat icon="fas fa-bars" @click="open('top')"><q-tooltip :delay="200" anchor="bottom left" self="top left" transition-show="rotate" transition-hide="scale" content-style="font-size: 10px; width: 80px;">
+          <q-btn class="ourstory" style="float: right; margin-top: -80px;" size="20px" flat icon="fas fa-bars" @click="open('top')">
+            <q-tooltip :delay="200" anchor="bottom left" self="top left"  content-style="font-size: 10px; width: 80px;">
           Our Story & Our Services
-        </q-tooltip>
+            </q-tooltip>
         </q-btn>
 
           <!-- Desktop Our story -->
@@ -114,9 +115,10 @@
         </q-dialog>
 
         <!-- q-dialog for phonw view -->
-         <q-btn class="ourstory-phone" style="float: right; margin-top: -80px;" size="20px" flat icon="fas fa-bars" @click="layout = true"><q-tooltip :delay="200" anchor="bottom left" self="top left" transition-show="rotate" transition-hide="scale" content-style="font-size: 10px; width: 80px;">
+         <q-btn class="ourstory-phone" style="float: right; margin-top: -80px;" size="20px" flat icon="fas fa-bars" @click="layout = true">
+           <!-- <q-tooltip :delay="200" anchor="bottom left" self="top left" transition-show="rotate" transition-hide="scale" content-style="font-size: 10px; width: 80px;">
 
-        </q-tooltip>
+        </q-tooltip> -->
 
             <q-dialog v-model="layout">
             <q-layout view="Lhh lpR fff" container style="background: rgba(0,0,0,0.7)">
