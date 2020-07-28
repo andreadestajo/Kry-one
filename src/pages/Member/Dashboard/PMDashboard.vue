@@ -5,7 +5,8 @@
         <div class="responsive">
 
          <!-- BITCOIN -->
-        <k-card class="dashboard__wallet responsiveee member__card q-mt-md" style="margin-top: -110px;">
+        <k-card class="dashboard__wallet member__card q-mt-md" style="width: 50%;
+            margin-left: -135px; margin-top: -110px;">
             <div class="value">{{$_formatNumber(checkWallet('BTC'), {currency: 'BTC'})}}</div>
             <div class="conversion">
                 <k-amount-conversion :amount="checkWallet('BTC')" coin="BTC"/>
@@ -19,7 +20,8 @@
 
 
         <!-- UNIQ -->
-        <k-card class="dashboard__wallet responsiveee member__card q-mt-md" style="">
+        <k-card class="dashboard__wallet  member__card q-mt-md" style="width: 50%;
+            margin-left: -135px;">
             <div class="value">{{$_formatNumber(checkWallet('XAU'), {currency: 'XAU'})}}</div>
             <div class="conversion">
                 <k-amount-conversion :amount="checkWallet('XAU')" coin="XAU"/>
@@ -33,7 +35,8 @@
 
 
          <!-- EARNING BREAKDOWN -->
-            <k-card class="dashboard__breakdown responsiveee member__card q-mt-md" style=" ">
+            <k-card class="dashboard__breakdown  member__card q-mt-md" style="width: 50%;
+            margin-left: -135px;">
                 <div class="subtitle">Earning Breakdown</div>
                 <div class="text-center q-pa-lg" v-if="!earning_breakdown">
                     <q-spinner color="primary" size="2em"/>
@@ -54,7 +57,8 @@
 
 
                    <!-- BINARY POINTS -->
-        <k-card class="dashboard__breakdown responsiveee member__card q-mt-md" style=" ">
+        <k-card class="dashboard__breakdown member__card q-mt-md" style="width: 50%;
+            margin-left: -135px;">
             <div class="subtitle">Group Status</div>
             <div class="text-center q-pa-lg" v-if="!earning_breakdown">
                 <q-spinner color="primary" size="2em"/>
@@ -102,7 +106,7 @@
                 </div>  
             </div>
         </k-card>
-    </div>
+        </div>
 
         <div class="responsivee">
         <!-- NOBILITY -->
@@ -236,7 +240,7 @@
                 <q-carousel-slide :name="4" img-src="../statics/4.jpg">
                 <a target="_blank" href="https://bit.ly/get10dollarsofUNIQ"><q-img class="full-height" src="../statics/4.png" /></a>
                 </q-carousel-slide>
-                </q-carousel>
+            </q-carousel>
             </div>
 
 
@@ -281,6 +285,7 @@
             </div>
         </k-card>
       </div>
+
     </div>
 </template>
 
@@ -410,6 +415,7 @@ export default
     ],
     mounted()
     {
+        // window.location.reload();
         // Check Placement
         if(this.$_current_user_data.nobility_info.rank_order != 1)
         {
@@ -465,7 +471,7 @@ export default
         .responsiveee
         {
             width: 50%;
-            margin-left: -135px
+            margin-left: -135px;
         }
         @media (min-width: 894px)
         {
