@@ -1,5 +1,5 @@
 .dashboard {
-    padding-bottom: 30px;
+    padding-bottom: 100px;
 
     &__header {
         background-color: $primary;
@@ -40,9 +40,6 @@
 
             &-requirements {
                 font-size: 20px;
-            }   
-            &-target {
-                
             }
        }
     }
