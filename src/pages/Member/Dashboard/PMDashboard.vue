@@ -1,12 +1,11 @@
 <template>
     <div class="dashboard">
-        <div class="dashboard__header"></div>
+        <!-- <div class="dashboard__header"></div> -->
 
         <div class="responsive">
 
          <!-- BITCOIN -->
-        <k-card class="dashboard__wallet member__card q-mt-md" style="width: 50%;
-            margin-left: -135px; margin-top: -110px;">
+        <k-card class="dashboard__wallet member__card q-mt-md" id="responsiveee">
             <div class="value">{{$_formatNumber(checkWallet('BTC'), {currency: 'BTC'})}}</div>
             <div class="conversion">
                 <k-amount-conversion :amount="checkWallet('BTC')" coin="BTC"/>
@@ -20,8 +19,7 @@
 
 
         <!-- UNIQ -->
-        <k-card class="dashboard__wallet  member__card q-mt-md" style="width: 50%;
-            margin-left: -135px;">
+        <k-card class="dashboard__wallet  member__card q-mt-md" id="responsiveee">
             <div class="value">{{$_formatNumber(checkWallet('XAU'), {currency: 'XAU'})}}</div>
             <div class="conversion">
                 <k-amount-conversion :amount="checkWallet('XAU')" coin="XAU"/>
@@ -35,8 +33,7 @@
 
 
          <!-- EARNING BREAKDOWN -->
-            <k-card class="dashboard__breakdown  member__card q-mt-md" style="width: 50%;
-            margin-left: -135px;">
+            <k-card class="dashboard__breakdown  member__card q-mt-md" id="responsiveee">
                 <div class="subtitle">Earning Breakdown</div>
                 <div class="text-center q-pa-lg" v-if="!earning_breakdown">
                     <q-spinner color="primary" size="2em"/>
@@ -57,8 +54,7 @@
 
 
                    <!-- BINARY POINTS -->
-        <k-card class="dashboard__breakdown member__card q-mt-md" style="width: 50%;
-            margin-left: -135px;">
+        <k-card class="dashboard__breakdown member__card q-mt-md" id="responsiveee">
             <div class="subtitle">Group Status</div>
             <div class="text-center q-pa-lg" v-if="!earning_breakdown">
                 <q-spinner color="primary" size="2em"/>
@@ -110,7 +106,7 @@
 
         <div class="responsivee">
         <!-- NOBILITY -->
-        <k-card class="dashboard__nobility q-mt-md" style="margin-top: -965px; margin-left: 185px">
+        <k-card class="dashboard__nobility" id="nobility">
             <div class="group">
                 <div class="group-label">Your current nobility</div>
                 <div class="group-value current">
@@ -326,8 +322,8 @@ export default
         interval             : 0,
         project              : "krypto-one-live",
         reason_detail        : '',
-         slide: 1,
-      autoplay: true
+         slide               : 1,
+      autoplay               : true
     }),
     computed:
     {
@@ -467,11 +463,16 @@ export default
 }
 </script>
 
-        <style>
-        .responsiveee
+<style scoped>
+        #responsiveee
         {
             width: 50%;
             margin-left: -135px;
+        }
+        #nobility
+        {
+            margin-top: -965px; 
+            margin-left: 185px;
         }
         @media (min-width: 894px)
         {
@@ -492,7 +493,7 @@ export default
                     margin-top: 1000px;
                     margin-left: -280px;
                 }
-                .responsiveee
+                #responsiveee
                 {
                     width: 140%;
                 }
@@ -504,7 +505,7 @@ export default
             }
             @media (max-width: 819px)
             {
-                .responsiveee
+                #responsiveee
                 {
                     width: 130%;
                     margin-left: -110px;
@@ -522,7 +523,7 @@ export default
             }
             @media (max-width: 771px)
             {
-                 .responsiveee
+                 #responsiveee
                 {
                     width: 120%;
                     margin-left: -83px;
@@ -540,7 +541,7 @@ export default
             }
              @media (max-width: 689px)
             {
-                 .responsiveee
+                 #responsiveee
                 {
                     width: 110%;
                     margin-left: -54px;
@@ -558,7 +559,7 @@ export default
             }
              @media (max-width: 635px)
             {
-                 .responsiveee
+                 #responsiveee
                 {
                     width: 100%;
                     margin-left: -28px;
@@ -685,4 +686,4 @@ export default
                  margin-left: -170px;
                  }
              }
-        </style>
+</style>

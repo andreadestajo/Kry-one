@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="center-kyc">
         <!--VERIFICATION FORM-->
         <div class="verification">
             <k-header detail="Please verify your account">KYC Verification</k-header>
@@ -191,7 +191,7 @@ import KCard        from '../../../components/Member/KCard';
 import KAlertDialog from '../../../components/Shared/KAlertDialog'
 
 import {required}          from "vuelidate/src/validators";
-import {fbCall} 	       from "../../../utilities/Callables";
+import {fbCall}            from "../../../utilities/Callables";
 import {FN_SUBMIT_KYC}     from "../../../references/refs_functions";
 import {STORE_MEMBER_IDS}  from "../../../references/refs_cloud_storage";
 
