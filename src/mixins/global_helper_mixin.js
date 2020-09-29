@@ -72,7 +72,8 @@ export default {
         {
             base       = base === "UNIQ" ? "XAU" : base;
             conversion = conversion === "UNIQ" ? "XAU" : conversion;
-
+            console.log(this.currency)
+            console.log(this.currency[base][conversion])
             let converted_rate = this.currency[base][conversion] * amount;
 
             // Default format number is true
