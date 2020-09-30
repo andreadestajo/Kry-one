@@ -26,7 +26,7 @@
             <q-btn class="q-mb-sm q-mx-sm" @click="transferWallet('btc')">Transfer Bitcoin</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="triggerUserCreate()">Trigger Initialize User Information</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="populatePromotionFilters()">Populate promotion filters</q-btn>
-            <q-btn class="q-mb-sm q-mx-sm" @click="getConversions()">Get conversion</q-btn>
+            <q-btn class="q-mb-sm q-mx-sm" @click="updateConversions()">Update conversion</q-btn>
             <q-btn class="q-mb-sm q-mx-sm" @click="clear()">Clear</q-btn>
         </div>
 
@@ -114,7 +114,7 @@ import DB_USER                      from "../../models/DB_USER";
 import DB_NOBILITY                  from "../../models/DB_NOBILITY";
 import DB_USER_WALLET               from "../../models/DB_USER_WALLET";
 import DB_USER_WALLET_LOG           from "../../models/DB_USER_WALLET_LOG";
-import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET, FN_UPGRADE_ACCOUNT, FN_UPDATE_CURRENCY, FN_POPULATE_PROMOTION_FILTERS, FN_GET_CONVERSIONS } from "../../references/refs_functions";
+import  { FN_REGISTER, FN_LOGIN, FN_ISSUE_WALLET, FN_TRANSFER_WALLET, FN_UPGRADE_ACCOUNT, FN_UPDATE_CURRENCY, FN_POPULATE_PROMOTION_FILTERS, FN_UPDATE_CONVERSIONS } from "../../references/refs_functions";
 
 export default
 {
@@ -445,9 +445,9 @@ export default
             console.log(response)
         },
 
-        async getConversions()
+        async updateConversions()
         {
-            let response = await fbCall(FN_GET_CONVERSIONS);
+            let response = await fbCall(FN_UPDATE_CONVERSIONS);
             console.log(response)
         }
 	}
