@@ -34,4 +34,5 @@ FN_UPDATE_CURRENCY     = `updateCurrency2`;
 
 // Developer
 export const
-FN_POPULATE_PROMOTION_FILTERS   = 'populatePromotionFilters';
+FN_POPULATE_PROMOTION_FILTERS   = 'populatePromotionFilters',
+FN_UPDATE_CONVERSIONS           = 'updateConversions'

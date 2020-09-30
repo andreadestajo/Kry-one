@@ -49,6 +49,7 @@ exports.kyc                     = FUNCTIONS_HTTPS.onCall(admin_controller.kyc);
 
 // Schedules
 exports.updateCurrency          = FUNCTIONS_PUBSUB.schedule('every 1 hours').onRun(schedule_controller.updateCurrency);
+exports.updateConversions       = FUNCTIONS_HTTPS.onCall(schedule_controller.updateCurrency);
 exports.updateCurrency2         = FUNCTIONS_HTTPS.onCall(schedule_controller.updateCurrency);
 
 // Triggers
